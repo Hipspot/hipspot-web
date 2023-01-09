@@ -1,5 +1,7 @@
+import { FilterId } from './filter';
+
 /** 카페 정보 타입 */
-type CafeInfo = {
+export type CafeInfo = {
   /**
    * 카페 아이디
    * @example 1
@@ -53,7 +55,7 @@ type CafeInfo = {
 };
 
 /** 카페 위치 정보 타입 */
-type CafeGeo = {
+export type CafeGeo = {
   type: 'Feature';
   /**
    * 마커 데이터
@@ -74,19 +76,3 @@ type CafeGeo = {
     coordinates: [number, number];
   };
 };
-
-/** 지도에서 마커 정보를 필터링 하는 기준 */
-enum FilterId {
-  /** 힙 스팟 ⭐️ */
-  Hipspot = 1,
-  /** 스터디 하기 좋은 카페 */
-  Study,
-  /** 가성비 좋은 카페 */
-  Effective,
-  /** 디저트가 맛있는 카페 */
-  Dessert,
-  /** 프렌차이즈 카페 */
-  Franchise,
-  /** 개인 카페 */
-  Individual,
-}
