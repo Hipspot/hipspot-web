@@ -1,4 +1,3 @@
-import React from 'react';
 import { useRecoilState } from 'recoil';
 import testAtom from '@recoil/testAtom';
 import Counter from '@components/Counter';
