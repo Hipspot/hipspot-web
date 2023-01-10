@@ -1,0 +1,47 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "title": "tom n toms",
+                "description": "many toms"
+            },
+            "geometry": {
+                "coordinates": [
+                    127.05522175167386,
+                    37.539976853347
+                ],
+                "type": "Point"
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "title": "업사이드커피",
+                "description": "업업"
+            },
+            "geometry": {
+                "coordinates": [
+                    127.05644480375474,
+                    37.54193464961139
+                ],
+                "type": "Point"
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "title": "Cafe ONION",
+                "description": "눈물"
+            },
+            "geometry": {
+                "coordinates": [
+                    127.05822982086192,
+                    37.54471367435555
+                ],
+                "type": "Point"
+            }
+        }
+    ]
+}
