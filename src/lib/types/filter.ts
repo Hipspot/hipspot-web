@@ -23,13 +23,13 @@ export type FilterData = {
    */
   label: string;
   /** 필터가 활성화 되었을 떄 아이콘
-   * @example <HipspotColored />
+   * @example '/assets/img/HipspotColoredIcon'
    */
-  icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+  icon: string;
   /** 필터가 비활성화 되었을 떄 아이콘
-   * @example <HipspotGray />
+   * @example '/assets/img/HipspotGrayIcon'
    */
-  iconDisabled: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+  iconDisabled: string;
   /** 필터의 색상
    * @example TintColor.pink
    */
