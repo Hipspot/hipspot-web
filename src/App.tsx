@@ -1,10 +1,12 @@
 import ClusterList from '@components/ClusterList';
 import Filtering from '@components/Filtering';
+import Marker from '@components/Marker';
 import styled from '@emotion/styled';
 
 function App() {
   return (
     <Wrapper>
+      <Marker number={6} />
       <Filtering />
       <ClusterList />
     </Wrapper>

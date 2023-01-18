@@ -11,6 +11,7 @@ export default function ClusterList() {
 
   const handleCloseModal: EventListener = useCallback(
     (e) => {
+      if (e.target === document.getElementById('marker')) return;
       if (open && (!ref.current || !ref.current.contains(e.target as Node))) setOpen(false);
     },
     [open, setOpen]
