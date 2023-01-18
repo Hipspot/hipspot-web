@@ -4,6 +4,11 @@ import { FilterId } from '@lib/types/filter';
 import FilterItem from './FilterItem';
 
 type FilteringProps = {
+  /**
+   * 필터링의 상단
+   * @description 여백모바일 환경마다 다를 윗 여백을 조정하기 위함
+   * @example 20
+   */
   marginTop?: number;
 };
 

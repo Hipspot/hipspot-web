@@ -4,6 +4,10 @@ import { activeFilterIdAtom, openClusterListAtom } from '@recoil/ui';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 type MarkerProps = {
+  /**
+   * 클러스터링 된 장소의 개수
+   * @example 3
+   */
   number: number;
 };
 
