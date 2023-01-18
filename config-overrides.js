@@ -6,5 +6,6 @@ module.exports = override(
 	addWebpackAlias({
 		'@components': path.resolve(__dirname, 'src', 'components'),
 		'@recoil': path.resolve(__dirname, 'src', 'recoil'),
+		'@libs': path.resolve(__dirname, 'src', 'libs'),
 	})
 );

@@ -34,6 +34,12 @@
       "@components": [
         "components"
       ],
+      "@libs/*": [
+        "libs/*"
+      ],
+      "@libs": [
+        "libs"
+      ],
     }
   },
   "include": [
