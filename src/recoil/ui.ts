@@ -1,7 +1,8 @@
+import { FilterId } from '@lib/types/filter';
 import { PlaceInfo } from '@lib/types/place';
 import { atom } from 'recoil';
 
-export const openClusterListAtom = atom({
+export const openClusterListAtom = atom<boolean>({
   key: 'openClusterList',
   default: true,
 });
@@ -52,4 +53,9 @@ export const clusterListAtom = atom({
       ],
     },
   ] as PlaceInfo[],
+});
+
+export const activeFilterIdAtom = atom<FilterId>({
+  key: 'filterId',
+  default: FilterId.Hipspot,
 });

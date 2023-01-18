@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import filterDataList from '@constants/filterDataList';
+import { FilterId } from '@lib/types/filter';
 import FilterItem from './FilterItem';
 
 type FilteringProps = {
@@ -9,8 +10,8 @@ type FilteringProps = {
 export default function Filtering({ marginTop }: FilteringProps) {
   return (
     <Wrapper marginTop={marginTop}>
-      {Object.values(filterDataList).map((filter) => (
-        <FilterItem key={filter.label} filterData={filter} />
+      {Object.values(filterDataList).map((filter, index: FilterId) => (
+        <FilterItem key={filter.label} id={index} filterData={filter} />
       ))}
     </Wrapper>
   );
