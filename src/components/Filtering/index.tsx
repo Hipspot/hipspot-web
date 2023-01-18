@@ -32,4 +32,6 @@ const Wrapper = styled.div<{ marginTop?: number }>`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  box-sizing: content-box;
 `;

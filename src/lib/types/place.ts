@@ -1,7 +1,7 @@
 import { FilterId } from './filter';
 
 /** 카페 정보 타입 */
-export type CafeInfo = {
+export type PlaceInfo = {
   /**
    * 카페 아이디
    * @example 1
@@ -26,7 +26,7 @@ export type CafeInfo = {
    * 카페 영업시간
    * @example '10:00 ~ 22:00'
    */
-  businessTime: string;
+  businessTime: string | null;
   /**
    * 카페 전화번호
    * @example '02-1234-5678'
@@ -46,26 +46,26 @@ export type CafeInfo = {
    * 네이버 지도 주소
    * @example 'https://map.naver.com/v5/search/%EC%B9%B4%ED%8E%98%ED%9E%99%EC%8A%A4%ED%8C%9F/place/1234567890'
    */
-  naverMapUrl: string;
+  naverMapUrl: string | null;
   /**
    * 카카오 지도 주소
    * @example 'https://map.kakao.com/link/map/카페 힙스팟,37.5446694,127.051352'
    */
-  kakaoMapUrl: string;
+  kakaoMapUrl: string | null;
 };
 
 /** 카페 위치 정보 타입 */
-export type CafeGeo = {
+export type MarkerInfo = {
   type: 'Feature';
   /**
    * 마커 데이터
-   * @example { id: 1, instaId: 'cafehipspot', placeName: '카페 힙스팟', filterId: FilterId.Hipspot }
+   * @example { id: 1, instaId: 'cafehipspot', placeName: '카페 힙스팟', filterList: [FilterId.Hipspot, FilterId.Franchise] }
    */
   properties: {
     id: number;
     instaId: string;
     placeName: string;
-    filterId: FilterId;
+    filterList: FilterId[];
   };
   /**
    * 카페의 Geolocation
