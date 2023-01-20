@@ -1,11 +1,30 @@
 const path = require('path');
-const { useBabelRc, addWebpackAlias, override } = require('customize-cra');
+const { getBabelLoader, addWebpackAlias, override } = require('customize-cra');
 
 module.exports = override(
 	useBabelRc(),
-	addWebpackAlias({
-		'@components': path.resolve(__dirname, 'src', 'components'),
-		'@recoil': path.resolve(__dirname, 'src', 'recoil'),
-		'@libs': path.resolve(__dirname, 'src', 'libs'),
-	})
+  removeBuiltinBabelConfig,
+  enableBabelConfig,
+  addWebpackAlias({
+    '@assets': path.resolve(__dirname, 'src', 'assets'),
+    '@components': path.resolve(__dirname, 'src', 'components'),
+    '@constants': path.resolve(__dirname, 'src', 'constants'),
+    '@lib': path.resolve(__dirname, 'src', 'lib'),
+    '@recoil': path.resolve(__dirname, 'src', 'recoil'),
+  })
 );
+
+function removeBuiltinBabelConfig(config) {
+  const loader = getBabelLoader(config);
+
+  loader.options.presets = [];
+  loader.options.plugins = [];
+
+  return config;
+}
+
+function enableBabelConfig(config) {
+  const loader = getBabelLoader(config);
+  loader.options.configFile = path.resolve(__dirname, 'babel.config.js');
+  return config;
+}

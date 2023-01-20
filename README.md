@@ -1,46 +1,37 @@
-# Getting Started with Create React App
+<p align="center"><img width='200px' src="https://user-images.githubusercontent.com/24623403/211196655-32b385c0-2308-4cd9-922c-0708c59c8991.png"></p>
+<p align='center'>
+  <img src='https://img.shields.io/github/package-json/v/Hipspot/hipspot-web'>
+  <a href="https://github.com/Hipspot/hipspot-web/issues"><img src='https://img.shields.io/github/issues/Hipspot/hipspot-web'></a>
+  <a href="https://github.com/Hipspot/hipspot-web/pulls"><img src='https://img.shields.io/github/issues-pr/Hipspot/hipspot-web'></a>
+  <a href="https://github.com/Hipspot/hipspot-web/graphs/contributors"><img src='https://img.shields.io/github/contributors/Hipspot/hipspot-web'></a>
+  <a href='https://github.com/Hipspot/hipspot-web/blob/main/LICENSE'><img src='https://img.shields.io/github/license/Hipspot/hipspot-web'></a>
+</p>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Hipspot Web
 
-## Available Scripts
+내가 가고싶은 카페를 찾아주는 플랫폼 서비스
 
-In the project directory, you can run:
+## Member
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+<table>
+  <tr align="center">
+    <td>오승태</td>
+    <td>이상준</td>
+    <td>이효린</td>
+    <td>황인서</td>
+  </tr>
+  <tr>
+     <td align="center">
+        <a href="https://github.com/yeoularu"><img src="https://avatars.githubusercontent.com/u/69510981?v=4" width="150px" alt="오승태"/><br /></a>
+     </td>
+     <td align="center">
+        <a href="https://github.com/Sangjun-man"><img src="https://avatars.githubusercontent.com/u/66112027?v=4" width="150px" alt="이상준"/><br /></a>
+     </td>
+     <td align="center">
+        <a href="https://github.com/hyorish03"><img src="https://avatars.githubusercontent.com/u/108210492?v=4" width="150px" alt="이효린"/><br /></a>
+     </td>
+     <td align="center">
+        <a href="https://github.com/sjsjsj1246"><img src="https://avatars.githubusercontent.com/u/24623403?v=4" width="150px" alt="황인서"/><br /></a>
+     </td>
+  <tr>
+</table>

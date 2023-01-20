@@ -1,6 +1,9 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": [
+    "@typescript-eslint",
+    "@emotion"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
@@ -20,12 +23,26 @@
   },
   "rules": {
     "import/prefer-default-export": "off",
+    "react/require-default-props": "off",
     "@typescript-eslint/no-use-before-define": "off",
     "react/react-in-jsx-scope": "off",
+    "react/no-unknown-property": [
+      "error",
+      {
+        "ignore": [
+          "css"
+        ]
+      }
+    ],
     "react/jsx-filename-extension": [
       "error",
       {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
       }
     ]
   }
