@@ -1,0 +1,32 @@
+name: Build & Test App
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install -g pnpm
+
+      - name: npm ci
+      - run: pnpm install --frozen-lockfile
+
+      - name: build
+      - run: pnpm run build
+
+      - name: jest
+      - run: pnpm test
