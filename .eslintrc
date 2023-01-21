@@ -22,8 +22,8 @@
     "project": "./tsconfig.json"
   },
   "rules": {
-    "react/require-default-props": "off",
     "import/prefer-default-export": "off",
+    "react/require-default-props": "off",
     "@typescript-eslint/no-use-before-define": "off",
     "react/react-in-jsx-scope": "off",
     "react/no-unknown-property": [

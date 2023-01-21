@@ -1,10 +1,21 @@
 import Filtering from '@components/Filtering';
+import InfoWindow from '@components/InfoWindow';
 
 function App() {
   return (
-    <div className="App">
-      메인
+    <div
+      className="App"
+      style={{
+        backgroundImage:
+          'url(https://user-images.githubusercontent.com/108210492/212647244-1ef8711d-1b94-475e-820a-26be666d1db0.png)',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        height: '100vh',
+      }}
+    >
       <Filtering />
+      <InfoWindow />
     </div>
   );
 }

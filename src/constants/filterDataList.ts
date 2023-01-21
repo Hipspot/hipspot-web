@@ -12,8 +12,8 @@ import {
   StudyColoredIcon,
   StudyGrayIcon,
 } from '@assets/index';
-import { filterColor } from '@lib/styles/color';
-import { FilterDataList, FilterId } from '@lib/types/filter';
+import { filterColor } from 'libs/styles/color';
+import { FilterDataList, FilterId } from '@libs/types/filter';
 
 const filterDataList: FilterDataList = {
   [FilterId.Hipspot]: {
