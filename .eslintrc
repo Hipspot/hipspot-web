@@ -44,6 +44,10 @@
           ".tsx"
         ]
       }
+    ],
+    "no-param-reassign":[
+      0,
+      {"props" : false }
     ]
   }
 }
