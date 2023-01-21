@@ -1,29 +1,31 @@
 import styled from '@emotion/styled';
 
-export const Information = styled.div`
-	width: 100%;
-	height: 36px;
-	background: transparent;
-	display: flex;
-	gap: 3px;
+const Information = styled.div`
+  .item {
+    display: flex;
+    padding: 24px 0px;
+    gap: 12px;
 
-	div {
-		flex: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-family: 'Pretendard';
-		font-style: normal;
-		font-weight: 600;
-		font-size: 14px;
-		background: #ffffff;
-		color: #999999;
-		border-radius: 12px 12px 0px 0px;
-		filter: brightness(0.99);
+    .right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
 
-		&.selected {
-			color: black;
-			filter: none;
-		}
-	}
+      .itemTitle {
+        font-family: 'Pretendard';
+        font-weight: 600;
+        line-height: 24px;
+        color: #181818;
+      }
+
+      .itemDescription {
+        font-family: 'Pretendard';
+        line-height: 24px;
+        color: #868686;
+      }
+    }
+
+    border-bottom: solid #efefef 1px;
+  }
 `;
