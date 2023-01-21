@@ -21,18 +21,39 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
+    "typeRoots": [
+      "./src/types"
+    ],
     "paths": {
-      "@recoil/*": [
-        "recoil/*"
+      "@assets/*": [
+        "assets/*"
       ],
-      "@recoil": [
-        "recoil"
+      "@assets": [
+        "assets"
       ],
       "@components/*": [
         "components/*"
       ],
       "@components": [
         "components"
+      ],
+      "@constants/*": [
+        "constants/*"
+      ],
+      "@constants": [
+        "constants"
+      ],
+      "@libs/*": [
+        "libs/*"
+      ],
+      "@libs": [
+        "libs"
+      ],
+      "@recoil/*": [
+        "recoil/*"
+      ],
+      "@recoil": [
+        "recoil"
       ],
     }
   },

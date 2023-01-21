@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
-import App from './App';
+import ClusterList from '.';
 
-test('Render App without crash', () => {
+test('Render ClusterList without crash', () => {
   const component = render(
     <RecoilRoot>
-      <App />
+      <ClusterList />
     </RecoilRoot>
   );
 

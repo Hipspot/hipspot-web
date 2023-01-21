@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
-import App from './App';
+import Filtering from '.';
 
-test('Render App without crash', () => {
+test('Render Filtering without crash', () => {
   const component = render(
     <RecoilRoot>
-      <App />
+      <Filtering />
     </RecoilRoot>
   );
 
