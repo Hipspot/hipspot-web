@@ -2,7 +2,6 @@ const path = require('path');
 const { getBabelLoader, addWebpackAlias, override } = require('customize-cra');
 
 module.exports = override(
-	useBabelRc(),
   removeBuiltinBabelConfig,
   enableBabelConfig,
   addWebpackAlias({

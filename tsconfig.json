@@ -43,11 +43,11 @@
       "@constants": [
         "constants"
       ],
-      "@lib/*": [
-        "lib/*"
+      "@libs/*": [
+        "libs/*"
       ],
-      "@lib": [
-        "lib"
+      "@libs": [
+        "libs"
       ],
       "@recoil/*": [
         "recoil/*"

@@ -1,4 +1,4 @@
-export { ReactComponent as Cancel } from './svg/Cancel.svg';
+export { ReactComponent as CancelIcon } from './svg/CancelIcon.svg';
 export { ReactComponent as ClockIcon } from './svg/ClockIcon.svg';
 export { ReactComponent as MarkerIcon } from './svg/MarkerIcon.svg';
 export { ReactComponent as PhoneIcon } from './svg/PhoneIcon.svg';

@@ -1,5 +1,5 @@
-import { FilterId } from '@lib/types/filter';
-import { TintColor } from '@lib/types/style';
+import { FilterId } from '@libs/types/filter';
+import { TintColor } from '@libs/types/style';
 
 export const filterColor = {
   [FilterId.Hipspot]: TintColor.pink,
