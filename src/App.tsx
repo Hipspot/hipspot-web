@@ -1,3 +1,4 @@
+import Filtering from '@components/Filtering';
 import InfoWindow from '@components/InfoWindow';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         height: '100vh',
       }}
     >
+      <Filtering />
       <InfoWindow />
     </div>
   );
