@@ -1,16 +1,26 @@
 import styled from '@emotion/styled';
-import { FilterData } from '@libs/types/filter';
+import { activeFilterIdAtom } from '@recoil/ui';
+import { useRecoilState } from 'recoil';
+import { FilterData, FilterId } from '@libs/types/filter';
 
 type FilterItemProps = {
+  id: FilterId;
   filterData: FilterData;
 };
 
-export default function FilterItem({ filterData }: FilterItemProps) {
+export default function FilterItem({ id, filterData }: FilterItemProps) {
+  const [activeFilterId, setActiveFilterId] = useRecoilState(activeFilterIdAtom);
+  const isActive = id === activeFilterId;
+
+  const handleClick = () => {
+    setActiveFilterId(id);
+  };
+
   return (
-    <Wrapper color={filterData.color}>
+    <Wrapper onClick={handleClick} color={isActive ? filterData.color : '#9A9A9A'}>
       <ShadowFrame>
         <ContentFrame>
-          <FilterIcon src={filterData.icon} alt="icon" />
+          <FilterIcon src={isActive ? filterData.icon : filterData.iconDisabled} alt="icon" />
           <p>{filterData.label}</p>
         </ContentFrame>
       </ShadowFrame>
