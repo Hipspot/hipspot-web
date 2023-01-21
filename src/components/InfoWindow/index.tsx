@@ -8,7 +8,7 @@ import { CancelIcon, ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets'
 import { Tab } from '@components/InfoWindow/Contents/Tab';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
-import { Title } from './Contents/Title';
+import * as Title from './Contents/Title';
 import PopUpWindow from './PopUpWindow';
 
 export default function InfoWindow() {
@@ -26,10 +26,10 @@ export default function InfoWindow() {
 
   return (
     <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
-      <Title>
+      <Title.Wrapper>
         <p className="CafeName">Honor</p>
         <CancelIcon className="CancelIcon" />
-      </Title>
+      </Title.Wrapper>
       <Tab>
         <div className="selected">업체제공사진</div>
         <div className="">메뉴</div>
