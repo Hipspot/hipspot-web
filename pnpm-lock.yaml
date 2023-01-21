@@ -30,8 +30,8 @@ specifiers:
   eslint-plugin-prettier: ^4.2.1
   eslint-plugin-react: ^7.31.11
   eslint-plugin-react-hooks: ^4.6.0
-  mapbox-gl: ^2.12.0
   jest-watch-typeahead: ^2.2.1
+  mapbox-gl: ^2.12.0
   path: ^0.12.7
   prettier: ^2.8.1
   react: ^18.2.0
@@ -40,7 +40,6 @@ specifiers:
   react-icons: ^4.7.1
   react-responsive-carousel: ^3.2.23
   react-scripts: 5.0.1
-  react-simple-image-slider: ^2.4.1
   recoil: ^0.7.6
   typescript: ^4.9.4
 
@@ -57,18 +56,17 @@ dependencies:
   react-icons: 4.7.1_react@18.2.0
   react-responsive-carousel: 3.2.23
   react-scripts: 5.0.1_cl6c6lk46klsk2subiyfxwnfya
-  react-simple-image-slider: 2.4.1
   recoil: 0.7.6_biqbaboplfbrettd7655fr4n2y
   typescript: 4.9.4
 
 devDependencies:
-  '@types/mapbox-gl': 2.7.10
   '@babel/preset-env': 7.20.2
   '@babel/preset-react': 7.18.6
   '@babel/preset-typescript': 7.18.6
   '@emotion/babel-plugin': 11.10.5
   '@emotion/eslint-plugin': 11.10.0_eslint@8.30.0
   '@types/jest': 27.5.2
+  '@types/mapbox-gl': 2.7.10
   '@types/node': 16.18.11
   '@types/react': 18.0.26
   '@types/react-dom': 18.0.10
@@ -7801,6 +7799,14 @@ packages:
       util: 0.10.4
     dev: true
 
+  /pbf/3.2.1:
+    resolution: {integrity: sha512-ClrV7pNOn7rtmoQVF4TS1vyU0WhYRnP92fzbfF75jAIwpnzdJXf8iTd4CMEqO4yUenH6NDqLiwjqlh6QgZzgLQ==}
+    hasBin: true
+    dependencies:
+      ieee754: 1.2.1
+      resolve-protobuf-schema: 2.1.0
+    dev: false
+
   /performance-now/2.1.0:
     resolution: {integrity: sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==}
 
@@ -8902,10 +8908,6 @@ packages:
       - webpack-cli
       - webpack-hot-middleware
       - webpack-plugin-serve
-
-  /react-simple-image-slider/2.4.1:
-    resolution: {integrity: sha512-9T/WjsRThJup43QxzH202rLVNqaUK9P8izTiWOfLcc5w3QygU44a9IQUuIwGYiXtWvw2spRRGLRc5Xd62/vfDg==}
-    dev: false
 
   /react/18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}

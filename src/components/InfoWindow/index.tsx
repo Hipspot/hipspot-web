@@ -5,10 +5,11 @@ import { tabStateAtom } from '@recoil/infoWindowState';
 import { useRecoilState } from 'recoil';
 import { TabState } from '@libs/types/infowindow';
 import { CancelIcon, ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets';
-import { Tab } from '@components/InfoWindow/Contents/Tab';
+import { Tab, TabBar } from '@components/InfoWindow/Contents/Tab';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
-import { Title } from './Contents/Title';
+import * as Title from './Contents/Title';
+
 import PopUpWindow from './PopUpWindow';
 
 export default function InfoWindow() {
@@ -26,15 +27,17 @@ export default function InfoWindow() {
 
   return (
     <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
-      <Title>
-        <p className="CafeName">Honor</p>
-        <CancelIcon className="CancelIcon" />
-      </Title>
-      <Tab>
-        <div className="selected">업체제공사진</div>
-        <div className="">메뉴</div>
-        <div className="">인스타그램</div>
-      </Tab>
+      <Title.Wrapper>
+        <Title.Name>Honor</Title.Name>
+        <Title.Icon>
+          <CancelIcon />
+        </Title.Icon>
+      </Title.Wrapper>
+      <TabBar>
+        <Tab className="selected">업체제공사진</Tab>
+        <Tab className="">메뉴</Tab>
+        <Tab className="">인스타그램</Tab>
+      </TabBar>
       <Section>
         <StyledCarousel
           infiniteLoop
