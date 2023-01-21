@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { FilterData, FilterId } from '@lib/types/filter';
 import { activeFilterIdAtom } from '@recoil/ui';
 import { useRecoilState } from 'recoil';
+import { FilterData, FilterId } from '@libs/types/filter';
 
 type FilterItemProps = {
   id: FilterId;

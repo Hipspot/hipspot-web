@@ -1,5 +1,6 @@
 import ClusterList from '@components/ClusterList';
 import Filtering from '@components/Filtering';
+import InfoWindow from '@components/InfoWindow';
 import Marker from '@components/Marker';
 import styled from '@emotion/styled';
 
@@ -9,6 +10,7 @@ function App() {
       <Marker number={6} />
       <Filtering />
       <ClusterList />
+      <InfoWindow />
     </Wrapper>
   );
 }

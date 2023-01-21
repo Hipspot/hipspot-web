@@ -10,13 +10,17 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.2.2",
     "msw": "^0.49.2",
+    "mapbox-gl": "^2.12.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.7.1",
+    "react-responsive-carousel": "^3.2.23",
     "react-scripts": "5.0.1",
     "recoil": "^0.7.6",
     "typescript": "^4.9.4"
   },
   "devDependencies": {
+    "@types/mapbox-gl": "^2.7.10",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
@@ -76,7 +80,7 @@
       "^@assets/(.*)$": "<rootDir>/src/assets/$1",
       "^@components/(.*)$": "<rootDir>/src/components/$1",
       "^@constants/(.*)$": "<rootDir>/src/constants/$1",
-      "^@lib/(.*)$": "<rootDir>/src/lib/$1",
+      "^@libs/(.*)$": "<rootDir>/src/lib/$1",
       "^@recoil/(.*)$": "<rootDir>/src/recoil/$1"
     },
     "setupFilesAfterEnv": [
