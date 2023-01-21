@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { clusterListAtom, openClusterListAtom } from '@recoil/ui';
 import { useCallback, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import ItemList from './ItemList';
 
 export default function ClusterList() {
   const ref = useRef<HTMLDivElement>(null);
@@ -28,14 +29,14 @@ export default function ClusterList() {
   return (
     <Wrapper ref={ref} open={open}>
       <ShadowFrame>
-        <ItemList>
+        <ItemList.Wrapper>
           {clusterList.map((cluster) => (
-            <Item key={cluster.id}>
-              <img src={cluster.imageList[0]} alt={cluster.placeName} />
-              <p>{cluster.placeName}</p>
-            </Item>
+            <ItemList.Item key={cluster.id}>
+              <ItemList.ItemImg src={cluster.imageList[0]} alt={cluster.placeName} />
+              <ItemList.ItemName>{cluster.placeName}</ItemList.ItemName>
+            </ItemList.Item>
           ))}
-        </ItemList>
+        </ItemList.Wrapper>
       </ShadowFrame>
     </Wrapper>
   );
@@ -78,46 +79,4 @@ const ShadowFrame = styled.div`
   border-radius: 4px;
 
   box-sizing: border-box;
-`;
-
-const ItemList = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 14px 16px;
-  gap: 21px;
-
-  width: 128px;
-  height: 100%;
-
-  background: #f2f2f2;
-  box-shadow: 1px -1px 2px rgba(255, 255, 255, 0.9), -1px 1px 2px rgba(0, 0, 0, 0.12);
-  border-radius: 2px;
-
-  box-sizing: border-box;
-
-  overflow: scroll;
-
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const Item = styled.div`
-  img {
-    width: 96px;
-    height: 96px;
-    border-radius: 4px;
-  }
-
-  p {
-    font-family: 'Pretendard';
-    font-weight: 600;
-    line-height: 24px;
-
-    text-align: center;
-
-    color: #181818;
-  }
 `;
