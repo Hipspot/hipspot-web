@@ -1,5 +1,5 @@
-import { FilterId } from '@lib/types/filter';
-import { PlaceInfo } from '@lib/types/place';
+import { FilterId } from '@libs/types/filter';
+import { PlaceInfo } from '@libs/types/place';
 import { atom } from 'recoil';
 
 export const openClusterListAtom = atom<boolean>({

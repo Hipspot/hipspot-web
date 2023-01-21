@@ -1,4 +1,4 @@
-import { PlaceInfo } from '@lib/types/place';
+import { PlaceInfo } from '@libs/types/place';
 
 const data: PlaceInfo[] = [
   {

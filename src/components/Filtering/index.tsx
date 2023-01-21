@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import filterDataList from '@constants/filterDataList';
-import { FilterId } from '@lib/types/filter';
+import { FilterId } from '@libs/types/filter';
 import FilterItem from './FilterItem';
 
 type FilteringProps = {

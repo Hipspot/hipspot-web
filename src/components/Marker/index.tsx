@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { filterColor } from '@lib/styles/color';
+import { filterColor } from '@libs/styles/color';
 import { activeFilterIdAtom, openClusterListAtom } from '@recoil/ui';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
