@@ -3,7 +3,7 @@ import { filterColor } from '@libs/styles/color';
 import { activeFilterIdAtom, openClusterListAtom } from '@recoil/ui';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-type MarkerProps = {
+type ClusterMarkerProps = {
   /**
    * 클러스터링 된 장소의 개수
    * @example 3
@@ -11,14 +11,13 @@ type MarkerProps = {
   number: number;
 };
 
-export default function Marker({ number }: MarkerProps) {
+export default function ClusterMarker({ number }: ClusterMarkerProps) {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const setOpenClusterList = useSetRecoilState(openClusterListAtom);
 
   const handleClick = () => {
     setOpenClusterList(true);
   };
-
   return (
     <Wrapper id="marker" onClick={handleClick} color={filterColor[activeFilterId]}>
       +{number}
