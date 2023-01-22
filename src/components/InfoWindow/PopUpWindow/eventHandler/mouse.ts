@@ -15,7 +15,6 @@ export const handleMouseDown: (eventStartProps: HandleEventStartProps) => MouseE
 
     setTabState((prev: TabState) => ({ ...prev, onHandling: true }));
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain, no-unsafe-optional-chaining, @typescript-eslint/no-non-null-assertion
     const infoWindowElem = target.parentElement as HTMLDivElement;
     const pointedTop = infoWindowElem.getBoundingClientRect().top - e.clientY;
     reactRefUpdate({ ref: modifyRef, update: pointedTop });
@@ -32,8 +31,7 @@ export const handleMouseMove: (eventMoveProps: HandleEventMoveProps) => MouseEve
       const infoWindowElem = target.parentElement as HTMLDivElement;
       infoWindowElem.style.setProperty('top', `${e.clientY + modifyRef.current}px`);
 
-      const slideEvent: any = new Event('forSlide');
-      slideEvent.clientY = e.clientY;
+      const slideEvent: Event = Object.assign(new Event('forSlide'), { clientY: e.clientY });
       document.getElementById('slide')?.dispatchEvent(slideEvent);
     }
   };

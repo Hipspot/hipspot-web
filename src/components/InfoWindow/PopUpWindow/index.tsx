@@ -1,4 +1,4 @@
-import React, { useEffect, ReactNode, useRef } from 'react';
+import { useEffect, ReactNode, useRef } from 'react';
 import { VscGrabber } from 'react-icons/vsc';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { cameraStateAtom, tabStateAtom } from '@recoil/infoWindowState';
