@@ -68,6 +68,7 @@ function MapComp() {
         });
         markerList[id] = new mapboxgl.Marker(marker).setLngLat(feature.geometry.coordinates).addTo(map);
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.error(e);
       }
     });
