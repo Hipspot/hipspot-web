@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { FilterId } from '@libs/types/filter';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 
 type MarkerProps = {
@@ -12,9 +13,11 @@ type MarkerProps = {
 };
 
 export default function PointMarker({ feature, image, id }: MarkerProps) {
-  const { placeName } = feature.properties;
+  const { placeName, filterList } = feature.properties;
   return (
     <Wrapper className="mapgl-marker-animation" id={`${id}`}>
+      {/* filterList에 맞게 랜더링해주는지 테스트하기 위한 tag 추후 삭제해주세요 */}
+      <div>{filterList.map((filter) => FilterId[filter]).join(', ')}</div>
       <PlaceName>{placeName}</PlaceName>
       <MarkerWrapper>
         <svg width="98" height="111" viewBox="0 0 98 111" fill="none" xmlns="http://www.w3.org/2000/svg">

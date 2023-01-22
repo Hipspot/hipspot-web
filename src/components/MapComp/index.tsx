@@ -1,22 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import PointMarker from '@components/Marker/pointMarker';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 import { renderEmotionElementToHtml } from '@libs/utils/renderEmotionElementToHtml';
 import { geoJsonSelector } from '@recoil/map';
-import mapboxgl, { GeoJSONSourceRaw } from 'mapbox-gl';
+import { activeFilterIdAtom } from '@recoil/ui';
+import mapboxgl, { GeoJSONSourceRaw, Marker } from 'mapbox-gl';
 import { FeatureCollection } from 'geojson';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { mapConfig } from './utils/mapConfig';
 
 function MapComp() {
   const features = useRecoilValue(geoJsonSelector);
+  const activeFilterId = useRecoilValue(activeFilterIdAtom);
+  const mapRef = useRef<mapboxgl.Map>();
+  const markerList: { [id in number | string]: mapboxgl.Marker } = useMemo(() => ({}), []);
 
   useEffect(() => {
     mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKKEN}`;
-
-    const map = new mapboxgl.Map(mapConfig);
+    mapRef.current = new mapboxgl.Map(mapConfig);
+    const map = mapRef.current;
 
     map.on('load', () => {
       const sourceJson: GeoJSONSourceRaw = {
@@ -33,10 +37,25 @@ function MapComp() {
         },
       });
     });
+  }, []);
 
-    if (features) {
-      features.forEach((feature: CustomGeoJSONFeatures) => {
-        const { id } = feature.properties;
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    if (!features) return;
+
+    Object.entries(markerList).forEach((markerEntry) => {
+      const [id, marker] = markerEntry as [string, Marker];
+      marker.remove();
+      delete markerList[id];
+    });
+
+    features.forEach((feature: CustomGeoJSONFeatures) => {
+      const { id, filterList } = feature.properties;
+
+      if (!filterList.includes(activeFilterId)) return;
+
+      try {
         const marker = renderEmotionElementToHtml({
           elem: (
             <PointMarker
@@ -46,12 +65,13 @@ function MapComp() {
             />
           ),
           cssDataKey: 'marker',
-          render: true,
         });
-        new mapboxgl.Marker(marker).setLngLat(feature.geometry.coordinates).addTo(map);
-      });
-    }
-  }, []);
+        markerList[id] = new mapboxgl.Marker(marker).setLngLat(feature.geometry.coordinates).addTo(map);
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  }, [activeFilterId]);
 
   return (
     <div
