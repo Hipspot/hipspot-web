@@ -18,6 +18,8 @@ function App() {
 export default App;
 
 const Wrapper = styled.div`
+  position: relative;
+  overflow: hidden;
   width: 100%;
   height: 100%;
 `;
