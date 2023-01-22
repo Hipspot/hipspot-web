@@ -14,7 +14,6 @@ export const handleTouchStart: (props: HandleEventStartProps) => TouchEventHandl
     target.style.setProperty('padding', 'calc(var(--vh,1vh) * 100) 0');
     target.style.setProperty('transform', 'translateY(-50%)');
 
-    // eslint-disable-next-line no-unsafe-optional-chaining, @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
     const infoWindowElem = target.parentElement as HTMLDivElement;
     const pointedTop = infoWindowElem.getBoundingClientRect().top - e.touches[0].clientY;
     reactRefUpdate({ ref: modifyRef, update: pointedTop });
@@ -31,8 +30,7 @@ export const handleTouchMove: (props: HandleEventMoveProps) => TouchEventHandler
       const infoWindowElem = target.parentElement as HTMLDivElement;
       infoWindowElem.style.setProperty('top', `${e.touches[0].clientY + modifyRef.current}px`);
 
-      const slideEvent: any = new Event('forSlide');
-      slideEvent.clientY = e.touches[0].clientY;
+      const slideEvent: Event = Object.assign(new Event('forSlide'), { clientY: e.touches[0].clientY });
       document.getElementById('slide')?.dispatchEvent(slideEvent);
     }
   };
