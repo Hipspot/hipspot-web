@@ -20,11 +20,20 @@ export const Icon = styled.div`
   }
 `;
 
-export const Name = styled.div`
-  font-family: 'Pretendard';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 20px;
-  color: #0d0d0d;
-  flex: 1;
+	.CafeName {
+		font-family: 'Pretendard';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 20px;
+		color: #0d0d0d;
+
+		flex: 1;
+	}
+
+	.CancleIcon {
+		width: 24px;
+		height: 24px;
+		text-align: center;
+		display: flex;
+	}
 `;

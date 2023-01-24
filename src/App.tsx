@@ -1,23 +1,25 @@
+import ClusterList from '@components/ClusterList';
 import Filtering from '@components/Filtering';
 import InfoWindow from '@components/InfoWindow';
+import styled from '@emotion/styled';
+import MapCompContainer from 'container/MapCompContainer';
 
 function App() {
   return (
-    <div
-      className="App"
-      style={{
-        backgroundImage:
-          'url(https://user-images.githubusercontent.com/108210492/212647244-1ef8711d-1b94-475e-820a-26be666d1db0.png)',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        height: '100vh',
-      }}
-    >
+    <Wrapper>
+      <MapCompContainer />
       <Filtering />
+      <ClusterList />
       <InfoWindow />
-    </div>
+    </Wrapper>
   );
 }
 
 export default App;
+
+const Wrapper = styled.div`
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+`;
