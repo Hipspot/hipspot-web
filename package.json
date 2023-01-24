@@ -85,6 +85,8 @@
       "^@assets/(.*)$": "<rootDir>/src/assets/$1",
       "^@components$": "<rootDir>/src/components",
       "^@components/(.*)$": "<rootDir>/src/components/$1",
+      "^@containers$": "<rootDir>/src/containers",
+      "^@containers/(.*)$": "<rootDir>/src/containers/$1",
       "^@constants$": "<rootDir>/src/constants",
       "^@constants/(.*)$": "<rootDir>/src/constants/$1",
       "^@libs$": "<rootDir>/src/libs",
