@@ -2,3 +2,4 @@ node_modules/
 config-overrides.js
 babel.config.js
 jest.setup.js
+/public/mockServiceWorker.js
