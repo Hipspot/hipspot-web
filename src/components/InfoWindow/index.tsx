@@ -1,15 +1,16 @@
-/* eslint-disable react/button-has-type */
 import { useEffect } from 'react';
 import styled from '@emotion/styled';
 import { tabStateAtom } from '@recoil/infoWindowState';
 import { useRecoilState } from 'recoil';
 import { TabState } from '@libs/types/infowindow';
 import { CancelIcon, ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets';
-import { Tab } from '@components/InfoWindow/Contents/Tab';
+import { Tab, TabBar } from '@components/InfoWindow/Contents/Tab';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 import * as Title from './Contents/Title';
 import PopUpWindow from './PopUpWindow';
+import * as Information from './Contents/Information';
+import * as MapButtonList from './Contents/MapButtonList';
 
 export default function InfoWindow() {
   const smoothLoopId: { id: number } = { id: -1 };
@@ -27,14 +28,16 @@ export default function InfoWindow() {
   return (
     <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
       <Title.Wrapper>
-        <p className="CafeName">Honor</p>
-        <CancelIcon className="CancelIcon" />
+        <Title.Name>Honor</Title.Name>
+        <Title.Icon>
+          <CancelIcon />
+        </Title.Icon>
       </Title.Wrapper>
-      <Tab>
-        <div className="selected">업체제공사진</div>
-        <div className="">메뉴</div>
-        <div className="">인스타그램</div>
-      </Tab>
+      <TabBar>
+        <Tab className="selected">업체제공사진</Tab>
+        <Tab className="">메뉴</Tab>
+        <Tab className="">인스타그램</Tab>
+      </TabBar>
       <Section>
         <StyledCarousel
           infiniteLoop
@@ -56,40 +59,39 @@ export default function InfoWindow() {
             />
           </div>
         </StyledCarousel>
-        <Information>
-          <div className="item">
-            <div className="left">
-              <ClockIcon />
-            </div>
-            <div className="right">
-              <div className="itemTitle">영업시간</div>
-              <div className="itemDescription">월, 화, 수, 목, 금, 토, 일 9:00~23:00</div>
-            </div>
-          </div>
 
-          <div className="item">
-            <div className="left">
-              <MarkerIcon />
-            </div>
-            <div className="right">
-              <div className="itemTitle">서울 노원구 공릉동 12길34</div>
-            </div>
-            <CopyIcon />
+        <Information.Item>
+          <div className="left">
+            <ClockIcon />
           </div>
+          <Information.Right>
+            <Information.ItemTitle>영업시간</Information.ItemTitle>
+            <Information.ItemDescription>월, 화, 수, 목, 금, 토, 일 9:00~23:00</Information.ItemDescription>
+          </Information.Right>
+        </Information.Item>
 
-          <div className="item">
-            <div className="left">
-              <PhoneIcon />
-            </div>
-            <div className="right">
-              <div className="itemTitle">010-1234-5678</div>
-            </div>
+        <Information.Item>
+          <div className="left">
+            <MarkerIcon />
           </div>
-        </Information>
-        <MapButtonList>
-          <button>네이버지도 길찾기</button>
-          <button>카카오맵 길찾기</button>
-        </MapButtonList>
+          <Information.Right>
+            <Information.ItemTitle>서울 노원구 공릉동 12길34</Information.ItemTitle>
+          </Information.Right>
+          <CopyIcon />
+        </Information.Item>
+
+        <Information.Item>
+          <div className="left">
+            <PhoneIcon />
+          </div>
+          <Information.Right>
+            <Information.ItemTitle>010-1234-5678</Information.ItemTitle>
+          </Information.Right>
+        </Information.Item>
+        <MapButtonList.List>
+          <MapButtonList.Button>네이버지도 길찾기</MapButtonList.Button>
+          <MapButtonList.Button>카카오맵 길찾기</MapButtonList.Button>
+        </MapButtonList.List>
       </Section>
     </PopUpWindow>
   );
@@ -133,54 +135,5 @@ const StyledCarousel = styled(Carousel)`
     position: absolute;
     top: 314px;
     right: 8px;
-  }
-`;
-
-const Information = styled.div`
-  .item {
-    display: flex;
-    padding: 24px 0px;
-    gap: 12px;
-
-    .right {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-
-      .itemTitle {
-        font-family: 'Pretendard';
-        font-weight: 600;
-        line-height: 24px;
-        color: #181818;
-      }
-
-      .itemDescription {
-        font-family: 'Pretendard';
-        line-height: 24px;
-        color: #868686;
-      }
-    }
-
-    border-bottom: solid #efefef 1px;
-  }
-`;
-
-const MapButtonList = styled.div`
-  margin-top: 26px;
-  display: flex;
-  gap: 10px;
-
-  button {
-    height: 56px;
-    border: none;
-    background: #262626;
-    border-radius: 8px;
-    flex: 1;
-
-    font-family: 'Pretendard';
-    font-weight: 600;
-    line-height: 24px;
-    color: white;
   }
 `;
