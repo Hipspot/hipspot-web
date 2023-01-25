@@ -18,6 +18,21 @@ function MapComp() {
   const mapRef = useRef<mapboxgl.Map>();
   const markerList: { [id in number | string]: mapboxgl.Marker } = useMemo(() => ({}), []);
 
+  const getFeaturesOnScreen = (map: mapboxgl.Map) => {
+    const mapboxFeaturesOnScreen = map.querySourceFeatures('placeList');
+
+    const uniqueIds = new Set<number>();
+
+    mapboxFeaturesOnScreen.forEach((feature) => {
+      const id = feature.properties?.id;
+      if (!uniqueIds.has(id)) {
+        uniqueIds.add(id);
+      }
+    });
+
+    setFeaturesOnScreen(features.filter((feature: CustomGeoJSONFeatures) => uniqueIds.has(feature.properties.id)));
+  };
+
   useEffect(() => {
     mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKKEN}`;
     mapRef.current = new mapboxgl.Map(mapConfig);
@@ -39,19 +54,15 @@ function MapComp() {
       });
     });
 
+    const setSource = () => {
+      getFeaturesOnScreen(map);
+    };
+    map.on('render', setSource);
+    map.once('movestart', () => {
+      map.off('render', setSource);
+    });
     map.on('moveend', () => {
-      const mapboxFeaturesOnScreen = map.querySourceFeatures('placeList');
-      console.log('🚀 ~ file: index.tsx:44 ~ map.on ~ mapboxFeaturesOnScreen', mapboxFeaturesOnScreen);
-      const uniqueIds = new Set<number>();
-
-      mapboxFeaturesOnScreen.forEach((feature) => {
-        const id = feature.properties?.id;
-        if (!uniqueIds.has(id)) {
-          uniqueIds.add(id);
-        }
-      });
-
-      setFeaturesOnScreen(features.filter((feature: CustomGeoJSONFeatures) => uniqueIds.has(feature.properties.id)));
+      getFeaturesOnScreen(map);
     });
   }, []);
 
