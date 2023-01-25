@@ -18,25 +18,29 @@ function MapComp() {
   const mapRef = useRef<mapboxgl.Map>();
   const markerList: { [id in number | string]: mapboxgl.Marker } = useMemo(() => ({}), []);
 
-  const getFeaturesOnScreen = (map: mapboxgl.Map) => {
-    const mapboxFeaturesOnScreen = map.querySourceFeatures('placeList');
-
-    const uniqueIds = new Set<number>();
-
-    mapboxFeaturesOnScreen.forEach((feature) => {
-      const id = feature.properties?.id;
-      if (!uniqueIds.has(id)) {
-        uniqueIds.add(id);
-      }
-    });
-
-    setFeaturesOnScreen(features.filter((feature: CustomGeoJSONFeatures) => uniqueIds.has(feature.properties.id)));
-  };
-
   useEffect(() => {
     mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKKEN}`;
     mapRef.current = new mapboxgl.Map(mapConfig);
     const map = mapRef.current;
+
+    const getFeaturesOnScreen = () => {
+      const mapboxFeaturesOnScreen = map.querySourceFeatures('placeList');
+
+      const uniqueIds = new Set<number>();
+
+      mapboxFeaturesOnScreen.forEach((feature) => {
+        const id = feature.properties?.id;
+        if (!uniqueIds.has(id)) {
+          uniqueIds.add(id);
+        }
+      });
+
+      setFeaturesOnScreen(features.filter((feature: CustomGeoJSONFeatures) => uniqueIds.has(feature.properties.id)));
+    };
+
+    const initFeaturesOnScreen = () => {
+      getFeaturesOnScreen();
+    };
 
     map.on('load', () => {
       const sourceJson: GeoJSONSourceRaw = {
@@ -54,15 +58,12 @@ function MapComp() {
       });
     });
 
-    const setSource = () => {
-      getFeaturesOnScreen(map);
-    };
-    map.on('render', setSource);
+    map.on('render', initFeaturesOnScreen);
     map.once('movestart', () => {
-      map.off('render', setSource);
+      map.off('render', initFeaturesOnScreen);
     });
     map.on('moveend', () => {
-      getFeaturesOnScreen(map);
+      getFeaturesOnScreen();
     });
   }, []);
 
