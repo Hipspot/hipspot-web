@@ -1,7 +1,7 @@
 import { useEffect, ReactNode, useRef } from 'react';
 import { VscGrabber } from 'react-icons/vsc';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { cameraStateAtom, tabStateAtom } from '@recoil/infoWindowState';
+import { cameraStateAtom, tabStateAtom } from '@states/infoWindowState';
 import { HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps, TabState } from '@libs/types/infowindow';
 import { handleMouseDown, handleMouseMove, handleMouseUp } from './eventHandler/mouse';
 import { handleTouchEnd, handleTouchMove, handleTouchStart } from './eventHandler/touch';

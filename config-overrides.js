@@ -10,7 +10,7 @@ module.exports = override(
     '@containers': path.resolve(__dirname, 'src', 'containers'),
     '@constants': path.resolve(__dirname, 'src', 'constants'),
     '@libs': path.resolve(__dirname, 'src', 'libs'),
-    '@recoil': path.resolve(__dirname, 'src', 'recoil'),
+    '@states': path.resolve(__dirname, 'src', 'states'),
   })
 );
 

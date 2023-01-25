@@ -55,11 +55,11 @@
       "@libs": [
         "libs"
       ],
-      "@recoil/*": [
-        "recoil/*"
+      "@states/*": [
+        "states/*"
       ],
-      "@recoil": [
-        "recoil"
+      "@states": [
+        "states"
       ],
     }
   },

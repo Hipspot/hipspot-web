@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { filterColor } from '@libs/styles/color';
-import { activeFilterIdAtom, openClusterListAtom } from '@recoil/ui';
+import { activeFilterIdAtom, openClusterListAtom } from '@states/ui';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 type ClusterMarkerProps = {
