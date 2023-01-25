@@ -85,12 +85,14 @@
       "^@assets/(.*)$": "<rootDir>/src/assets/$1",
       "^@components$": "<rootDir>/src/components",
       "^@components/(.*)$": "<rootDir>/src/components/$1",
+      "^@containers$": "<rootDir>/src/containers",
+      "^@containers/(.*)$": "<rootDir>/src/containers/$1",
       "^@constants$": "<rootDir>/src/constants",
       "^@constants/(.*)$": "<rootDir>/src/constants/$1",
       "^@libs$": "<rootDir>/src/libs",
       "^@libs/(.*)$": "<rootDir>/src/libs/$1",
-      "^@recoil$": "<rootDir>/src/recoil",
-      "^@recoil/(.*)$": "<rootDir>/src/recoil/$1"
+      "^@states$": "<rootDir>/src/states",
+      "^@states/(.*)$": "<rootDir>/src/states/$1"
     },
     "setupFilesAfterEnv": [
       "<rootDir>/jest.setup.js"

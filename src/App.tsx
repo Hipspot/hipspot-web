@@ -2,7 +2,7 @@ import ClusterList from '@components/ClusterList';
 import Filtering from '@components/Filtering';
 import InfoWindow from '@components/InfoWindow';
 import styled from '@emotion/styled';
-import MapCompContainer from 'container/MapCompContainer';
+import MapCompContainer from '@containers/MapCompContainer';
 
 function App() {
   return (
