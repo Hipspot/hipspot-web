@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { BarSizes, BarSizeType } from '@constants/barSizes';
 
 export const Layout = styled.div`
+  height: calc(100vh + 30px);
   position: fixed;
   min-width: 300px;
   max-width: 600px;

@@ -93,17 +93,6 @@ export const infoPropsStateAtom = atom<{
   },
 });
 
-// const initImageList: ImageCompProps[] = [
-// 	{ src: '/image/testImg.png' },
-// 	{ src: '/image/testImg2.png' },
-// 	{ src: '/image/testImg3.png' },
-// 	{ src: '/image/testImg4.png' },
-// 	{ src: '/image/testImg.png' },
-// 	{ src: '/image/testImg3.png' },
-// 	{ src: '/image/testImg.png' },
-// 	{ src: '/image/testImg2.png' },
-// 	{ src: '/image/testImg3.png' },
-// ];
 const initTabListState: ImageTabListType[] = [
   { name: '내부사진', type: 'storeImage', selected: false },
   { name: '외부사진', type: 'storeImage', selected: true },
