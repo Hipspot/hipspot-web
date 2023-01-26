@@ -1,15 +1,14 @@
 import styled from '@emotion/styled';
 
 export const Wrapper = styled.div`
+  padding: 0px 20px;
   width: 100%;
-  height: 36px;
+  height: 60px;
   display: flex;
-  gap: 3px;
+  gap: 32px;
 `;
 
 export const Tab = styled.div<{ isSelected?: boolean }>`
-  flex: 1;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,7 +18,6 @@ export const Tab = styled.div<{ isSelected?: boolean }>`
   font-weight: 600;
   font-size: 14px;
 
-  background: #ffffff;
   border-radius: 12px 12px 0px 0px;
   color: #999999;
   filter: brightness(0.99);

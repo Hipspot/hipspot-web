@@ -6,7 +6,8 @@ import { TabState } from '@libs/types/infowindow';
 import { CancelIcon, ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
-import { CafeInfo } from '@libs/types/cafe';
+import { PlaceInfo } from '@libs/types/place';
+import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import PopUpWindow from './PopUpWindow';
 import * as Information from './Contents/Information';
 import * as MapButtonList from './Contents/MapButtonList';
@@ -18,7 +19,7 @@ export default function InfoWindow() {
   const [tabState, setTabState] = useRecoilState<TabState>(tabStateAtom);
 
   // TODO: 서버에서 받아온 데이터로 변경
-  const info: CafeInfo = {
+  const info: PlaceInfo = {
     id: 1,
     placeName: 'Honor',
     address: '서울 노원구 공릉동 12길34',
@@ -28,6 +29,7 @@ export default function InfoWindow() {
     imageList: [
       'https://user-images.githubusercontent.com/108210492/212647596-3a2cf836-69e8-485a-b93d-4fb4642b935a.png',
       'https://images.unsplash.com/photo-1559496417-e7f25cb247f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80',
+      'https://www.gyeongju.go.kr/upload/content/thumb/20200409/069148D14AFC4BE799F223B16967BF37.jpg',
     ],
     instaId: 'honor_cafe',
     kakaoMapUrl: 'https://map.kakao.com/link/map/카페 힙스팟,37.5446694,127.051352',
@@ -43,7 +45,7 @@ export default function InfoWindow() {
     });
   }, [setTabState]);
 
-  return (
+  return tabState.top === popUpHeights[PopUpHeightsType.top] ? (
     <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
       <BlurFrame>
         <Title.Wrapper>
@@ -53,6 +55,20 @@ export default function InfoWindow() {
           </Title.Icon>
         </Title.Wrapper>
 
+        <StyledCarousel
+          infiniteLoop
+          showIndicators={false}
+          showThumbs={false}
+          showArrows={false}
+          statusFormatter={(currentItem: number, total: number) => `${currentItem}/${total}`}
+        >
+          {info.imageList.map((image) => (
+            <div key={image}>
+              <img src={image} alt="" />
+            </div>
+          ))}
+        </StyledCarousel>
+
         <TabBar.Wrapper>
           <TabBar.Tab isSelected>업체제공사진</TabBar.Tab>
           <TabBar.Tab>메뉴</TabBar.Tab>
@@ -60,19 +76,6 @@ export default function InfoWindow() {
         </TabBar.Wrapper>
 
         <Section>
-          <StyledCarousel
-            infiniteLoop
-            showIndicators={false}
-            showThumbs={false}
-            showArrows={false}
-            statusFormatter={(currentItem: number, total: number) => `${currentItem}/${total}`}
-          >
-            {info.imageList.map((image) => (
-              <div key={image}>
-                <img src={image} alt="" />
-              </div>
-            ))}
-          </StyledCarousel>
           {[
             {
               title: '영업시간',
@@ -104,6 +107,17 @@ export default function InfoWindow() {
         </Section>
       </BlurFrame>
     </PopUpWindow>
+  ) : (
+    <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
+      <WhiteFrame>
+        <h2>{info.placeName}</h2>
+        <Slide onScroll={() => console.log('hi')}>
+          {info.imageList.map((image) => (
+            <img key={image} src={image} alt="" />
+          ))}
+        </Slide>
+      </WhiteFrame>
+    </PopUpWindow>
   );
 }
 
@@ -119,6 +133,55 @@ const BlurFrame = styled.div`
   backdrop-filter: blur(8px);
 `;
 
+const WhiteFrame = styled.div`
+  width: 100%;
+  height: 100%;
+
+  margin-top: 29px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: white;
+
+  h2 {
+    padding: 16px;
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+
+    color: #0d0d0d;
+  }
+`;
+
+const Slide = styled.div`
+  width: 100%;
+  padding-left: 16px;
+
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  z-index: 1001;
+
+  img {
+    border-radius: 8px;
+    flex: 0 0 auto;
+    width: 186px;
+    height: 186px;
+    object-fit: cover;
+    object-position: center;
+  }
+`;
+
 const Section = styled.section`
   background-color: white;
   padding: 16px;
@@ -126,6 +189,8 @@ const Section = styled.section`
 `;
 
 const StyledCarousel = styled(Carousel)`
+  padding: 0px 16px;
+
   img {
     height: 343px;
     object-fit: cover;

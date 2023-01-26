@@ -25,13 +25,11 @@ export const Wrapper = styled.div`
   border-radius: 4px 4px 0px 0px;
   border: 1px solid;
   border-color: #cecacb;
-  overflow: scroll;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 
-  //scrollbar 없애는 속성
   &::-webkit-scrollbar {
     display: none;
   }
@@ -44,7 +42,7 @@ export const ResizeSide = styled.div`
   z-index: 0;
   top: 0;
   width: 100%;
-  height: ${(props: { tabState: { popUpState: string } }) => (props.tabState.popUpState === 'half' ? 500 : 120)}px;
+  height: ${(props: { tabState: { popUpState: string } }) => (props.tabState.popUpState === 'half' ? 80 : 120)}px;
   transform: translateY(-50%);
   transform: ${(props: { tabState: { popUpState: string } }) =>
     props.tabState.popUpState === 'half' && `translateY(0px)`};
