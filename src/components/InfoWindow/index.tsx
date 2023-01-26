@@ -111,7 +111,7 @@ export default function InfoWindow() {
     <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
       <WhiteFrame>
         <h2>{info.placeName}</h2>
-        <Slide onScroll={() => console.log('hi')}>
+        <Slide>
           {info.imageList.map((image) => (
             <img key={image} src={image} alt="" />
           ))}
