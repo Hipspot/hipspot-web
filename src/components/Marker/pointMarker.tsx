@@ -15,7 +15,7 @@ type MarkerProps = {
 export default function PointMarker({ feature, image, id }: MarkerProps) {
   const { placeName, filterList } = feature.properties;
   return (
-    <Wrapper className="mapgl-marker-animation" id={`${id}`}>
+    <Wrapper onClick={() => console.log(feature)} className="mapgl-marker-animation" id={`${id}`}>
       {/* filterList에 맞게 랜더링해주는지 테스트하기 위한 tag 추후 삭제해주세요 */}
       <div>{filterList.map((filter) => FilterId[filter]).join(', ')}</div>
       <PlaceName>{placeName}</PlaceName>
