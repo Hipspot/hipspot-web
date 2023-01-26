@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { tabStateAtom } from '@states/infoWindowState';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
+import { tabStateAtom } from '@states/infoWindowState';
 import { TabState } from '@libs/types/infowindow';
 import { CancelIcon, ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets';
-import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
+import { CafeInfo } from '@libs/types/cafe';
 import PopUpWindow from './PopUpWindow';
 import * as Information from './Contents/Information';
 import * as MapButtonList from './Contents/MapButtonList';
@@ -15,6 +16,23 @@ import * as TabBar from './Contents/TabBar';
 export default function InfoWindow() {
   const smoothLoopId: { id: number } = { id: -1 };
   const [tabState, setTabState] = useRecoilState<TabState>(tabStateAtom);
+
+  // TODO: 서버에서 받아온 데이터로 변경
+  const info: CafeInfo = {
+    id: 1,
+    placeName: 'Honor',
+    address: '서울 노원구 공릉동 12길34',
+    contactNum: '010-1234-5678',
+    businessDay: ['월', '화', '수', '목', '금', '토', '일'],
+    businessTime: '9:00~23:00',
+    imageList: [
+      'https://user-images.githubusercontent.com/108210492/212647596-3a2cf836-69e8-485a-b93d-4fb4642b935a.png',
+      'https://images.unsplash.com/photo-1559496417-e7f25cb247f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80',
+    ],
+    instaId: 'honor_cafe',
+    kakaoMapUrl: 'https://map.kakao.com/link/map/카페 힙스팟,37.5446694,127.051352',
+    naverMapUrl: 'https://map.naver.com/v5/search/%EC%B9%B4%ED%8E%98%ED%9E%99%EC%8A%A4%ED%8C%9F/place/1234567890',
+  };
 
   useEffect(() => {
     const { innerHeight } = window;
@@ -29,7 +47,7 @@ export default function InfoWindow() {
     <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
       <BlurFrame>
         <Title.Wrapper>
-          <Title.Name>Honor</Title.Name>
+          <Title.Name>{info.placeName}</Title.Name>
           <Title.Icon>
             <CancelIcon />
           </Title.Icon>
@@ -49,45 +67,39 @@ export default function InfoWindow() {
             showArrows={false}
             statusFormatter={(currentItem: number, total: number) => `${currentItem}/${total}`}
           >
-            <div>
-              <img
-                src="https://user-images.githubusercontent.com/108210492/212647596-3a2cf836-69e8-485a-b93d-4fb4642b935a.png"
-                alt=""
-              />
-            </div>
-            <div>
-              <img
-                src="https://images.unsplash.com/photo-1559496417-e7f25cb247f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
-                alt=""
-              />
-            </div>
+            {info.imageList.map((image) => (
+              <div key={image}>
+                <img src={image} alt="" />
+              </div>
+            ))}
           </StyledCarousel>
+          {[
+            {
+              title: '영업시간',
+              icon: <ClockIcon />,
+              description: `${info.businessDay.join(', ')} ${info.businessTime}`,
+            },
+            { title: info.address, icon: <MarkerIcon /> },
+            { title: info.contactNum, icon: <PhoneIcon /> },
+          ].map(({ title, icon, description }) => (
+            <Information.Wrapper key={title}>
+              <Information.Icon>{icon}</Information.Icon>
+              <Information.Contents>
+                <Information.Title>{title}</Information.Title>
 
-          <Information.Item>
-            <ClockIcon />
-            <Information.Right>
-              <Information.ItemTitle>영업시간</Information.ItemTitle>
-              <Information.ItemDescription>월, 화, 수, 목, 금, 토, 일 9:00~23:00</Information.ItemDescription>
-            </Information.Right>
-          </Information.Item>
+                {description && <Information.Description>{description}</Information.Description>}
+              </Information.Contents>
+              {title === info.address && <CopyIcon />}
+            </Information.Wrapper>
+          ))}
 
-          <Information.Item>
-            <MarkerIcon />
-            <Information.Right>
-              <Information.ItemTitle>서울 노원구 공릉동 12길34</Information.ItemTitle>
-            </Information.Right>
-            <CopyIcon />
-          </Information.Item>
-
-          <Information.Item>
-            <PhoneIcon />
-            <Information.Right>
-              <Information.ItemTitle>010-1234-5678</Information.ItemTitle>
-            </Information.Right>
-          </Information.Item>
           <MapButtonList.List>
-            <MapButtonList.Button>네이버지도 길찾기</MapButtonList.Button>
-            <MapButtonList.Button>카카오맵 길찾기</MapButtonList.Button>
+            <MapButtonList.Button onClick={() => info.naverMapUrl && window.open(info.naverMapUrl)}>
+              네이버지도 길찾기
+            </MapButtonList.Button>
+            <MapButtonList.Button onClick={() => info.kakaoMapUrl && window.open(info.kakaoMapUrl)}>
+              카카오맵 길찾기
+            </MapButtonList.Button>
           </MapButtonList.List>
         </Section>
       </BlurFrame>
