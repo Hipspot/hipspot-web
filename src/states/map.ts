@@ -1,4 +1,4 @@
-import getGeoJson from 'api/getGeoJson';
+import getGeoJson from '@libs/apis/getGeoJson';
 import { atom, selector } from 'recoil';
 
 export const geoJsonAtom = atom({

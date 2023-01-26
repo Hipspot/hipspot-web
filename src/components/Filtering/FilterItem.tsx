@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { activeFilterIdAtom } from '@recoil/ui';
+import { activeFilterIdAtom } from '@states/ui';
 import { useRecoilState } from 'recoil';
 import { FilterData, FilterId } from '@libs/types/filter';
 

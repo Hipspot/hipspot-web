@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { clusterListAtom, openClusterListAtom } from '@recoil/ui';
+import { clusterListAtom, openClusterListAtom } from '@states/ui';
 import { useCallback, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import ItemList from './ItemList';

@@ -37,6 +37,12 @@
       "@components": [
         "components"
       ],
+      "@containers/*": [
+        "containers/*"
+      ],
+      "@containers": [
+        "containers"
+      ],
       "@constants/*": [
         "constants/*"
       ],
@@ -49,11 +55,11 @@
       "@libs": [
         "libs"
       ],
-      "@recoil/*": [
-        "recoil/*"
+      "@states/*": [
+        "states/*"
       ],
-      "@recoil": [
-        "recoil"
+      "@states": [
+        "states"
       ],
     }
   },
