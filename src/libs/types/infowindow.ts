@@ -1,4 +1,4 @@
-import { CameraStateType } from '@recoil/infoWindowState';
+import { CameraStateType } from '@states/infoWindowState';
 import { SetterOrUpdater } from 'recoil';
 
 export type PopUpWindowState = 'thumbNail' | 'half' | 'full';

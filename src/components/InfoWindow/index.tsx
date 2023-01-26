@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { tabStateAtom } from '@recoil/infoWindowState';
+import { tabStateAtom } from '@states/infoWindowState';
 import { useRecoilState } from 'recoil';
 import { TabState } from '@libs/types/infowindow';
 import { CancelIcon, ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets';
