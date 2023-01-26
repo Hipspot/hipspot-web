@@ -23,9 +23,8 @@ function MapComp() {
     mapRef.current = new mapboxgl.Map(mapConfig);
     const map = mapRef.current;
 
-    const getFeaturesOnScreen = () => {
+    const updateFeaturesOnScreen = () => {
       const mapboxFeaturesOnScreen = map.querySourceFeatures('placeList');
-
       const uniqueIds = new Set<number>();
 
       mapboxFeaturesOnScreen.forEach((feature) => {
@@ -36,10 +35,6 @@ function MapComp() {
       });
 
       setFeaturesOnScreen(features.filter((feature: CustomGeoJSONFeatures) => uniqueIds.has(feature.properties.id)));
-    };
-
-    const initFeaturesOnScreen = () => {
-      getFeaturesOnScreen();
     };
 
     map.on('load', () => {
@@ -58,12 +53,12 @@ function MapComp() {
       });
     });
 
-    map.on('render', initFeaturesOnScreen);
+    map.on('render', updateFeaturesOnScreen);
     map.once('movestart', () => {
-      map.off('render', initFeaturesOnScreen);
+      map.off('render', updateFeaturesOnScreen);
     });
     map.on('moveend', () => {
-      getFeaturesOnScreen();
+      updateFeaturesOnScreen();
     });
   }, []);
 
