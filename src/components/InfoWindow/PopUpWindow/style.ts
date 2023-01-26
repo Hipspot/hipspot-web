@@ -1,16 +1,16 @@
 import styled from '@emotion/styled';
-
-const BOTTOM_BAR_SIZE = '30px';
+import { BarSizes, BarSizeType } from '@constants/barSizes';
 
 export const Layout = styled.div`
+  height: calc(100vh + 30px);
   position: fixed;
   min-width: 300px;
   max-width: 600px;
   height: ${(props: { tabState: { popUpState: string } }) =>
-    props.tabState.popUpState === 'full' && `calc(100% + ${BOTTOM_BAR_SIZE})`};
+    props.tabState.popUpState === 'full' && `calc(100% + ${BarSizes[BarSizeType.BOTTOM]})`};
   box-sizing: border-box;
   transform: translateX(calc(50vw - 50%));
-  top: calc(100% - ${BOTTOM_BAR_SIZE});
+  top: calc(100% - ${BarSizes[BarSizeType.BOTTOM]});
   width: 100vw;
   z-index: 11;
 `;

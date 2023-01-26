@@ -1,27 +1,25 @@
 import styled from '@emotion/styled';
 
-// eslint-disable-next-line import/prefer-default-export
-export const Title = styled.div`
-  margin-top: 32px;
-  width: calc(100% - 32px);
-  height: calc(80px - 32px);
-  background: transparent;
+export const Wrapper = styled.div`
+  width: 100%;
+  height: 56px;
+  padding: 0px 16px;
+
   display: flex;
   align-items: center;
-  padding: 16px;
-  backdrop-filter: blur(8px);
+  justify-content: space-between;
+`;
 
-  .CafeName {
-    font-family: 'Pretendard';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 20px;
-    color: #0d0d0d;
+export const Name = styled.h1`
+  font-family: 'Pretendard';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  color: #0d0d0d;
+`;
 
-    flex: 1;
-  }
-
-  .CancelIcon {
+export const Icon = styled.div`
+  svg {
     width: 24px;
     height: 24px;
     text-align: center;
