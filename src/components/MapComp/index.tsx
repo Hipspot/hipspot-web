@@ -4,8 +4,8 @@ import { css } from '@emotion/react';
 import PointMarker from '@components/Marker/pointMarker';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 import { renderEmotionElementToHtml } from '@libs/utils/renderEmotionElementToHtml';
-import { geoJsonSelector } from '@recoil/map';
-import { activeFilterIdAtom } from '@recoil/ui';
+import { geoJsonSelector } from '@states/map';
+import { activeFilterIdAtom } from '@states/ui';
 import mapboxgl, { GeoJSONSourceRaw, Marker } from 'mapbox-gl';
 import { FeatureCollection } from 'geojson';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -29,7 +29,7 @@ function MapComp() {
 
       mapboxFeaturesOnScreen.forEach((feature) => {
         const id = feature.properties?.id;
-        if (!uniqueIds.has(id)) {
+        if (id !== undefined) {
           uniqueIds.add(id);
         }
       });
