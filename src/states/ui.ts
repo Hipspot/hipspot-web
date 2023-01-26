@@ -59,3 +59,8 @@ export const activeFilterIdAtom = atom<FilterId>({
   key: 'filterId',
   default: FilterId.Hipspot,
 });
+
+export const themeModeAtom = atom<'light' | 'dark'>({
+  key: 'themeMode',
+  default: 'light',
+});

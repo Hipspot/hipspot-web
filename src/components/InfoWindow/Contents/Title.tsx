@@ -11,8 +11,6 @@ export const Wrapper = styled.div`
 `;
 
 export const Name = styled.h1`
-  font-family: 'Pretendard';
-  font-style: normal;
   font-weight: 600;
   font-size: 20px;
   color: #0d0d0d;

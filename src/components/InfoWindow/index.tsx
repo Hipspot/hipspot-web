@@ -146,8 +146,6 @@ const WhiteFrame = styled.div`
 
   h2 {
     padding: 16px;
-    font-family: 'Pretendard';
-    font-style: normal;
     font-weight: 600;
     font-size: 20px;
 
@@ -208,7 +206,6 @@ const StyledCarousel = styled(Carousel)`
 
     background: #0000006b;
 
-    font-family: 'Pretendard';
     font-weight: 400;
     font-size: 12px;
     line-height: 20px;

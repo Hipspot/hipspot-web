@@ -1,11 +1,44 @@
 import { FilterId } from '@libs/types/filter';
-import { TintColor } from '@libs/types/style';
+
+export const colors = {
+  black: '#000000',
+  white: '#FFFFFF',
+  gray: {
+    10: '#0D0D0D',
+    9: '#262626',
+    8: '#404040',
+    7: '#595959',
+    6: '#737373',
+    5: '#999999',
+    4: '#B3B3B3',
+    3: '#CCCCCC',
+    2: '#F0F0F0',
+    1: '#FAFAFA',
+  },
+  error: '#D32F2F',
+  success: '#4CAF50',
+  warning: '#F9A825',
+  tintColor: {
+    pink: '#C55CC7',
+    green: '#43BE84',
+    yellow: '#F2BE19',
+    brown: '#BF8D69',
+    blue: '#418DFF',
+    violet: '#B46FEA',
+  },
+};
 
 export const filterColor = {
-  [FilterId.Hipspot]: TintColor.pink,
-  [FilterId.Study]: TintColor.green,
-  [FilterId.Reasonable]: TintColor.yellow,
-  [FilterId.Dessert]: TintColor.brown,
-  [FilterId.Franchise]: TintColor.blue,
-  [FilterId.Personal]: TintColor.violet,
+  /** 힙스팟 #C55CC7 */
+  [FilterId.Hipspot]: colors.tintColor.pink,
+  /** 스터디 #43BE84 */
+  [FilterId.Study]: colors.tintColor.green,
+  /** 가성비 #F2BE19 */
+  [FilterId.Reasonable]: colors.tintColor.yellow,
+  /** 디저트 #BF8D69 */
+  [FilterId.Dessert]: colors.tintColor.brown,
+  /** 프렌차이즈 #418DFF */
+  [FilterId.Franchise]: colors.tintColor.blue,
+  /** 개인카페 #B46FEA */
+  [FilterId.Personal]: colors.tintColor.violet,
 };

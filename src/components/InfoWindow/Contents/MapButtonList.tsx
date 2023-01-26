@@ -13,8 +13,6 @@ export const Button = styled.button`
   border-radius: 8px;
   flex: 1;
 
-  font-family: 'Pretendard';
   font-weight: 600;
-  line-height: 24px;
   color: white;
 `;
