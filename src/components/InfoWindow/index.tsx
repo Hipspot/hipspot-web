@@ -7,11 +7,16 @@ import { TabState } from '@libs/types/infowindow';
 import { CancelIcon, ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets';
 import { Tab } from '@components/InfoWindow/Contents/Tab';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
+import { CafeInfo } from '@libs/types/cafe';
 import { Carousel } from 'react-responsive-carousel';
 import { Title } from './Contents/Title';
 import PopUpWindow from './PopUpWindow';
 
-export default function InfoWindow() {
+type InfoWindowProps = {
+  cafeInfo: CafeInfo | null;
+};
+
+export default function InfoWindow({ cafeInfo }: InfoWindowProps) {
   const smoothLoopId: { id: number } = { id: -1 };
   const [tabState, setTabState] = useRecoilState<TabState>(tabStateAtom);
 
@@ -24,7 +29,7 @@ export default function InfoWindow() {
     });
   }, [setTabState]);
 
-  return (
+  return cafeInfo ? (
     <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
       <Title>
         <p className="CafeName">Honor</p>
@@ -92,7 +97,7 @@ export default function InfoWindow() {
         </MapButtonList>
       </Section>
     </PopUpWindow>
-  );
+  ) : null;
 }
 
 const Section = styled.section`
