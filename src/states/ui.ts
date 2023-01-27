@@ -4,7 +4,7 @@ import { atom } from 'recoil';
 
 export const openClusterListAtom = atom<boolean>({
   key: 'openClusterList',
-  default: true,
+  default: false,
 });
 
 export const clusterListAtom = atom({

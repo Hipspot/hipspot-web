@@ -1,7 +1,7 @@
 import { useEffect, ReactNode, useRef } from 'react';
 import { VscGrabber } from 'react-icons/vsc';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { cameraStateAtom, tabStateAtom } from '@states/infoWindowState';
+import { cameraStateAtom, tabStateAtom } from '@states/infoWindow';
 import { HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps, TabState } from '@libs/types/infowindow';
 import { handleMouseDown, handleMouseMove, handleMouseUp } from './eventHandler/mouse';
 import { handleTouchEnd, handleTouchMove, handleTouchStart } from './eventHandler/touch';
@@ -39,7 +39,6 @@ function PopUpWindow({ id, tabState, children, smoothLoopId }: PopUpWindowProps)
       endPointTabState: tabState,
       smoothLoopId,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabState]);
 
   return (

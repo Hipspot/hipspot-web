@@ -1,8 +1,6 @@
 import styled from '@emotion/styled';
 import { FilterId } from '@libs/types/filter';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
-import { activatedCafeIdAtom } from '@states/infoWindowState';
-import { useSetRecoilState } from 'recoil';
 
 type MarkerProps = {
   /**
@@ -12,18 +10,14 @@ type MarkerProps = {
   id: number;
   image: string;
   feature: CustomGeoJSONFeatures;
+  handleClickMarker: (id: number) => void;
 };
 
-export default function PointMarker({ feature, image, id }: MarkerProps) {
+export default function PointMarker({ handleClickMarker, feature, image, id }: MarkerProps) {
   const { placeName, filterList } = feature.properties;
-  const setActivatedCafeId = useSetRecoilState(activatedCafeIdAtom);
-
-  const handleClick = () => {
-    setActivatedCafeId(id);
-  };
 
   return (
-    <Wrapper className="mapgl-marker-animation" id={`${id}`} onClick={handleClick}>
+    <Wrapper className="mapgl-marker-animation" id={`${id}`} onClick={() => handleClickMarker(id)}>
       {/* filterList에 맞게 랜더링해주는지 테스트하기 위한 tag 추후 삭제해주세요 */}
       <div>{filterList.map((filter) => FilterId[filter]).join(', ')}</div>
       <PlaceName>{placeName}</PlaceName>
