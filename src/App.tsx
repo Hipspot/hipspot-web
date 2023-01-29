@@ -3,8 +3,13 @@ import Filtering from '@components/Filtering';
 import InfoWindow from '@components/InfoWindow';
 import styled from '@emotion/styled';
 import MapCompContainer from '@containers/MapCompContainer';
+import { useLayoutEffect } from 'react';
+import fromflutterMessageHandler from '@libs/webview/fromFlutterMessageHandler';
 
 function App() {
+  useLayoutEffect(() => {
+    window.fromflutterMessageHandler = fromflutterMessageHandler;
+  });
   return (
     <Wrapper>
       <MapCompContainer />
