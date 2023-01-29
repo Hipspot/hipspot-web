@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import { BarSizes, BarSizeType } from '@constants/barSizes';
+import { TabState } from '@libs/types/infowindow';
 
-export const Layout = styled.div`
+export const Layout = styled.div<{ tabState: TabState }>`
   height: calc(100vh + 30px);
   position: fixed;
   min-width: 300px;
   max-width: 600px;
-  height: ${(props: { tabState: { popUpState: string } }) =>
-    props.tabState.popUpState === 'full' && `calc(100% + ${BarSizes[BarSizeType.BOTTOM]})`};
+  height: ${(props) => props.tabState.popUpState === 'full' && `calc(100% + ${BarSizes[BarSizeType.BOTTOM]})`};
   box-sizing: border-box;
   transform: translateX(calc(50vw - 50%));
   top: calc(100%);

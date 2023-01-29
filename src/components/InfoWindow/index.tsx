@@ -23,7 +23,7 @@ export default function InfoWindow({ placeInfo }: InfoWindowProps) {
 
   return (
     <div>
-      <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
+      <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId} available={!!placeInfo}>
         {/* TODO 데이터 없을 때 로딩 보여주기 */}
         {placeInfo &&
           (tabState.top === popUpHeights[PopUpHeightsType.top] ? (
