@@ -15,7 +15,7 @@ export const tabStateAtom = atom<TabState>({
   key: 'atom / tabState',
   default: {
     // eslint-disable-next-line no-restricted-globals
-    top: innerHeight - 30,
+    top: innerHeight,
     onHandling: true,
     popUpState: 'thumbNail',
   },

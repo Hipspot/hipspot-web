@@ -10,7 +10,7 @@ export const Layout = styled.div`
     props.tabState.popUpState === 'full' && `calc(100% + ${BarSizes[BarSizeType.BOTTOM]})`};
   box-sizing: border-box;
   transform: translateX(calc(50vw - 50%));
-  top: calc(100% - ${BarSizes[BarSizeType.BOTTOM]});
+  top: calc(100%);
   width: 100vw;
   z-index: 11;
 `;
