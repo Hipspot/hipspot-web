@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import PointMarker from '@components/Marker/pointMarker';
@@ -13,6 +13,7 @@ import { mapConfig } from './utils/mapConfig';
 
 function MapComp() {
   const features = useRecoilValue(geoJsonSelector);
+  const [featuresOnScreen, setFeaturesOnScreen] = useState<CustomGeoJSONFeatures[]>();
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const mapRef = useRef<mapboxgl.Map>();
   const markerList: { [id in number | string]: mapboxgl.Marker } = useMemo(() => ({}), []);
@@ -21,6 +22,20 @@ function MapComp() {
     mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKKEN}`;
     mapRef.current = new mapboxgl.Map(mapConfig);
     const map = mapRef.current;
+
+    const updateFeaturesOnScreen = () => {
+      const mapboxFeaturesOnScreen = map.querySourceFeatures('placeList');
+      const uniqueIds = new Set<number>();
+
+      mapboxFeaturesOnScreen.forEach((feature) => {
+        const id = feature.properties?.id;
+        if (id !== undefined) {
+          uniqueIds.add(id);
+        }
+      });
+
+      setFeaturesOnScreen(features.filter((feature: CustomGeoJSONFeatures) => uniqueIds.has(feature.properties.id)));
+    };
 
     map.on('load', () => {
       const sourceJson: GeoJSONSourceRaw = {
@@ -37,12 +52,20 @@ function MapComp() {
         },
       });
     });
+
+    map.on('render', updateFeaturesOnScreen);
+    map.once('movestart', () => {
+      map.off('render', updateFeaturesOnScreen);
+    });
+    map.on('moveend', () => {
+      updateFeaturesOnScreen();
+    });
   }, []);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    if (!features) return;
+    if (!featuresOnScreen) return;
 
     Object.entries(markerList).forEach((markerEntry) => {
       const [id, marker] = markerEntry as [string, Marker];
@@ -50,7 +73,7 @@ function MapComp() {
       delete markerList[id];
     });
 
-    features.forEach((feature: CustomGeoJSONFeatures) => {
+    featuresOnScreen.forEach((feature: CustomGeoJSONFeatures) => {
       const { id, filterList } = feature.properties;
 
       if (!filterList.includes(activeFilterId)) return;
@@ -72,7 +95,7 @@ function MapComp() {
         console.error(e);
       }
     });
-  }, [activeFilterId]);
+  }, [activeFilterId, featuresOnScreen]);
 
   return (
     <div
