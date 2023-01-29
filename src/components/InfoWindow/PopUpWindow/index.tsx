@@ -12,17 +12,18 @@ export interface PopUpWindowProps {
   id: string;
   tabState: TabState;
   children: ReactNode;
+  available: boolean;
   smoothLoopId: { id: number };
 }
 
-function PopUpWindow({ id, tabState, children, smoothLoopId }: PopUpWindowProps) {
+function PopUpWindow({ id, tabState, children, smoothLoopId, available }: PopUpWindowProps) {
   const setTabState = useSetRecoilState(tabStateAtom);
   const [cameraState, setCameraState] = useRecoilState(cameraStateAtom);
   const modifyRef = useRef<number>(0);
   const topCoordRef = useRef<number>(window.innerHeight - 30);
 
-  const eventStartProp: HandleEventStartProps = { setTabState, smoothLoopId, modifyRef };
-  const eventMoveProp: HandleEventMoveProps = { tabState, modifyRef, topCoordRef };
+  const eventStartProp: HandleEventStartProps = { setTabState, smoothLoopId, modifyRef, available };
+  const eventMoveProp: HandleEventMoveProps = { tabState, modifyRef, topCoordRef, available };
   const eventEndProp: HandleEventEndProps = { setTabState, setCameraState, cameraState, tabState, topCoordRef };
 
   const onMouseDown = handleMouseDown(eventStartProp);

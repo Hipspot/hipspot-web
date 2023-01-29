@@ -38,7 +38,7 @@ export default function InfoWindow({ cafeInfo }: InfoWindowProps) {
   };
 
   return (
-    <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
+    <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId} available={!!cafeInfo}>
       {!cafeInfo && (
         <Loading>
           <ReactLoading type="bubbles" color="#8e8e8e" height={70} width={70} />

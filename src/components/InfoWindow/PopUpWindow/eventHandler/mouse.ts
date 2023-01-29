@@ -5,8 +5,10 @@ import { cancelAnimation } from '../utils/cancelAnimation';
 import { reactRefUpdate } from '../utils/reactRefUpdate';
 
 export const handleMouseDown: (eventStartProps: HandleEventStartProps) => MouseEventHandler<HTMLDivElement> =
-  ({ setTabState, smoothLoopId, modifyRef }) =>
+  ({ setTabState, smoothLoopId, modifyRef, available }) =>
   (e) => {
+    if (!available) return;
+
     cancelAnimation(smoothLoopId);
 
     const target = e.target as HTMLDivElement;
@@ -21,11 +23,11 @@ export const handleMouseDown: (eventStartProps: HandleEventStartProps) => MouseE
   };
 
 export const handleMouseMove: (eventMoveProps: HandleEventMoveProps) => MouseEventHandler<HTMLDivElement> =
-  ({ topCoordRef, tabState, modifyRef }) =>
+  ({ topCoordRef, tabState, modifyRef, available }) =>
   (e) => {
     const { onHandling } = tabState;
 
-    if (onHandling) {
+    if (onHandling && available) {
       topCoordRef.current = e.clientY;
       const target = e.target as HTMLDivElement;
       const infoWindowElem = target.parentElement as HTMLDivElement;
