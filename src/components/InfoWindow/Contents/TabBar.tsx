@@ -1,6 +1,22 @@
 import styled from '@emotion/styled';
 
-export const Wrapper = styled.div`
+interface TabBarProps {
+  isSelected: boolean;
+}
+
+function TabBar({ isSelected }: TabBarProps) {
+  return (
+    <Wrapper>
+      <Tab isSelected={isSelected}>업체제공사진</Tab>
+      <Tab>메뉴</Tab>
+      <Tab>인스타그램</Tab>
+    </Wrapper>
+  );
+}
+
+export default TabBar;
+
+const Wrapper = styled.div`
   padding: 0px 20px;
   width: 100%;
   height: 60px;
@@ -8,7 +24,7 @@ export const Wrapper = styled.div`
   gap: 32px;
 `;
 
-export const Tab = styled.div<{ isSelected?: boolean }>`
+const Tab = styled.div<{ isSelected?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,107 +1,71 @@
 import styled from '@emotion/styled';
-import { tabStateAtom } from '@states/infoWindow';
-import { useRecoilValue } from 'recoil';
-import { TabState } from '@libs/types/infowindow';
-import { CancelIcon, ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets';
+import { css } from '@emotion/react';
+import { activatedCafeIdAtom, placeInfoQuery, tabStateAtom } from '@states/infoWindow';
+import { useRecoilValue, useRecoilValueLoadable } from 'recoil';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { Carousel } from 'react-responsive-carousel';
 import { PlaceInfo } from '@libs/types/place';
-import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
+import MakeLodableSuspense from '@components/MakeLodableSuspense';
+import { PopUpWindowState } from '@libs/types/infowindow';
+// import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import PopUpWindow from './PopUpWindow';
-import * as Information from './Contents/Information';
 import * as MapButtonList from './Contents/MapButtonList';
-import * as Title from './Contents/Title';
-import * as TabBar from './Contents/TabBar';
+import TabBar from './Contents/TabBar';
+import Title from './Contents/Title';
+import CustomCarousel from './Contents/Carousel';
+import Information from './Contents/Information';
 
-type InfoWindowProps = {
-  placeInfo: PlaceInfo | null;
-};
+export default function InfoWindow() {
+  const tabState = useRecoilValue(tabStateAtom);
+  const activatedCafeId = useRecoilValue(activatedCafeIdAtom);
+  const placeInfoLoadable = useRecoilValueLoadable(placeInfoQuery(activatedCafeId));
 
-export default function InfoWindow({ placeInfo }: InfoWindowProps) {
-  const smoothLoopId: { id: number } = { id: -1 };
-  const tabState = useRecoilValue<TabState>(tabStateAtom);
+  const placeInfo: PlaceInfo = placeInfoLoadable.contents || {
+    placeName: '',
+    id: 0,
+    imageList: [],
+    businessDay: [],
+    businessTime: '',
+    address: '',
+    contactNum: '',
+    instaId: '',
+    kakaoMapUrl: '',
+    naverMapUrl: '',
+  };
 
   return (
-    <div>
-      <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId} available={!!placeInfo}>
-        {/* TODO 데이터 없을 때 로딩 보여주기 */}
-        {placeInfo &&
-          (tabState.top === popUpHeights[PopUpHeightsType.top] ? (
-            <BlurFrame>
-              <Title.Wrapper>
-                <Title.Name>{placeInfo.placeName}</Title.Name>
-                <Title.Icon>
-                  <CancelIcon />
-                </Title.Icon>
-              </Title.Wrapper>
-
-              <StyledCarousel
-                infiniteLoop
-                showIndicators={false}
-                showThumbs={false}
-                showArrows={false}
-                statusFormatter={(currentItem: number, total: number) => `${currentItem}/${total}`}
-              >
-                {placeInfo.imageList.map((image) => (
-                  <div key={image}>
-                    <img src={image} alt="" />
-                  </div>
-                ))}
-              </StyledCarousel>
-
-              <TabBar.Wrapper>
-                <TabBar.Tab isSelected>업체제공사진</TabBar.Tab>
-                <TabBar.Tab>메뉴</TabBar.Tab>
-                <TabBar.Tab>인스타그램</TabBar.Tab>
-              </TabBar.Wrapper>
-
-              <Section>
-                {[
-                  {
-                    title: '영업시간',
-                    icon: <ClockIcon />,
-                    description: `${placeInfo.businessDay.join(', ')} ${placeInfo.businessTime}`,
-                  },
-                  { title: placeInfo.address, icon: <MarkerIcon /> },
-                  { title: placeInfo.contactNum, icon: <PhoneIcon /> },
-                ].map(({ title, icon, description }) => (
-                  <Information.Wrapper key={title}>
-                    <Information.Icon>{icon}</Information.Icon>
-                    <Information.Contents>
-                      <Information.Title>{title}</Information.Title>
-
-                      {description && <Information.Description>{description}</Information.Description>}
-                    </Information.Contents>
-                    {title === placeInfo.address && <CopyIcon />}
-                  </Information.Wrapper>
-                ))}
-
-                <MapButtonList.List>
-                  <MapButtonList.Button onClick={() => placeInfo.naverMapUrl && window.open(placeInfo.naverMapUrl)}>
-                    네이버지도 길찾기
-                  </MapButtonList.Button>
-                  <MapButtonList.Button onClick={() => placeInfo.kakaoMapUrl && window.open(placeInfo.kakaoMapUrl)}>
-                    카카오맵 길찾기
-                  </MapButtonList.Button>
-                </MapButtonList.List>
-              </Section>
-            </BlurFrame>
-          ) : (
-            <WhiteFrame>
-              <h2>{placeInfo.placeName}</h2>
-              <Slide>
-                {placeInfo.imageList.map((image) => (
-                  <img key={image} src={image} alt="" />
-                ))}
-              </Slide>
-            </WhiteFrame>
-          ))}
-      </PopUpWindow>
-    </div>
+    <PopUpWindow id="popUpWindow" available={!!placeInfo} tabState={tabState}>
+      <BlurFrame id="popUpWindow_blurFrame" popUpState={tabState.popUpState}>
+        <MakeLodableSuspense lodableState={placeInfoLoadable.state}>
+          <Title placeName={placeInfo.placeName} />
+        </MakeLodableSuspense>
+        <MakeLodableSuspense lodableState={placeInfoLoadable.state}>
+          <CustomCarousel imageList={placeInfo.imageList} />
+        </MakeLodableSuspense>
+        <TabBar isSelected />
+        <Section>
+          <MakeLodableSuspense lodableState={placeInfoLoadable.state}>
+            <Information
+              businessDay={placeInfo.businessDay}
+              businessTime={placeInfo.businessTime}
+              contactNum={placeInfo.contactNum}
+              address={placeInfo.address}
+            />
+          </MakeLodableSuspense>
+          <MapButtonList.List>
+            <MapButtonList.Button onClick={() => placeInfo.naverMapUrl && window.open(placeInfo.naverMapUrl)}>
+              네이버지도 길찾기
+            </MapButtonList.Button>
+            <MapButtonList.Button onClick={() => placeInfo.kakaoMapUrl && window.open(placeInfo.kakaoMapUrl)}>
+              카카오맵 길찾기
+            </MapButtonList.Button>
+          </MapButtonList.List>
+        </Section>
+      </BlurFrame>
+    </PopUpWindow>
   );
 }
 
-const BlurFrame = styled.div`
+const BlurFrame = styled.div<{ popUpState: PopUpWindowState }>`
   width: 100%;
   height: 100%;
   margin-top: 29px;
@@ -109,98 +73,19 @@ const BlurFrame = styled.div`
   display: flex;
   flex-direction: column;
 
-  background: transparent;
-  backdrop-filter: blur(8px);
-`;
-
-const WhiteFrame = styled.div`
-  width: 100%;
-  height: 100%;
-
-  margin-top: 29px;
-
-  display: flex;
-  flex-direction: column;
-
-  background: white;
-
-  h2 {
-    padding: 16px;
-    font-family: 'Pretendard';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 20px;
-
-    color: #0d0d0d;
-  }
-`;
-
-const Slide = styled.div`
-  width: 100%;
-  padding-left: 16px;
-
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 8px;
-  overflow: auto;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-
-  z-index: 1001;
-
-  img {
-    border-radius: 8px;
-    flex: 0 0 auto;
-    width: 186px;
-    height: 186px;
-    object-fit: cover;
-    object-position: center;
-  }
+  ${(props) =>
+    props.popUpState === 'full'
+      ? css`
+          background: transparent;
+          backdrop-filter: blur(8px);
+        `
+      : css`
+          background: white;
+        `}
 `;
 
 const Section = styled.section`
   background-color: white;
   padding: 16px;
   flex: 1;
-`;
-
-const StyledCarousel = styled(Carousel)`
-  padding: 0px 16px;
-
-  img {
-    height: 343px;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  li img {
-    border-radius: 8px;
-  }
-
-  .carousel-status {
-    height: 24px;
-    width: 40px;
-    border-radius: 12px;
-
-    background: #0000006b;
-
-    font-family: 'Pretendard';
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 20px;
-    text-align: center;
-    color: #ffffff;
-
-    box-sizing: border-box;
-
-    padding: 2px 0px;
-
-    position: absolute;
-    top: 314px;
-    right: 8px;
-  }
 `;

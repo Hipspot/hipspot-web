@@ -10,13 +10,13 @@ import smoothMove from './utils/smoothMove';
 
 export interface PopUpWindowProps {
   id: string;
-  tabState: TabState;
   children: ReactNode;
+  tabState: TabState;
   available: boolean;
-  smoothLoopId: { id: number };
 }
 
-function PopUpWindow({ id, tabState, children, smoothLoopId, available }: PopUpWindowProps) {
+function PopUpWindow({ id, children, tabState, available }: PopUpWindowProps) {
+  const smoothLoopId: { id: number } = { id: -1 };
   const setTabState = useSetRecoilState(tabStateAtom);
   const [cameraState, setCameraState] = useRecoilState(cameraStateAtom);
   const modifyRef = useRef<number>(0);

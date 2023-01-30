@@ -2,7 +2,7 @@ import ClusterList from '@components/ClusterList';
 import Filtering from '@components/Filtering';
 import styled from '@emotion/styled';
 import MapCompContainer from '@containers/MapCompContainer';
-import InfoWindowContainer from '@containers/InfoWindowContainer';
+import InfoWindow from '@components/InfoWindow';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <MapCompContainer />
       <Filtering />
       <ClusterList />
-      <InfoWindowContainer />
+      <InfoWindow />
     </Wrapper>
   );
 }

@@ -1,6 +1,23 @@
+import { CancelIcon } from '@assets/index';
 import styled from '@emotion/styled';
 
-export const Wrapper = styled.div`
+interface TitleProps {
+  placeName: string;
+}
+function Title({ placeName }: TitleProps) {
+  return (
+    <Wrapper>
+      <Name>{placeName}</Name>
+      <Icon>
+        <CancelIcon />
+      </Icon>
+    </Wrapper>
+  );
+}
+
+export default Title;
+
+const Wrapper = styled.div`
   width: 100%;
   height: 56px;
   padding: 0px 16px;
@@ -10,7 +27,7 @@ export const Wrapper = styled.div`
   justify-content: space-between;
 `;
 
-export const Name = styled.h1`
+const Name = styled.h1`
   font-family: 'Pretendard';
   font-style: normal;
   font-weight: 600;
@@ -18,7 +35,7 @@ export const Name = styled.h1`
   color: #0d0d0d;
 `;
 
-export const Icon = styled.div`
+const Icon = styled.div`
   svg {
     width: 24px;
     height: 24px;

@@ -1,21 +1,58 @@
+import { ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets/index';
 import styled from '@emotion/styled';
 
-export const Wrapper = styled.div`
+interface InformationProps {
+  businessDay: string[];
+  businessTime: string | null;
+  address: string;
+  contactNum: string;
+}
+
+function Information({ businessDay, businessTime, address, contactNum }: InformationProps) {
+  const InfoList = [
+    {
+      title: '영업시간',
+      icon: <ClockIcon />,
+      description: `${businessDay.join(', ')} ${businessTime || ''}`,
+    },
+    { title: address, icon: <MarkerIcon /> },
+    { title: contactNum, icon: <PhoneIcon /> },
+  ];
+  return (
+    <>
+      {InfoList.map(({ title, icon, description }, i) => (
+        <Wrapper key={`${title} ${+i}`}>
+          <Icon>{icon}</Icon>
+          <Contents>
+            <Title>{title}</Title>
+
+            {description && <Description>{description}</Description>}
+          </Contents>
+          {title === address && <CopyIcon />}
+        </Wrapper>
+      ))}
+    </>
+  );
+}
+export default Information;
+
+const Wrapper = styled.div`
   display: flex;
   padding: 24px 0px;
   gap: 12px;
   border-bottom: solid #efefef 1px;
 `;
 
-export const Icon = styled.div``;
+const Icon = styled.div``;
 
-export const Contents = styled.div`
+const Contents = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
 `;
-export const Title = styled.h2`
+const Title = styled.h2`
+  padding: 16px;
   font-family: 'Pretendard';
   font-weight: 600;
   font-size: 16px;
@@ -23,7 +60,7 @@ export const Title = styled.h2`
   color: #181818;
 `;
 
-export const Description = styled.div`
+const Description = styled.div`
   font-family: 'Pretendard';
   line-height: 24px;
   color: #868686;
