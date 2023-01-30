@@ -11,7 +11,11 @@ import { FeatureCollection } from 'geojson';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { mapConfig } from './utils/mapConfig';
 
-function MapComp() {
+type MapCompProps = {
+  handleClickMarker: (id: number) => void;
+};
+
+function MapComp({ handleClickMarker }: MapCompProps) {
   const features = useRecoilValue(geoJsonSelector);
   const [featuresOnScreen, setFeaturesOnScreen] = useState<CustomGeoJSONFeatures[]>();
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
@@ -82,6 +86,7 @@ function MapComp() {
         const marker = renderEmotionElementToHtml({
           elem: (
             <PointMarker
+              handleClickMarker={handleClickMarker}
               feature={feature}
               image="https://hipspot.s3.ap-northeast-2.amazonaws.com/store/0.jpg"
               id={id}

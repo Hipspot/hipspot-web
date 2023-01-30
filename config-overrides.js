@@ -11,6 +11,7 @@ module.exports = override(
     '@constants': path.resolve(__dirname, 'src', 'constants'),
     '@libs': path.resolve(__dirname, 'src', 'libs'),
     '@states': path.resolve(__dirname, 'src', 'states'),
+    '@mocks': path.resolve(__dirname, 'src', 'mocks'),
   })
 );
 
