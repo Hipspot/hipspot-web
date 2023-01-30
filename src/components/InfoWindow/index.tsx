@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { tabStateAtom } from '@states/infoWindow';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { TabState } from '@libs/types/infowindow';
 import { CancelIcon, ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
@@ -9,6 +9,7 @@ import { CafeInfo } from '@libs/types/cafe';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import { copyToClipboard, stringifyBusinessDate } from '@libs/utils/cafeInfo';
 import { toast } from 'react-hot-toast';
+import ReactLoading from 'react-loading';
 import PopUpWindow from './PopUpWindow';
 import * as Information from './Contents/Information';
 import * as MapButtonList from './Contents/MapButtonList';
@@ -21,7 +22,7 @@ type InfoWindowProps = {
 
 export default function InfoWindow({ cafeInfo }: InfoWindowProps) {
   const smoothLoopId: { id: number } = { id: -1 };
-  const tabState = useRecoilValue<TabState>(tabStateAtom);
+  const [tabState, setTabState] = useRecoilState<TabState>(tabStateAtom);
   const handleCopyText = (message: string, text: string) => {
     toast.success(message, {
       style: {
@@ -29,14 +30,7 @@ export default function InfoWindow({ cafeInfo }: InfoWindowProps) {
         background: 'rgba(64, 64, 64, 0.9)',
         opacity: '0.9',
         backdropFilter: 'blur(30px)',
-
-        fontFamily: "'Pretendard'",
-        fontStyle: 'normal',
         fontWeight: '600',
-        fontSize: '16px',
-        lineHeight: '24px',
-        textAlign: 'left',
-
         color: '#FFFFFF',
       },
     });
@@ -45,13 +39,21 @@ export default function InfoWindow({ cafeInfo }: InfoWindowProps) {
 
   return (
     <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
-      {/* TODO 데이터 없을 때 로딩 보여주기 */}
+      {!cafeInfo && (
+        <Loading>
+          <ReactLoading type="bubbles" color="#8e8e8e" height={70} width={70} />
+        </Loading>
+      )}
       {cafeInfo &&
         (tabState.top === popUpHeights[PopUpHeightsType.top] ? (
           <BlurFrame>
             <Title.Wrapper>
               <Title.Name>{cafeInfo.placeName}</Title.Name>
-              <Title.Icon>
+              <Title.Icon
+                onClick={() => {
+                  setTabState({ top: window.innerHeight - 30, onHandling: true, popUpState: 'thumbNail' });
+                }}
+              >
                 <CancelIcon />
               </Title.Icon>
             </Title.Wrapper>
@@ -128,7 +130,7 @@ export default function InfoWindow({ cafeInfo }: InfoWindowProps) {
 const BlurFrame = styled.div`
   width: 100%;
   height: 100%;
-  margin-top: 30px;
+  padding-top: 30px;
 
   display: flex;
   flex-direction: column;
@@ -235,4 +237,13 @@ const StyledCarousel = styled(Carousel)`
     top: 314px;
     right: 8px;
   }
+`;
+
+const Loading = styled.div`
+  width: 100%;
+  height: 100%;
+  padding-top: 60px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
 `;

@@ -12,7 +12,7 @@ function App() {
       <Filtering />
       <ClusterList />
       <InfoWindowContainer />
-      <Toaster position="bottom-center" />
+      <Toaster position="bottom-center" containerClassName="toaster" />
     </Wrapper>
   );
 }
@@ -24,4 +24,10 @@ const Wrapper = styled.div`
   overflow: hidden;
   width: 100%;
   height: 100%;
+
+  .toaster {
+    div:nth-of-type(2) {
+      justify-content: flex-start;
+    }
+  }
 `;
