@@ -7,6 +7,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 import { CafeInfo } from '@libs/types/cafe';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
+import { copyToClipboard, stringifyBusinessDate } from '@libs/utils/cafeInfo';
 import PopUpWindow from './PopUpWindow';
 import * as Information from './Contents/Information';
 import * as MapButtonList from './Contents/MapButtonList';
@@ -22,82 +23,82 @@ export default function InfoWindow({ cafeInfo }: InfoWindowProps) {
   const tabState = useRecoilValue<TabState>(tabStateAtom);
 
   return (
-    <div>
-      <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
-        {/* TODO 데이터 없을 때 로딩 보여주기 */}
-        {cafeInfo &&
-          (tabState.top === popUpHeights[PopUpHeightsType.top] ? (
-            <BlurFrame>
-              <Title.Wrapper>
-                <Title.Name>{cafeInfo.placeName}</Title.Name>
-                <Title.Icon>
-                  <CancelIcon />
-                </Title.Icon>
-              </Title.Wrapper>
+    <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
+      {/* TODO 데이터 없을 때 로딩 보여주기 */}
+      {cafeInfo &&
+        (tabState.top === popUpHeights[PopUpHeightsType.top] ? (
+          <BlurFrame>
+            <Title.Wrapper>
+              <Title.Name>{cafeInfo.placeName}</Title.Name>
+              <Title.Icon>
+                <CancelIcon />
+              </Title.Icon>
+            </Title.Wrapper>
 
-              <StyledCarousel
-                infiniteLoop
-                showIndicators={false}
-                showThumbs={false}
-                showArrows={false}
-                statusFormatter={(currentItem: number, total: number) => `${currentItem}/${total}`}
-              >
-                {cafeInfo.imageList.map((image) => (
-                  <div key={image}>
-                    <img src={image} alt="" />
-                  </div>
-                ))}
-              </StyledCarousel>
+            <StyledCarousel
+              infiniteLoop
+              showIndicators={false}
+              showThumbs={false}
+              showArrows={false}
+              statusFormatter={(currentItem: number, total: number) => `${currentItem}/${total}`}
+            >
+              {cafeInfo.imageList.map((image) => (
+                <div key={image}>
+                  <img src={image} alt="" />
+                </div>
+              ))}
+            </StyledCarousel>
 
-              <TabBar.Wrapper>
-                <TabBar.Tab isSelected>업체제공사진</TabBar.Tab>
-                <TabBar.Tab>메뉴</TabBar.Tab>
-                <TabBar.Tab>인스타그램</TabBar.Tab>
-              </TabBar.Wrapper>
+            <TabBar.Wrapper>
+              <TabBar.Tab isSelected>업체제공사진</TabBar.Tab>
+              <TabBar.Tab>메뉴</TabBar.Tab>
+              <TabBar.Tab>인스타그램</TabBar.Tab>
+            </TabBar.Wrapper>
 
-              <Section>
-                {[
-                  {
-                    title: '영업시간',
-                    icon: <ClockIcon />,
-                    description: `${cafeInfo.businessDay.join(', ')} ${cafeInfo.businessTime}`,
-                  },
-                  { title: cafeInfo.address, icon: <MarkerIcon /> },
-                  { title: cafeInfo.contactNum, icon: <PhoneIcon /> },
-                ].map(({ title, icon, description }) => (
-                  <Information.Wrapper key={title}>
-                    <Information.Icon>{icon}</Information.Icon>
-                    <Information.Contents>
-                      <Information.Title>{title}</Information.Title>
+            <Section>
+              {[
+                {
+                  title: '영업시간',
+                  icon: <ClockIcon />,
+                  description: stringifyBusinessDate({
+                    businessDay: cafeInfo.businessDay,
+                    businessTime: cafeInfo.businessTime,
+                  }),
+                },
+                { title: cafeInfo.address, icon: <MarkerIcon /> },
+                { title: cafeInfo.contactNum, icon: <PhoneIcon /> },
+              ].map(({ title, icon, description }) => (
+                <Information.Wrapper key={title}>
+                  <Information.Icon>{icon}</Information.Icon>
+                  <Information.Contents>
+                    <Information.Title>{title}</Information.Title>
+                    {description && <Information.Description>{description}</Information.Description>}
+                  </Information.Contents>
+                  {title === cafeInfo.address && <CopyIcon onClick={() => copyToClipboard(title)} />}
+                </Information.Wrapper>
+              ))}
 
-                      {description && <Information.Description>{description}</Information.Description>}
-                    </Information.Contents>
-                    {title === cafeInfo.address && <CopyIcon />}
-                  </Information.Wrapper>
-                ))}
-
-                <MapButtonList.List>
-                  <MapButtonList.Button onClick={() => cafeInfo.naverMapUrl && window.open(cafeInfo.naverMapUrl)}>
-                    네이버지도 길찾기
-                  </MapButtonList.Button>
-                  <MapButtonList.Button onClick={() => cafeInfo.kakaoMapUrl && window.open(cafeInfo.kakaoMapUrl)}>
-                    카카오맵 길찾기
-                  </MapButtonList.Button>
-                </MapButtonList.List>
-              </Section>
-            </BlurFrame>
-          ) : (
-            <WhiteFrame>
-              <h2>{cafeInfo.placeName}</h2>
-              <Slide>
-                {cafeInfo.imageList.map((image) => (
-                  <img key={image} src={image} alt="" />
-                ))}
-              </Slide>
-            </WhiteFrame>
-          ))}
-      </PopUpWindow>
-    </div>
+              <MapButtonList.List>
+                <MapButtonList.Button onClick={() => cafeInfo.naverMapUrl && window.open(cafeInfo.naverMapUrl)}>
+                  네이버지도 길찾기
+                </MapButtonList.Button>
+                <MapButtonList.Button onClick={() => cafeInfo.kakaoMapUrl && window.open(cafeInfo.kakaoMapUrl)}>
+                  카카오맵 길찾기
+                </MapButtonList.Button>
+              </MapButtonList.List>
+            </Section>
+          </BlurFrame>
+        ) : (
+          <WhiteFrame>
+            <h2>{cafeInfo.placeName}</h2>
+            <Slide>
+              {cafeInfo.imageList.map((image) => (
+                <img key={image} src={image} alt="" />
+              ))}
+            </Slide>
+          </WhiteFrame>
+        ))}
+    </PopUpWindow>
   );
 }
 
