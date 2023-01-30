@@ -1,10 +1,10 @@
 import InfoWindow from '@components/InfoWindow';
-import { activatedCafeIdAtom, placeInfoQuery } from '@states/infoWindow';
+import { activatedCafeIdAtom, cafeInfoQuery } from '@states/infoWindow';
 import { useRecoilValue, useRecoilValueLoadable } from 'recoil';
 
 export default function InfoWindowContainer() {
   const activatedCafeId = useRecoilValue(activatedCafeIdAtom);
-  const placeInfoLoadable = useRecoilValueLoadable(placeInfoQuery(activatedCafeId));
+  const cafeInfoLoadable = useRecoilValueLoadable(cafeInfoQuery(activatedCafeId));
 
-  return <InfoWindow placeInfo={placeInfoLoadable.state === 'hasValue' ? placeInfoLoadable.contents : null} />;
+  return <InfoWindow cafeInfo={cafeInfoLoadable.state === 'hasValue' ? cafeInfoLoadable.contents : null} />;
 }

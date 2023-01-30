@@ -1,14 +1,14 @@
-import { getPlaceInfo } from '@libs/apis/place';
+import { getCafeInfo } from '@libs/apis/cafe';
 import { render, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import InfoWindow from '.';
 
 test('Render InfoWindow without crash', async () => {
-  const placeInfo = await getPlaceInfo(1);
+  const cafeInfo = await getCafeInfo(1);
 
   const component = render(
     <RecoilRoot>
-      <InfoWindow placeInfo={placeInfo} />
+      <InfoWindow cafeInfo={cafeInfo} />
     </RecoilRoot>
   );
 

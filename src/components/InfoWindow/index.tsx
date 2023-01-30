@@ -5,7 +5,7 @@ import { TabState } from '@libs/types/infowindow';
 import { CancelIcon, ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
-import { PlaceInfo } from '@libs/types/place';
+import { CafeInfo } from '@libs/types/cafe';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import PopUpWindow from './PopUpWindow';
 import * as Information from './Contents/Information';
@@ -14,10 +14,10 @@ import * as Title from './Contents/Title';
 import * as TabBar from './Contents/TabBar';
 
 type InfoWindowProps = {
-  placeInfo: PlaceInfo | null;
+  cafeInfo: CafeInfo | null;
 };
 
-export default function InfoWindow({ placeInfo }: InfoWindowProps) {
+export default function InfoWindow({ cafeInfo }: InfoWindowProps) {
   const smoothLoopId: { id: number } = { id: -1 };
   const tabState = useRecoilValue<TabState>(tabStateAtom);
 
@@ -25,11 +25,11 @@ export default function InfoWindow({ placeInfo }: InfoWindowProps) {
     <div>
       <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
         {/* TODO 데이터 없을 때 로딩 보여주기 */}
-        {placeInfo &&
+        {cafeInfo &&
           (tabState.top === popUpHeights[PopUpHeightsType.top] ? (
             <BlurFrame>
               <Title.Wrapper>
-                <Title.Name>{placeInfo.placeName}</Title.Name>
+                <Title.Name>{cafeInfo.placeName}</Title.Name>
                 <Title.Icon>
                   <CancelIcon />
                 </Title.Icon>
@@ -42,7 +42,7 @@ export default function InfoWindow({ placeInfo }: InfoWindowProps) {
                 showArrows={false}
                 statusFormatter={(currentItem: number, total: number) => `${currentItem}/${total}`}
               >
-                {placeInfo.imageList.map((image) => (
+                {cafeInfo.imageList.map((image) => (
                   <div key={image}>
                     <img src={image} alt="" />
                   </div>
@@ -60,10 +60,10 @@ export default function InfoWindow({ placeInfo }: InfoWindowProps) {
                   {
                     title: '영업시간',
                     icon: <ClockIcon />,
-                    description: `${placeInfo.businessDay.join(', ')} ${placeInfo.businessTime}`,
+                    description: `${cafeInfo.businessDay.join(', ')} ${cafeInfo.businessTime}`,
                   },
-                  { title: placeInfo.address, icon: <MarkerIcon /> },
-                  { title: placeInfo.contactNum, icon: <PhoneIcon /> },
+                  { title: cafeInfo.address, icon: <MarkerIcon /> },
+                  { title: cafeInfo.contactNum, icon: <PhoneIcon /> },
                 ].map(({ title, icon, description }) => (
                   <Information.Wrapper key={title}>
                     <Information.Icon>{icon}</Information.Icon>
@@ -72,15 +72,15 @@ export default function InfoWindow({ placeInfo }: InfoWindowProps) {
 
                       {description && <Information.Description>{description}</Information.Description>}
                     </Information.Contents>
-                    {title === placeInfo.address && <CopyIcon />}
+                    {title === cafeInfo.address && <CopyIcon />}
                   </Information.Wrapper>
                 ))}
 
                 <MapButtonList.List>
-                  <MapButtonList.Button onClick={() => placeInfo.naverMapUrl && window.open(placeInfo.naverMapUrl)}>
+                  <MapButtonList.Button onClick={() => cafeInfo.naverMapUrl && window.open(cafeInfo.naverMapUrl)}>
                     네이버지도 길찾기
                   </MapButtonList.Button>
-                  <MapButtonList.Button onClick={() => placeInfo.kakaoMapUrl && window.open(placeInfo.kakaoMapUrl)}>
+                  <MapButtonList.Button onClick={() => cafeInfo.kakaoMapUrl && window.open(cafeInfo.kakaoMapUrl)}>
                     카카오맵 길찾기
                   </MapButtonList.Button>
                 </MapButtonList.List>
@@ -88,9 +88,9 @@ export default function InfoWindow({ placeInfo }: InfoWindowProps) {
             </BlurFrame>
           ) : (
             <WhiteFrame>
-              <h2>{placeInfo.placeName}</h2>
+              <h2>{cafeInfo.placeName}</h2>
               <Slide>
-                {placeInfo.imageList.map((image) => (
+                {cafeInfo.imageList.map((image) => (
                   <img key={image} src={image} alt="" />
                 ))}
               </Slide>

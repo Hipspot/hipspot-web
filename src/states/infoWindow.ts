@@ -1,6 +1,6 @@
 import { atom, selectorFamily } from 'recoil';
 import { LngLatLike } from 'mapbox-gl';
-import { getPlaceInfo } from '@libs/apis/place';
+import { getCafeInfo } from '@libs/apis/cafe';
 import { TabState } from '../libs/types/infowindow';
 
 export type CameraStateType = {
@@ -37,7 +37,7 @@ export const activatedCafeIdAtom = atom<number | null>({
   default: null,
 });
 
-export const placeInfoQuery = selectorFamily({
+export const cafeInfoQuery = selectorFamily({
   key: 'selector / infoWindowQuery',
-  get: (id: number | null) => () => id ? getPlaceInfo(id) : null,
+  get: (id: number | null) => () => id ? getCafeInfo(id) : null,
 });
