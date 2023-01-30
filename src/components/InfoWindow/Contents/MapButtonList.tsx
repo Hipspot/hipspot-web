@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 
 export const List = styled.div`
   margin-top: 26px;
+  margin-bottom: 40px;
   display: flex;
   gap: 10px;
 `;

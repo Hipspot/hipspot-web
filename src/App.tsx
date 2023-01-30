@@ -3,6 +3,7 @@ import Filtering from '@components/Filtering';
 import styled from '@emotion/styled';
 import MapCompContainer from '@containers/MapCompContainer';
 import InfoWindowContainer from '@containers/InfoWindowContainer';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Filtering />
       <ClusterList />
       <InfoWindowContainer />
+      <Toaster position="bottom-center" />
     </Wrapper>
   );
 }

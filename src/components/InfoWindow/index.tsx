@@ -8,6 +8,7 @@ import { Carousel } from 'react-responsive-carousel';
 import { CafeInfo } from '@libs/types/cafe';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import { copyToClipboard, stringifyBusinessDate } from '@libs/utils/cafeInfo';
+import { toast } from 'react-hot-toast';
 import PopUpWindow from './PopUpWindow';
 import * as Information from './Contents/Information';
 import * as MapButtonList from './Contents/MapButtonList';
@@ -21,6 +22,26 @@ type InfoWindowProps = {
 export default function InfoWindow({ cafeInfo }: InfoWindowProps) {
   const smoothLoopId: { id: number } = { id: -1 };
   const tabState = useRecoilValue<TabState>(tabStateAtom);
+  const handleCopyText = (message: string, text: string) => {
+    toast.success(message, {
+      style: {
+        width: '100%',
+        background: 'rgba(64, 64, 64, 0.9)',
+        opacity: '0.9',
+        backdropFilter: 'blur(30px)',
+
+        fontFamily: "'Pretendard'",
+        fontStyle: 'normal',
+        fontWeight: '600',
+        fontSize: '16px',
+        lineHeight: '24px',
+        textAlign: 'left',
+
+        color: '#FFFFFF',
+      },
+    });
+    copyToClipboard(text);
+  };
 
   return (
     <PopUpWindow id="popUpWindow" tabState={tabState} smoothLoopId={smoothLoopId}>
@@ -74,7 +95,9 @@ export default function InfoWindow({ cafeInfo }: InfoWindowProps) {
                     <Information.Title>{title}</Information.Title>
                     {description && <Information.Description>{description}</Information.Description>}
                   </Information.Contents>
-                  {title === cafeInfo.address && <CopyIcon onClick={() => copyToClipboard(title)} />}
+                  {title === cafeInfo.address && (
+                    <CopyIcon onClick={() => handleCopyText('주소가 복사되었습니다.', title)} />
+                  )}
                 </Information.Wrapper>
               ))}
 
@@ -105,13 +128,21 @@ export default function InfoWindow({ cafeInfo }: InfoWindowProps) {
 const BlurFrame = styled.div`
   width: 100%;
   height: 100%;
-  margin-top: 29px;
+  margin-top: 30px;
 
   display: flex;
   flex-direction: column;
 
   background: transparent;
   backdrop-filter: blur(8px);
+
+  overflow: scroll;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const WhiteFrame = styled.div`
