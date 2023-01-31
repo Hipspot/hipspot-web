@@ -1,6 +1,6 @@
-import { PlaceInfo } from '@libs/types/place';
+import { CafeInfo } from '@libs/types/cafe';
 
-const data: PlaceInfo[] = [
+const data: CafeInfo[] = [
   {
     id: 1,
     placeName: 'Honor',

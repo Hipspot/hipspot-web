@@ -1,22 +1,21 @@
 import styled from '@emotion/styled';
-import { activatedCafeIdAtom, placeInfoQuery, tabStateAtom } from '@states/infoWindow';
+import { activatedCafeIdAtom, cafeInfoQuery, tabStateAtom } from '@states/infoWindow';
 import { useRecoilValue, useRecoilValueLoadable } from 'recoil';
 import { css } from '@emotion/react';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import MakeLodableSuspense from '@components/MakeLodableSuspense';
 import { PopUpWindowState } from '@libs/types/infowindow';
 // import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
-import PopUpWindow from './PopUpWindow';
 import * as MapButtonList from './Contents/MapButtonList';
 import TabBar from './Contents/TabBar';
 import Title, { TitleSkeleton } from './Contents/Title';
 import CustomCarousel, { CustomCarouselSkeleton } from './Contents/Carousel';
 import Information, { InformationSkeleton } from './Contents/Information';
+import PopUpWindow from './PopUpWindow';
 
 export default function InfoWindow() {
   const tabState = useRecoilValue(tabStateAtom);
   const activatedCafeId = useRecoilValue(activatedCafeIdAtom);
-  const { state, contents } = useRecoilValueLoadable(placeInfoQuery(activatedCafeId));
+  const { state, contents } = useRecoilValueLoadable(cafeInfoQuery(activatedCafeId));
 
   return contents ? (
     <PopUpWindow id="popUpWindow" available={!!contents} tabState={tabState}>
@@ -55,14 +54,14 @@ export default function InfoWindow() {
       </BlurFrame>
     </PopUpWindow>
   ) : (
-    <div />
+    <Loading />
   );
 }
 
 const BlurFrame = styled.div<{ popUpState: PopUpWindowState }>`
   width: 100%;
   height: 100%;
-  margin-top: 29px;
+  padding-top: 30px;
 
   display: flex;
   flex-direction: column;
@@ -102,4 +101,13 @@ const TitleWrapper = styled.div`
 `;
 const CarouselWrapper = styled.div`
   height: var(--carousel-height, 343);
+`;
+
+const Loading = styled.div`
+  width: 100%;
+  height: 100%;
+  padding-top: 60px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
 `;

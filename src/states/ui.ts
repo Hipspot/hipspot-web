@@ -1,5 +1,5 @@
 import { FilterId } from '@libs/types/filter';
-import { PlaceInfo } from '@libs/types/place';
+import { CafeInfo } from '@libs/types/cafe';
 import { atom } from 'recoil';
 
 export const openClusterListAtom = atom<boolean>({
@@ -52,7 +52,7 @@ export const clusterListAtom = atom({
         'https://user-images.githubusercontent.com/24623403/213137042-bdc48dba-fd97-4466-8a20-d1f2f2194d78.png',
       ],
     },
-  ] as PlaceInfo[],
+  ] as CafeInfo[],
 });
 
 export const activeFilterIdAtom = atom<FilterId>({

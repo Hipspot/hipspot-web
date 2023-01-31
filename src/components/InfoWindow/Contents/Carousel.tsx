@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import Loading from 'react-loading';
 import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 interface CarouselProps {
   imageList: string[];
