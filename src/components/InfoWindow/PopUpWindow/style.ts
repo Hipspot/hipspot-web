@@ -42,6 +42,7 @@ export const ResizeSide = styled.div`
   z-index: 0;
   top: 0;
   width: 100%;
+  background: transparent;
   height: ${(props: { tabState: { popUpState: string } }) => (props.tabState.popUpState === 'half' ? 80 : 120)}px;
   transform: translateY(-50%);
   transform: ${(props: { tabState: { popUpState: string } }) =>

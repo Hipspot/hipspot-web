@@ -1,22 +1,20 @@
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import React from 'react';
-import Skeleton from 'react-loading-skeleton';
-
 interface MakeLodableSuspenseProps {
   lodableState: 'hasValue' | 'loading' | 'hasError';
-  children: EmotionJSX.Element;
+  loading: JSX.Element;
+  children: JSX.Element;
 }
 
-function MakeLodableSuspense({ lodableState, children }: MakeLodableSuspenseProps) {
+function MakeLodableSuspense({ lodableState, children, loading }: MakeLodableSuspenseProps) {
   // eslint-disable-next-line default-case
   switch (lodableState) {
     case 'hasValue': {
       return children;
     }
     case 'loading':
-      return <Skeleton />;
+      return loading;
+
     case 'hasError':
-      return <>error</>;
+      return <div>error발생, reload?</div>;
   }
 }
 

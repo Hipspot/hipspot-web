@@ -1,30 +1,43 @@
 import { CancelIcon } from '@assets/index';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 interface TitleProps {
   placeName: string;
 }
 function Title({ placeName }: TitleProps) {
   return (
-    <Wrapper>
+    <>
       <Name>{placeName}</Name>
       <Icon>
         <CancelIcon />
       </Icon>
-    </Wrapper>
+    </>
   );
 }
 
 export default Title;
 
-const Wrapper = styled.div`
+export function TitleSkeleton() {
+  return (
+    <TitleSkeletonWrapper>
+      <Skeleton
+        baseColor="lightgray"
+        css={css`
+          height: 40px;
+        `}
+      />
+    </TitleSkeletonWrapper>
+  );
+}
+
+export const TitleSkeletonWrapper = styled.div`
   width: 100%;
   height: 56px;
-  padding: 0px 16px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  z-index: 1;
+  padding: 8px 0px;
 `;
 
 const Name = styled.h1`

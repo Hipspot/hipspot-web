@@ -1,5 +1,6 @@
 import { ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets/index';
 import styled from '@emotion/styled';
+import Skeleton from 'react-loading-skeleton';
 
 interface InformationProps {
   businessDay: string[];
@@ -36,7 +37,42 @@ function Information({ businessDay, businessTime, address, contactNum }: Informa
 }
 export default Information;
 
-const Wrapper = styled.div`
+export function InformationSkeleton() {
+  const InfoList = [
+    {
+      icon: <ClockIcon />,
+    },
+    { icon: <MarkerIcon /> },
+    { icon: <PhoneIcon /> },
+  ];
+  return (
+    <>
+      {InfoList.map(({ icon }) => (
+        <Wrapper>
+          <Icon>{icon}</Icon>
+          <Contents>
+            <Title>
+              <Skeleton />
+            </Title>
+          </Contents>
+          <Description>
+            <Skeleton />
+          </Description>
+        </Wrapper>
+      ))}
+    </>
+  );
+}
+
+// export const InformationSkeleton = styled.div`
+//   display: flex;
+//   padding: 24px 0px;
+//   gap: 12px;
+//   border-bottom: solid #efefef 1px;
+//   background-color: gray;
+// `;
+
+export const Wrapper = styled.div`
   display: flex;
   padding: 24px 0px;
   gap: 12px;
@@ -52,7 +88,6 @@ const Contents = styled.div`
   gap: 8px;
 `;
 const Title = styled.h2`
-  padding: 16px;
   font-family: 'Pretendard';
   font-weight: 600;
   font-size: 16px;

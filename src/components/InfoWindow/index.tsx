@@ -1,67 +1,61 @@
 import styled from '@emotion/styled';
-import { css } from '@emotion/react';
 import { activatedCafeIdAtom, placeInfoQuery, tabStateAtom } from '@states/infoWindow';
 import { useRecoilValue, useRecoilValueLoadable } from 'recoil';
+import { css } from '@emotion/react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { PlaceInfo } from '@libs/types/place';
 import MakeLodableSuspense from '@components/MakeLodableSuspense';
 import { PopUpWindowState } from '@libs/types/infowindow';
 // import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import PopUpWindow from './PopUpWindow';
 import * as MapButtonList from './Contents/MapButtonList';
 import TabBar from './Contents/TabBar';
-import Title from './Contents/Title';
-import CustomCarousel from './Contents/Carousel';
-import Information from './Contents/Information';
+import Title, { TitleSkeleton } from './Contents/Title';
+import CustomCarousel, { CustomCarouselSkeleton } from './Contents/Carousel';
+import Information, { InformationSkeleton } from './Contents/Information';
 
 export default function InfoWindow() {
   const tabState = useRecoilValue(tabStateAtom);
   const activatedCafeId = useRecoilValue(activatedCafeIdAtom);
-  const placeInfoLoadable = useRecoilValueLoadable(placeInfoQuery(activatedCafeId));
+  const { state, contents } = useRecoilValueLoadable(placeInfoQuery(activatedCafeId));
 
-  const placeInfo: PlaceInfo = placeInfoLoadable.contents || {
-    placeName: '',
-    id: 0,
-    imageList: [],
-    businessDay: [],
-    businessTime: '',
-    address: '',
-    contactNum: '',
-    instaId: '',
-    kakaoMapUrl: '',
-    naverMapUrl: '',
-  };
-
-  return (
-    <PopUpWindow id="popUpWindow" available={!!placeInfo} tabState={tabState}>
+  return contents ? (
+    <PopUpWindow id="popUpWindow" available={!!contents} tabState={tabState}>
       <BlurFrame id="popUpWindow_blurFrame" popUpState={tabState.popUpState}>
-        <MakeLodableSuspense lodableState={placeInfoLoadable.state}>
-          <Title placeName={placeInfo.placeName} />
-        </MakeLodableSuspense>
-        <MakeLodableSuspense lodableState={placeInfoLoadable.state}>
-          <CustomCarousel imageList={placeInfo.imageList} />
-        </MakeLodableSuspense>
-        <TabBar isSelected />
+        <TopSection>
+          <TitleWrapper>
+            <MakeLodableSuspense lodableState={state} loading={<TitleSkeleton />}>
+              <Title placeName={contents.placeName} />
+            </MakeLodableSuspense>
+          </TitleWrapper>
+          <CarouselWrapper>
+            <MakeLodableSuspense lodableState={state} loading={<CustomCarouselSkeleton />}>
+              <CustomCarousel imageList={contents.imageList} />
+            </MakeLodableSuspense>
+          </CarouselWrapper>
+          <TabBar isSelected />
+        </TopSection>
         <Section>
-          <MakeLodableSuspense lodableState={placeInfoLoadable.state}>
+          <MakeLodableSuspense lodableState={state} loading={<InformationSkeleton />}>
             <Information
-              businessDay={placeInfo.businessDay}
-              businessTime={placeInfo.businessTime}
-              contactNum={placeInfo.contactNum}
-              address={placeInfo.address}
+              businessDay={contents.businessDay}
+              businessTime={contents.businessTime}
+              contactNum={contents.contactNum}
+              address={contents.address}
             />
           </MakeLodableSuspense>
           <MapButtonList.List>
-            <MapButtonList.Button onClick={() => placeInfo.naverMapUrl && window.open(placeInfo.naverMapUrl)}>
+            <MapButtonList.Button onClick={() => contents.naverMapUrl && window.open(contents.naverMapUrl)}>
               네이버지도 길찾기
             </MapButtonList.Button>
-            <MapButtonList.Button onClick={() => placeInfo.kakaoMapUrl && window.open(placeInfo.kakaoMapUrl)}>
+            <MapButtonList.Button onClick={() => contents.kakaoMapUrl && window.open(contents.kakaoMapUrl)}>
               카카오맵 길찾기
             </MapButtonList.Button>
           </MapButtonList.List>
         </Section>
       </BlurFrame>
     </PopUpWindow>
+  ) : (
+    <div />
   );
 }
 
@@ -73,6 +67,12 @@ const BlurFrame = styled.div<{ popUpState: PopUpWindowState }>`
   display: flex;
   flex-direction: column;
 
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   ${(props) =>
     props.popUpState === 'full'
       ? css`
@@ -84,8 +84,22 @@ const BlurFrame = styled.div<{ popUpState: PopUpWindowState }>`
         `}
 `;
 
+const TopSection = styled.section``;
 const Section = styled.section`
   background-color: white;
   padding: 16px;
   flex: 1;
+`;
+
+const TitleWrapper = styled.div`
+  width: 100%;
+  height: 56px;
+  padding: 0px 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+const CarouselWrapper = styled.div`
+  height: var(--carousel-height, 343);
 `;

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import Loading from 'react-loading';
 import { Carousel } from 'react-responsive-carousel';
 
 interface CarouselProps {
@@ -7,35 +8,60 @@ interface CarouselProps {
 
 function CustomCarousel({ imageList }: CarouselProps) {
   return (
-    <div>
-      <StyledCarousel
-        infiniteLoop
-        showIndicators={false}
-        showThumbs={false}
-        showArrows={false}
-        statusFormatter={(currentItem: number, total: number) => `${currentItem}/${total}`}
-      >
-        {imageList.map((image) => (
-          <div key={image}>
-            <img src={image} alt="" />
-          </div>
-        ))}
-      </StyledCarousel>
-    </div>
+    <StyledCarousel
+      infiniteLoop
+      showIndicators={false}
+      showThumbs={false}
+      showArrows={false}
+      statusFormatter={(currentItem: number, total: number) => `${currentItem}/${total}`}
+    >
+      {imageList.map((image) => (
+        <div key={image}>
+          <img src={image} alt="" />
+        </div>
+      ))}
+    </StyledCarousel>
   );
 }
 
 export default CustomCarousel;
+
+export function CustomCarouselSkeleton() {
+  return (
+    <SkeltonWrapper>
+      <div>
+        <Loading color="pink" />
+      </div>
+    </SkeltonWrapper>
+  );
+}
+
+const SkeltonWrapper = styled.div`
+  padding: 0px 16px;
+  width: 100%;
+  height: var(--carousel-height, 343);
+  & > div {
+    background-color: #d6d6d6;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
 const StyledCarousel = styled(Carousel)`
   padding: 0px 16px;
-
+  height: var(--carousel-height, 343);
   img {
-    height: 343px;
+    height: inherit;
     object-fit: cover;
     object-position: center;
   }
 
   li img {
+    height: var(--carousel-height, 343);
     border-radius: 8px;
   }
 
@@ -58,7 +84,7 @@ const StyledCarousel = styled(Carousel)`
     padding: 2px 0px;
 
     position: absolute;
-    top: 314px;
+    top: calc(var(--carousel-height, 343) - 30px);
     right: 8px;
   }
 `;
