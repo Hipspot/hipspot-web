@@ -24,16 +24,7 @@ export default function InfoWindow({ cafeInfo }: InfoWindowProps) {
   const smoothLoopId: { id: number } = { id: -1 };
   const [tabState, setTabState] = useRecoilState<TabState>(tabStateAtom);
   const handleCopyText = (message: string, text: string) => {
-    toast.success(message, {
-      style: {
-        width: '100%',
-        background: 'rgba(64, 64, 64, 0.9)',
-        opacity: '0.9',
-        backdropFilter: 'blur(30px)',
-        fontWeight: '600',
-        color: '#FFFFFF',
-      },
-    });
+    toast.success(message);
     copyToClipboard(text);
   };
 

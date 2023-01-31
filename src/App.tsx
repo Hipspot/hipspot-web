@@ -12,7 +12,22 @@ function App() {
       <Filtering />
       <ClusterList />
       <InfoWindowContainer />
-      <Toaster position="bottom-center" containerClassName="toaster" />
+      <Toaster
+        position="bottom-center"
+        containerClassName="toaster"
+        toastOptions={{
+          success: {
+            style: {
+              width: '100%',
+              background: 'rgba(64, 64, 64, 0.9)',
+              opacity: '0.9',
+              backdropFilter: 'blur(30px)',
+              fontWeight: '600',
+              color: '#FFFFFF',
+            },
+          },
+        }}
+      />
     </Wrapper>
   );
 }
