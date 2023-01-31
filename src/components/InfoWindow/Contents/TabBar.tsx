@@ -6,6 +6,7 @@ export const Wrapper = styled.div`
   height: 60px;
   display: flex;
   gap: 32px;
+  flex-shrink: 0;
 `;
 
 export const Tab = styled.div<{ isSelected?: boolean }>`

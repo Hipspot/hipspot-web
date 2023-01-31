@@ -1,26 +1,21 @@
-import { PlaceInfo } from '@libs/types/place';
+import { CafeInfo } from '@libs/types/cafe';
 
-const data: PlaceInfo[] = [
+const data: CafeInfo[] = [
   {
     id: 1,
-    placeName: '글로우',
-    instaId: '@4fbhouse',
-    address: '서울 성동구 아차산로9길 20 1층',
-    businessDay: ['금, 목, 수, 월, 일, 토, 화'],
-    businessTime: null,
-    contactNum: '070-5097-5506',
+    placeName: 'Honor',
+    address: '서울 노원구 공릉동 12길34',
+    contactNum: '010-1234-5678',
+    businessDay: ['월', '화', '수', '목', '금', '토', '일'],
+    businessTime: '9:00~23:00',
     imageList: [
-      'https://hipspot.s3.ap-northeast-2.amazonaws.com/store/0.jpg',
-      'https://hipspot.s3.ap-northeast-2.amazonaws.com/store/1.jpg',
-      'https://hipspot.s3.ap-northeast-2.amazonaws.com/store/2.jpg',
-      'https://hipspot.s3.ap-northeast-2.amazonaws.com/store/3.jpg',
-      'https://hipspot.s3.ap-northeast-2.amazonaws.com/store/4.jpg',
-      'https://hipspot.s3.ap-northeast-2.amazonaws.com/store/5.jpg',
-      'https://hipspot.s3.ap-northeast-2.amazonaws.com/store/6.jpg',
-      'https://hipspot.s3.ap-northeast-2.amazonaws.com/store/7.jpg',
+      'https://user-images.githubusercontent.com/108210492/212647596-3a2cf836-69e8-485a-b93d-4fb4642b935a.png',
+      'https://images.unsplash.com/photo-1559496417-e7f25cb247f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80',
+      'https://www.gyeongju.go.kr/upload/content/thumb/20200409/069148D14AFC4BE799F223B16967BF37.jpg',
     ],
-    naverMapUrl: '\nhttp://naver.me/GY2TicZ0',
-    kakaoMapUrl: null,
+    instaId: 'honor_cafe',
+    kakaoMapUrl: 'https://map.kakao.com/link/map/카페 힙스팟,37.5446694,127.051352',
+    naverMapUrl: 'https://map.naver.com/v5/search/%EC%B9%B4%ED%8E%98%ED%9E%99%EC%8A%A4%ED%8C%9F/place/1234567890',
   },
 ];
 

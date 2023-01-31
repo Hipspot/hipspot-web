@@ -1,7 +1,7 @@
 import { FilterId } from './filter';
 
 /** 카페 정보 타입 */
-export type PlaceInfo = {
+export type CafeInfo = {
   /**
    * 카페 아이디
    * @example 1

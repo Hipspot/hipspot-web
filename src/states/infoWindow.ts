@@ -1,5 +1,6 @@
-import { atom } from 'recoil';
+import { atom, selectorFamily } from 'recoil';
 import { LngLatLike } from 'mapbox-gl';
+import { getCafeInfo } from '@libs/apis/cafe';
 import { TabState } from '../libs/types/infowindow';
 
 export type CameraStateType = {
@@ -14,7 +15,7 @@ export const tabStateAtom = atom<TabState>({
   key: 'atom / tabState',
   default: {
     // eslint-disable-next-line no-restricted-globals
-    top: innerHeight - 30,
+    top: innerHeight,
     onHandling: false,
     popUpState: 'thumbNail',
   },
@@ -29,4 +30,14 @@ export const cameraStateAtom = atom<CameraStateType>({
     markerClicked: false,
     zoom: 17,
   },
+});
+
+export const activatedCafeIdAtom = atom<number | null>({
+  key: 'atom / activatedCafeId',
+  default: null,
+});
+
+export const cafeInfoQuery = selectorFamily({
+  key: 'selector / infoWindowQuery',
+  get: (id: number | null) => () => id ? getCafeInfo(id) : null,
 });

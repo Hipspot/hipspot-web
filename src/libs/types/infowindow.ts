@@ -1,4 +1,4 @@
-import { CameraStateType } from '@states/infoWindowState';
+import { CameraStateType } from '@states/infoWindow';
 import { SetterOrUpdater } from 'recoil';
 
 export type PopUpWindowState = 'thumbNail' | 'half' | 'full';
@@ -26,9 +26,11 @@ export interface HandleEventStartProps {
   setTabState: SetterOrUpdater<TabState>;
   smoothLoopId: { id: number };
   modifyRef: React.MutableRefObject<number>;
+  available: boolean;
 }
 
 export interface HandleEventMoveProps {
+  available: boolean;
   tabState: TabState;
   modifyRef: React.MutableRefObject<number>;
   topCoordRef: React.MutableRefObject<number>;
