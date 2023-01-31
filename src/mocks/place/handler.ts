@@ -1,4 +1,4 @@
 import { rest } from 'msw';
 import * as service from './service';
 
-export const placeHandler = [rest.post('/place/:id', service.getPlace)];
+export const placeHandler = [rest.get('/place/:id', service.getPlace)];
