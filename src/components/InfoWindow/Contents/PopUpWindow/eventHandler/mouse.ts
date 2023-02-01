@@ -1,43 +1,48 @@
-import { TouchEventHandler } from 'react';
+import { MouseEventHandler } from 'react';
+import { HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps, TabState } from '@libs/types/infowindow';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
-import { TabState, HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps } from '@libs/types/infowindow';
-import { reactRefUpdate } from '../utils/reactRefUpdate';
+import { DOMID_CAROUSEL } from '@constants/DOMId';
+import { EVENT_CHANGE_CAROUSEL } from '@constants/event';
 import { cancelAnimation } from '../utils/cancelAnimation';
+import { reactRefUpdate } from '../utils/reactRefUpdate';
 
-export const handleTouchStart: (props: HandleEventStartProps) => TouchEventHandler<HTMLDivElement> =
-  ({ smoothLoopId, modifyRef, setTabState, available }) =>
+export const handleMouseDown: (eventStartProps: HandleEventStartProps) => MouseEventHandler<HTMLDivElement> =
+  ({ setTabState, smoothLoopId, modifyRef, available }) =>
   (e) => {
     if (!available) return;
+
     cancelAnimation(smoothLoopId);
 
     const target = e.target as HTMLDivElement;
-    setTabState((prev: TabState) => ({ ...prev, onHandling: true }));
     target.style.setProperty('padding', 'calc(var(--vh,1vh) * 100) 0');
     target.style.setProperty('transform', 'translateY(-50%)');
 
+    setTabState((prev: TabState) => ({ ...prev, onHandling: true }));
+
     const infoWindowElem = target.parentElement as HTMLDivElement;
-    const pointedTop = infoWindowElem.getBoundingClientRect().top - e.touches[0].clientY;
+    const pointedTop = infoWindowElem.getBoundingClientRect().top - e.clientY;
     reactRefUpdate({ ref: modifyRef, update: pointedTop });
   };
 
-export const handleTouchMove: (props: HandleEventMoveProps) => TouchEventHandler<HTMLDivElement> =
-  ({ tabState, modifyRef, topCoordRef, available }) =>
+export const handleMouseMove: (eventMoveProps: HandleEventMoveProps) => MouseEventHandler<HTMLDivElement> =
+  ({ topCoordRef, tabState, modifyRef, available }) =>
   (e) => {
     const { onHandling } = tabState;
-    if (onHandling && available) {
-      reactRefUpdate({ ref: topCoordRef, update: e.touches[0].clientY });
 
+    if (onHandling && available) {
+      topCoordRef.current = e.clientY;
       const target = e.target as HTMLDivElement;
       const infoWindowElem = target.parentElement as HTMLDivElement;
-      infoWindowElem.style.setProperty('top', `${e.touches[0].clientY + modifyRef.current}px`);
+      infoWindowElem.style.setProperty('top', `${e.clientY + modifyRef.current}px`);
 
-      const slideEvent: Event = Object.assign(new Event('forSlide'), { clientY: e.touches[0].clientY });
-      document.getElementById('slide')?.dispatchEvent(slideEvent);
+      const slideEvent: Event = Object.assign(new Event(EVENT_CHANGE_CAROUSEL), { clientY: e.clientY });
+      console.log(slideEvent);
+      document.getElementById(DOMID_CAROUSEL)?.dispatchEvent(slideEvent);
     }
   };
 
-export const handleTouchEnd: (props: HandleEventEndProps) => TouchEventHandler<HTMLDivElement> =
-  ({ setCameraState, cameraState, tabState, setTabState, topCoordRef }) =>
+export const handleMouseUp: (eventEndProps: HandleEventEndProps) => MouseEventHandler<HTMLDivElement> =
+  ({ setTabState, setCameraState, tabState, cameraState, topCoordRef }) =>
   (e) => {
     const { onHandling } = tabState;
     if (onHandling) {
@@ -62,6 +67,7 @@ export const handleTouchEnd: (props: HandleEventEndProps) => TouchEventHandler<H
 
       target.style.setProperty('padding', '0px');
       target.style.removeProperty('transform');
+
       setTabState(endPointTabState);
     }
   };

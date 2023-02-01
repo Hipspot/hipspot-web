@@ -22,7 +22,7 @@ function Information({ businessDay, businessTime, address, contactNum }: Informa
   return (
     <>
       {InfoList.map(({ title, icon, description }, i) => (
-        <Wrapper key={`${title} ${+i}`}>
+        <Wrapper key={`${title}_${+i}`}>
           <Icon>{icon}</Icon>
           <Contents>
             <Title>{title}</Title>
@@ -47,8 +47,9 @@ export function InformationSkeleton() {
   ];
   return (
     <>
-      {InfoList.map(({ icon }) => (
-        <Wrapper>
+      {InfoList.map(({ icon }, i) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <Wrapper key={`info_skeleton_ ${i}`}>
           <Icon>{icon}</Icon>
           <Contents>
             <Title>

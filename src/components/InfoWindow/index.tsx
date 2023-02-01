@@ -4,13 +4,13 @@ import { useRecoilValue, useRecoilValueLoadable } from 'recoil';
 import { css } from '@emotion/react';
 import MakeLodableSuspense from '@components/MakeLodableSuspense';
 import { PopUpWindowState } from '@libs/types/infowindow';
-// import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
+import { DOMID_BLURFRAME, DOMID_CAROUSEL, DOMID_POP_UP_WINDOW } from '@constants/DOMId';
 import * as MapButtonList from './Contents/MapButtonList';
 import TabBar from './Contents/TabBar';
 import Title, { TitleSkeleton } from './Contents/Title';
 import CustomCarousel, { CustomCarouselSkeleton } from './Contents/Carousel';
 import Information, { InformationSkeleton } from './Contents/Information';
-import PopUpWindow from './PopUpWindow';
+import PopUpWindow from './Contents/PopUpWindow';
 
 export default function InfoWindow() {
   const tabState = useRecoilValue(tabStateAtom);
@@ -18,8 +18,8 @@ export default function InfoWindow() {
   const { state, contents } = useRecoilValueLoadable(cafeInfoQuery(activatedCafeId));
 
   return contents ? (
-    <PopUpWindow id="popUpWindow" available={!!contents} tabState={tabState}>
-      <BlurFrame id="popUpWindow_blurFrame" popUpState={tabState.popUpState}>
+    <PopUpWindow id={DOMID_POP_UP_WINDOW} available={!!contents} tabState={tabState}>
+      <BlurFrame id={DOMID_BLURFRAME} popUpState={tabState.popUpState}>
         <TopSection>
           <TitleWrapper>
             <MakeLodableSuspense lodableState={state} loading={<TitleSkeleton />}>
@@ -28,7 +28,7 @@ export default function InfoWindow() {
           </TitleWrapper>
           <CarouselWrapper>
             <MakeLodableSuspense lodableState={state} loading={<CustomCarouselSkeleton />}>
-              <CustomCarousel imageList={contents.imageList} />
+              <CustomCarousel imageList={contents.imageList} id={DOMID_CAROUSEL} />
             </MakeLodableSuspense>
           </CarouselWrapper>
           <TabBar isSelected />
@@ -80,7 +80,7 @@ const BlurFrame = styled.div<{ popUpState: PopUpWindowState }>`
         `
       : css`
           background: white;
-        `}
+        `};
 `;
 
 const TopSection = styled.section``;

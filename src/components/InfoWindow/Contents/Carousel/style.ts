@@ -1,43 +1,7 @@
 import styled from '@emotion/styled';
-import Loading from 'react-loading';
 import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
-interface CarouselProps {
-  imageList: string[];
-}
-
-function CustomCarousel({ imageList }: CarouselProps) {
-  return (
-    <StyledCarousel
-      infiniteLoop
-      showIndicators={false}
-      showThumbs={false}
-      showArrows={false}
-      statusFormatter={(currentItem: number, total: number) => `${currentItem}/${total}`}
-    >
-      {imageList.map((image) => (
-        <div key={image}>
-          <img src={image} alt="" />
-        </div>
-      ))}
-    </StyledCarousel>
-  );
-}
-
-export default CustomCarousel;
-
-export function CustomCarouselSkeleton() {
-  return (
-    <SkeltonWrapper>
-      <div>
-        <Loading color="pink" />
-      </div>
-    </SkeltonWrapper>
-  );
-}
-
-const SkeltonWrapper = styled.div`
+export const SkeltonWrapper = styled.div`
   padding: 0px 16px;
   width: 100%;
   height: var(--carousel-height, 343);
@@ -52,7 +16,7 @@ const SkeltonWrapper = styled.div`
   }
 `;
 
-const StyledCarousel = styled(Carousel)`
+export const StyledCarousel = styled(Carousel)`
   padding: 0px 16px;
   height: var(--carousel-height, 343);
   img {
