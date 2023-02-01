@@ -10,15 +10,16 @@ type MarkerProps = {
   id: number;
   image: string;
   feature: CustomGeoJSONFeatures;
+  handleClickMarker: (id: number) => void;
 };
 
-export default function PointMarker({ feature, image, id }: MarkerProps) {
+export default function PointMarker({ handleClickMarker, feature, image, id }: MarkerProps) {
   const { placeName, filterList } = feature.properties;
   return (
-    <Wrapper onClick={() => console.log(feature)} className="mapgl-marker-animation" id={`${id}`}>
+    <Wrapper className="mapgl-marker-animation" id={`${id}`} onClick={() => handleClickMarker(id)}>
       {/* filterList에 맞게 랜더링해주는지 테스트하기 위한 tag 추후 삭제해주세요 */}
       <div>{filterList.map((filter) => FilterId[filter]).join(', ')}</div>
-      <PlaceName>{placeName}</PlaceName>
+      <CafeName>{placeName}</CafeName>
       <MarkerWrapper>
         <svg width="98" height="111" viewBox="0 0 98 111" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d={backgroundPath} fill="#D9D9D9" stroke="white" />
@@ -66,7 +67,7 @@ const MaskImage = styled.div<{ image: string }>`
   transform: translate(-10px, -10px);
 `;
 
-const PlaceName = styled.div`
+const CafeName = styled.div`
   position: absolute;
   color: #181818;
 

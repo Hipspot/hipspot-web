@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import PointMarker from '@components/Marker/pointMarker';
@@ -11,8 +11,13 @@ import { FeatureCollection } from 'geojson';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { mapConfig } from './utils/mapConfig';
 
-function MapComp() {
+type MapCompProps = {
+  handleClickMarker: (id: number) => void;
+};
+
+function MapComp({ handleClickMarker }: MapCompProps) {
   const features = useRecoilValue(geoJsonSelector);
+  const [featuresOnScreen, setFeaturesOnScreen] = useState<CustomGeoJSONFeatures[]>();
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const mapRef = useRef<mapboxgl.Map>();
   const markerList: { [id in number | string]: mapboxgl.Marker } = useMemo(() => ({}), []);
@@ -21,6 +26,20 @@ function MapComp() {
     mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKKEN}`;
     mapRef.current = new mapboxgl.Map(mapConfig);
     const map = mapRef.current;
+
+    const updateFeaturesOnScreen = () => {
+      const mapboxFeaturesOnScreen = map.querySourceFeatures('placeList');
+      const uniqueIds = new Set<number>();
+
+      mapboxFeaturesOnScreen.forEach((feature) => {
+        const id = feature.properties?.id;
+        if (id !== undefined) {
+          uniqueIds.add(id);
+        }
+      });
+
+      setFeaturesOnScreen(features.filter((feature: CustomGeoJSONFeatures) => uniqueIds.has(feature.properties.id)));
+    };
 
     map.on('load', () => {
       const sourceJson: GeoJSONSourceRaw = {
@@ -37,12 +56,20 @@ function MapComp() {
         },
       });
     });
+
+    map.on('render', updateFeaturesOnScreen);
+    map.once('movestart', () => {
+      map.off('render', updateFeaturesOnScreen);
+    });
+    map.on('moveend', () => {
+      updateFeaturesOnScreen();
+    });
   }, []);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    if (!features) return;
+    if (!featuresOnScreen) return;
 
     Object.entries(markerList).forEach((markerEntry) => {
       const [id, marker] = markerEntry as [string, Marker];
@@ -50,7 +77,7 @@ function MapComp() {
       delete markerList[id];
     });
 
-    features.forEach((feature: CustomGeoJSONFeatures) => {
+    featuresOnScreen.forEach((feature: CustomGeoJSONFeatures) => {
       const { id, filterList } = feature.properties;
 
       if (!filterList.includes(activeFilterId)) return;
@@ -59,6 +86,7 @@ function MapComp() {
         const marker = renderEmotionElementToHtml({
           elem: (
             <PointMarker
+              handleClickMarker={handleClickMarker}
               feature={feature}
               image="https://hipspot.s3.ap-northeast-2.amazonaws.com/store/0.jpg"
               id={id}
@@ -72,7 +100,7 @@ function MapComp() {
         console.error(e);
       }
     });
-  }, [activeFilterId]);
+  }, [activeFilterId, featuresOnScreen]);
 
   return (
     <div

@@ -1,13 +1,21 @@
-import { render } from '@testing-library/react';
+import { getCafeInfo } from '@libs/apis/cafe';
+import data from '@mocks/place/data';
+import { render, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import InfoWindow from '.';
 
-test('Render InfoWindow without crash', () => {
+test('Render InfoWindow without crash', async () => {
+  const mockData = data[0];
+  const cafeInfo = await getCafeInfo(mockData.id);
+
   const component = render(
     <RecoilRoot>
-      <InfoWindow />
+      <InfoWindow cafeInfo={cafeInfo} />
     </RecoilRoot>
   );
 
-  expect(component).toBeTruthy();
+  await waitFor(() => {
+    expect(component).toBeTruthy();
+    expect(component.findByText(mockData.placeName)).toBeTruthy();
+  });
 });

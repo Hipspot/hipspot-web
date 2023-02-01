@@ -5,8 +5,9 @@ import { reactRefUpdate } from '../utils/reactRefUpdate';
 import { cancelAnimation } from '../utils/cancelAnimation';
 
 export const handleTouchStart: (props: HandleEventStartProps) => TouchEventHandler<HTMLDivElement> =
-  ({ smoothLoopId, modifyRef, setTabState }) =>
+  ({ smoothLoopId, modifyRef, setTabState, available }) =>
   (e) => {
+    if (!available) return;
     cancelAnimation(smoothLoopId);
 
     const target = e.target as HTMLDivElement;
@@ -20,10 +21,10 @@ export const handleTouchStart: (props: HandleEventStartProps) => TouchEventHandl
   };
 
 export const handleTouchMove: (props: HandleEventMoveProps) => TouchEventHandler<HTMLDivElement> =
-  ({ tabState, modifyRef, topCoordRef }) =>
+  ({ tabState, modifyRef, topCoordRef, available }) =>
   (e) => {
     const { onHandling } = tabState;
-    if (onHandling) {
+    if (onHandling && available) {
       reactRefUpdate({ ref: topCoordRef, update: e.touches[0].clientY });
 
       const target = e.target as HTMLDivElement;
