@@ -10,7 +10,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint './src/**/*.{ts,tsx,js,jsx}'",
     "lint:fix": "eslint --fix './src/**/*.{ts,tsx,js,jsx}'",
-    "prettier": "prettier --write --config ./.prettierrc './src/**/*.{ts,tsx}'"
+    "prettier": "prettier --write --config ./.prettierrc './src/**/*.{ts,tsx}'",
+    "deploy": "npm run build && netlify deploy --prod"
   },
   "dependencies": {
     "@emotion/cache": "^11.10.5",
