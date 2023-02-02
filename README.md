@@ -7,6 +7,8 @@
   <a href='https://github.com/Hipspot/hipspot-web/blob/main/LICENSE'><img src='https://img.shields.io/github/license/Hipspot/hipspot-web'></a>
 </p>
 
+[![배포 상태](https://api.netlify.com/api/v1/badges/b93ff31f-5079-4d08-a7ec-9e0e674807ff/deploy-status)](https://app.netlify.com/sites/hipspot-webview/deploys)
+
 # Hipspot Web
 
 내가 가고싶은 카페를 찾아주는 플랫폼 서비스
