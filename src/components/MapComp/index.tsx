@@ -2,11 +2,12 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import PointMarker from '@components/Marker/pointMarker';
+import ClusterMarker from '@components/Marker/clusterMarker';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 import { renderEmotionElementToHtml } from '@libs/utils/renderEmotionElementToHtml';
 import { geoJsonSelector } from '@states/map';
 import { activeFilterIdAtom } from '@states/ui';
-import mapboxgl, { GeoJSONSourceRaw, Marker } from 'mapbox-gl';
+import mapboxgl, { GeoJSONSource, GeoJSONSourceRaw, MapboxGeoJSONFeature, Marker } from 'mapbox-gl';
 import { FeatureCollection } from 'geojson';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { mapConfig } from './utils/mapConfig';
@@ -18,6 +19,7 @@ type MapCompProps = {
 function MapComp({ handleClickMarker }: MapCompProps) {
   const features = useRecoilValue(geoJsonSelector);
   const [featuresOnScreen, setFeaturesOnScreen] = useState<CustomGeoJSONFeatures[]>();
+  const [clustersOnScreen, setClustersOnScreen] = useState<MapboxGeoJSONFeature[]>([]);
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const mapRef = useRef<mapboxgl.Map>();
   const markerList: { [id in number | string]: mapboxgl.Marker } = useMemo(() => ({}), []);
@@ -31,13 +33,20 @@ function MapComp({ handleClickMarker }: MapCompProps) {
       const mapboxFeaturesOnScreen = map.querySourceFeatures('placeList');
       const uniqueIds = new Set<number>();
 
+      const clusters: MapboxGeoJSONFeature[] = [];
       mapboxFeaturesOnScreen.forEach((feature) => {
+        if (feature.properties?.cluster) {
+          clusters.push(feature);
+          return;
+        }
+
         const id = feature.properties?.id;
         if (id !== undefined) {
           uniqueIds.add(id);
         }
       });
 
+      setClustersOnScreen(clusters);
       setFeaturesOnScreen(features.filter((feature: CustomGeoJSONFeatures) => uniqueIds.has(feature.properties.id)));
     };
 
@@ -45,6 +54,9 @@ function MapComp({ handleClickMarker }: MapCompProps) {
       const sourceJson: GeoJSONSourceRaw = {
         type: 'geojson',
         data: { type: 'FeatureCollection', features } as FeatureCollection,
+        cluster: true,
+        clusterMaxZoom: 16,
+        clusterRadius: 60,
       };
       map.addSource('placeList', sourceJson);
       map.addLayer({
@@ -61,15 +73,33 @@ function MapComp({ handleClickMarker }: MapCompProps) {
     map.once('movestart', () => {
       map.off('render', updateFeaturesOnScreen);
     });
-    map.on('moveend', () => {
-      updateFeaturesOnScreen();
-    });
+    map.on('moveend', updateFeaturesOnScreen);
   }, []);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
     if (!featuresOnScreen) return;
+
+    const source = map.getSource('placeList') as GeoJSONSource;
+    clustersOnScreen.forEach((feature) => {
+      console.log(feature.geometry);
+
+      const id = feature.properties?.cluster_id;
+      const count = feature.properties?.point_count;
+
+      const geo = feature.geometry;
+      source.getClusterLeaves(id, 99, 0, (err, leaves) => {
+        console.log(leaves);
+      });
+      const marker = renderEmotionElementToHtml({
+        elem: <ClusterMarker number={count} />,
+        cssDataKey: 'cluster',
+      });
+      if (geo.type === 'GeometryCollection') return;
+      new mapboxgl.Marker(marker).setLngLat(geo.coordinates as [number, number]).addTo(map);
+    });
+    console.log(clustersOnScreen);
 
     Object.entries(markerList).forEach((markerEntry) => {
       const [id, marker] = markerEntry as [string, Marker];
