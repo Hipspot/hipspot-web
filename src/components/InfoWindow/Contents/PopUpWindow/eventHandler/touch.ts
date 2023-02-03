@@ -1,8 +1,9 @@
 import { TouchEventHandler } from 'react';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import { TabState, HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps } from '@libs/types/infowindow';
-import { DOMID_CAROUSEL } from '@constants/DOMId';
-import { EVENT_CHANGE_CAROUSEL } from '@constants/event';
+import { DOMID_BLURFRAME, DOMID_CAROUSEL } from '@constants/DOMId';
+import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
+import { SlideUpWindowEvent } from '@libs/types/customEvents';
 import { reactRefUpdate } from '../utils/reactRefUpdate';
 import { cancelAnimation } from '../utils/cancelAnimation';
 
@@ -31,11 +32,12 @@ export const handleTouchMove: (props: HandleEventMoveProps) => TouchEventHandler
 
       const target = e.target as HTMLDivElement;
       const infoWindowElem = target.parentElement as HTMLDivElement;
-      infoWindowElem.style.setProperty('top', `${e.touches[0].clientY + modifyRef.current}px`);
+      const currentTop = e.touches[0].clientY + modifyRef.current;
+      infoWindowElem.style.setProperty('top', `${currentTop}px`);
 
-      const slideEvent: Event = Object.assign(new Event(EVENT_CHANGE_CAROUSEL), { clientY: e.touches[0].clientY });
-      const a = document.getElementById(DOMID_CAROUSEL)!;
-      a.dispatchEvent(slideEvent);
+      const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), { currentTop });
+      document.getElementById(DOMID_CAROUSEL)!.dispatchEvent(slideEvent);
+      document.getElementById(DOMID_BLURFRAME)!.dispatchEvent(slideEvent);
     }
   };
 

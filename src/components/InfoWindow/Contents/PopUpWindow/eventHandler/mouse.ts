@@ -1,8 +1,9 @@
 import { MouseEventHandler } from 'react';
 import { HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps, TabState } from '@libs/types/infowindow';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
-import { DOMID_CAROUSEL } from '@constants/DOMId';
-import { EVENT_CHANGE_CAROUSEL } from '@constants/event';
+import { DOMID_BLURFRAME, DOMID_CAROUSEL } from '@constants/DOMId';
+import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
+import { SlideUpWindowEvent } from '@libs/types/customEvents';
 import { cancelAnimation } from '../utils/cancelAnimation';
 import { reactRefUpdate } from '../utils/reactRefUpdate';
 
@@ -33,11 +34,13 @@ export const handleMouseMove: (eventMoveProps: HandleEventMoveProps) => MouseEve
       topCoordRef.current = e.clientY;
       const target = e.target as HTMLDivElement;
       const infoWindowElem = target.parentElement as HTMLDivElement;
-      infoWindowElem.style.setProperty('top', `${e.clientY + modifyRef.current}px`);
+      const currentTop = e.clientY + modifyRef.current;
 
-      const slideEvent: Event = Object.assign(new Event(EVENT_CHANGE_CAROUSEL), { clientY: e.clientY });
-      console.log(slideEvent);
+      infoWindowElem.style.setProperty('top', `${currentTop}px`);
+
+      const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), { currentTop });
       document.getElementById(DOMID_CAROUSEL)?.dispatchEvent(slideEvent);
+      document.getElementById(DOMID_BLURFRAME)?.dispatchEvent(slideEvent);
     }
   };
 

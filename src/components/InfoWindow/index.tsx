@@ -1,9 +1,7 @@
 import styled from '@emotion/styled';
 import { activatedCafeIdAtom, cafeInfoQuery, tabStateAtom } from '@states/infoWindow';
 import { useRecoilValue, useRecoilValueLoadable } from 'recoil';
-import { css } from '@emotion/react';
 import MakeLodableSuspense from '@components/MakeLodableSuspense';
-import { PopUpWindowState } from '@libs/types/infowindow';
 import { DOMID_BLURFRAME, DOMID_CAROUSEL, DOMID_POP_UP_WINDOW } from '@constants/DOMId';
 import * as MapButtonList from './Contents/MapButtonList';
 import TabBar from './Contents/TabBar';
@@ -11,6 +9,7 @@ import Title, { TitleSkeleton } from './Contents/Title';
 import CustomCarousel, { CustomCarouselSkeleton } from './Contents/Carousel';
 import Information, { InformationSkeleton } from './Contents/Information';
 import PopUpWindow from './Contents/PopUpWindow';
+import BlurFrame from './Contents/BlurFrame';
 
 export default function InfoWindow() {
   const tabState = useRecoilValue(tabStateAtom);
@@ -28,7 +27,7 @@ export default function InfoWindow() {
           </TitleWrapper>
           <CarouselWrapper>
             <MakeLodableSuspense lodableState={state} loading={<CustomCarouselSkeleton />}>
-              <CustomCarousel imageList={contents.imageList} id={DOMID_CAROUSEL} />
+              <CustomCarousel imageList={contents.imageList} id={DOMID_CAROUSEL} popUpState={tabState.popUpState} />
             </MakeLodableSuspense>
           </CarouselWrapper>
           <TabBar isSelected />
@@ -57,31 +56,6 @@ export default function InfoWindow() {
     <Loading />
   );
 }
-
-const BlurFrame = styled.div<{ popUpState: PopUpWindowState }>`
-  width: 100%;
-  height: 100%;
-  padding-top: 30px;
-
-  display: flex;
-  flex-direction: column;
-
-  overflow: scroll;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  ${(props) =>
-    props.popUpState === 'full'
-      ? css`
-          background: transparent;
-          backdrop-filter: blur(8px);
-        `
-      : css`
-          background: white;
-        `};
-`;
 
 const TopSection = styled.section``;
 const Section = styled.section`

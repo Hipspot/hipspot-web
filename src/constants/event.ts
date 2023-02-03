@@ -1,1 +1,1 @@
-export const EVENT_CHANGE_CAROUSEL = 'carousel_change';
+export const EVENT_SLIDE_UP_WINDOW = 'slide_up_window';
