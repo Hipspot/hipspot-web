@@ -1,8 +1,9 @@
+import { useEffect } from 'react';
 import styled from '@emotion/styled';
 import { activatedCafeIdAtom, cafeInfoQuery, tabStateAtom } from '@states/infoWindow';
 import { useRecoilValue, useRecoilValueLoadable } from 'recoil';
 import MakeLodableSuspense from '@components/MakeLodableSuspense';
-import { DOMID_BLURFRAME, DOMID_CAROUSEL, DOMID_POP_UP_WINDOW } from '@constants/DOMId';
+import { DOMID_BLURFRAME, DOMID_CAROUSEL, DOMID_POP_UP_WINDOW, DOMTargetList } from '@constants/DOM';
 import * as MapButtonList from './Contents/MapButtonList';
 import TabBar from './Contents/TabBar';
 import Title, { TitleSkeleton } from './Contents/Title';
@@ -16,9 +17,16 @@ export default function InfoWindow() {
   const activatedCafeId = useRecoilValue(activatedCafeIdAtom);
   const { state, contents } = useRecoilValueLoadable(cafeInfoQuery(activatedCafeId));
 
+  useEffect(() => {
+    if (!contents) return;
+    DOMTargetList[DOMID_BLURFRAME] = document.getElementById(DOMID_BLURFRAME);
+    DOMTargetList[DOMID_CAROUSEL] = document.getElementById(DOMID_CAROUSEL);
+    DOMTargetList[DOMID_POP_UP_WINDOW] = document.getElementById(DOMID_POP_UP_WINDOW);
+  }, [contents]);
+
   return contents ? (
     <PopUpWindow id={DOMID_POP_UP_WINDOW} available={!!contents} tabState={tabState}>
-      <BlurFrame id={DOMID_BLURFRAME} popUpState={tabState.popUpState}>
+      <BlurFrame id={DOMID_BLURFRAME} tabState={tabState}>
         <TopSection>
           <TitleWrapper>
             <MakeLodableSuspense lodableState={state} loading={<TitleSkeleton />}>

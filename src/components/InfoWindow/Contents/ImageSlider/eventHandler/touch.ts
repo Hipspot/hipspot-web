@@ -7,7 +7,6 @@ import { reactRefUpdate } from '../../PopUpWindow/utils/reactRefUpdate';
 export const handleTouchStart: (props: HandleImageSliderStartProps) => TouchEventHandler<HTMLElement> =
   ({ imageSliderRef }) =>
   (e) => {
-    e.stopPropagation();
 
     const target = e.currentTarget as HTMLDivElement;
     target.style.setProperty('--transition-duration', `0s`);
@@ -21,7 +20,6 @@ export const handleTouchStart: (props: HandleImageSliderStartProps) => TouchEven
 export const handleTouchMove: (props: HandleImageSlideMoveProps) => TouchEventHandler<HTMLElement> =
   ({ imageSliderRef }) =>
   (e) => {
-    e.stopPropagation();
 
     if (imageSliderRef.current && imageSliderRef.current.onHandling) {
       const { left: prevLeft, x } = imageSliderRef.current;
@@ -41,7 +39,6 @@ export const handleTouchEnd: (props: HandleImageSliderEndProps) => TouchEventHan
   ({ imageSliderRef }) =>
   (e) => {
     e.preventDefault();
-    e.stopPropagation();
     if (imageSliderRef.current) {
       const target = e.currentTarget as HTMLElement;
       const r = document.querySelector(':root') as HTMLDivElement;

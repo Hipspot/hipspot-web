@@ -1,4 +1,4 @@
-import { DOMID_BLURFRAME, DOMID_CAROUSEL } from '@constants/DOMId';
+import { DOMID_CAROUSEL } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import { popUpHeights } from '@constants/popUpHeights';
 import { SlideUpWindowEvent } from '@libs/types/customEvents';
@@ -17,8 +17,9 @@ interface CarouselProps {
 }
 
 function CustomCarousel({ id, imageList, tabState }: CarouselProps) {
-  const onSlidePopUpWindow = handleSlidePopUpWindow({ popUpHeights });
   const [imageIndex, setImageIndex] = useState<number>(0);
+
+  const onSlidePopUpWindow = handleSlidePopUpWindow({ popUpHeights });
 
   useEffect(() => {
     const elem = document.getElementById(id);
@@ -32,10 +33,9 @@ function CustomCarousel({ id, imageList, tabState }: CarouselProps) {
     const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), {
       currentTop: tabState.top,
     });
-
     document.getElementById(DOMID_CAROUSEL)?.dispatchEvent(slideEvent);
-    document.getElementById(DOMID_BLURFRAME)?.dispatchEvent(slideEvent);
   }, [tabState]);
+
   return (
     <S.ComponentWrapper id={id}>
       {tabState.popUpState === 'full' ? (

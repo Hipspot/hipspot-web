@@ -19,7 +19,6 @@ export const Wrapper = styled.div<{ popUpState: PopUpWindowState }>`
   ${(props) =>
     props.popUpState === 'full'
       ? css`
-          background: rgba(250, 120, 1, 0.06);
           backdrop-filter: blur(8px);
         `
       : css`

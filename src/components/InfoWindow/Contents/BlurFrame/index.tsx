@@ -1,17 +1,19 @@
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
-import { PopUpWindowState } from '@libs/types/infowindow';
+import { TabState } from '@libs/types/infowindow';
+import { SlideUpWindowEvent } from '@libs/types/customEvents';
+import { DOMID_BLURFRAME } from '@constants/DOM';
 import { popUpHeights } from '@constants/popUpHeights';
 import { useEffect } from 'react';
 import { handleSlideUpWindowForBlurFrame as handleSlideUpWindow } from './eventHandler/slideUpWindow';
 import * as S from './style';
 
 interface BlurFrameProps {
-  popUpState: PopUpWindowState;
+  tabState: TabState;
   id: string;
   children: React.ReactNode;
 }
 
-function BlurFrame({ popUpState, id, children }: BlurFrameProps) {
+function BlurFrame({ tabState, id, children }: BlurFrameProps) {
   const onSlidePopUpWindow = handleSlideUpWindow({ popUpHeights });
 
   useEffect(() => {
@@ -21,8 +23,16 @@ function BlurFrame({ popUpState, id, children }: BlurFrameProps) {
       elem.addEventListener(EVENT_SLIDE_UP_WINDOW, onSlidePopUpWindow);
     }
   }, []);
+
+  useEffect(() => {
+    const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), {
+      currentTop: tabState.top,
+    });
+    document.getElementById(DOMID_BLURFRAME)?.dispatchEvent(slideEvent);
+  }, [tabState]);
+
   return (
-    <S.Wrapper id={id} popUpState={popUpState}>
+    <S.Wrapper id={id} popUpState={tabState.popUpState}>
       {children}
     </S.Wrapper>
   );

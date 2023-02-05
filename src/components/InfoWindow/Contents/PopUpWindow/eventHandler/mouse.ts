@@ -1,7 +1,7 @@
 import { MouseEventHandler } from 'react';
 import { HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps, TabState } from '@libs/types/infowindow';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
-import { DOMID_BLURFRAME, DOMID_CAROUSEL } from '@constants/DOMId';
+import { DOMID_BLURFRAME, DOMID_CAROUSEL } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import { SlideUpWindowEvent } from '@libs/types/customEvents';
 import { cancelAnimation } from '../utils/cancelAnimation';

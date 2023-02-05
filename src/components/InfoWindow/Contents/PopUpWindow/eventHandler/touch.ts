@@ -1,7 +1,7 @@
 import { TouchEventHandler } from 'react';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import { TabState, HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps } from '@libs/types/infowindow';
-import { DOMID_BLURFRAME, DOMID_CAROUSEL } from '@constants/DOMId';
+import { DOMID_BLURFRAME, DOMID_CAROUSEL } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import { SlideUpWindowEvent } from '@libs/types/customEvents';
 import { reactRefUpdate } from '../utils/reactRefUpdate';

@@ -1,7 +1,10 @@
 import { CSSVAR_CAROUSEL_HEIGHT } from '@constants/cssVar';
+import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import styled from '@emotion/styled';
 import { ImageSliderRef } from '@libs/types/slider';
+import { tabStateAtom } from '@states/infoWindow';
 import { useRef } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { handleMouseDown, handleMouseMove, handleMouseUp } from './eventHandler/mouse';
 import { handleTouchEnd, handleTouchMove, handleTouchStart } from './eventHandler/touch';
 
@@ -11,6 +14,7 @@ interface SlideProps {
 }
 
 function ImageSlider({ imageList, imageIndex }: SlideProps) {
+  const setTabState = useSetRecoilState(tabStateAtom);
   const imageSliderRef = useRef<ImageSliderRef>({
     x: 0,
     startX: 0,
@@ -39,7 +43,13 @@ function ImageSlider({ imageList, imageIndex }: SlideProps) {
       onTouchEndCapture={onTouchEndCapture}
     >
       {imageList.map((imageSrc) => (
-        <Image src={imageSrc} key={imageSrc} />
+        <Image
+          src={imageSrc}
+          key={imageSrc}
+          onDoubleClick={() => {
+            setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.top], popUpState: 'full' }));
+          }}
+        />
       ))}
     </SlideContainer>
   );
