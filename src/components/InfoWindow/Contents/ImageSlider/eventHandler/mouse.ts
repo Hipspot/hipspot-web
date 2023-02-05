@@ -10,8 +10,9 @@ export const handleMouseDown: (props: HandleImageSliderStartProps) => MouseEvent
     e.preventDefault();
     e.stopPropagation();
 
-    const target = e.currentTarget as HTMLDivElement;
-    target.style.setProperty('--transition-duration', `0s`);
+    const r = document.getElementById('carousel') as HTMLDivElement;
+
+    r.style.setProperty('--transition-duration', `0s`);
 
     reactRefUpdate({
       ref: imageSliderRef,
@@ -29,9 +30,9 @@ export const handleMouseMove: (props: HandleImageSlideMoveProps) => MouseEventHa
       const { left: prevLeft, x } = imageSliderRef.current;
       const move = e.clientX - x;
       const left = prevLeft + move;
-      const target = e.currentTarget as HTMLElement;
+      const r = document.getElementById('carousel') as HTMLDivElement;
 
-      target.style.setProperty('--image-translate', `${left}px`);
+      r.style.setProperty('--image-translate', `${left}px`);
       reactRefUpdate({
         ref: imageSliderRef,
         update: { ...imageSliderRef.current, x: e.clientX, left },
@@ -40,13 +41,12 @@ export const handleMouseMove: (props: HandleImageSlideMoveProps) => MouseEventHa
   };
 
 export const handleMouseUp: (props: HandleImageSliderEndProps) => MouseEventHandler<HTMLElement> =
-  ({ imageSliderRef }) =>
+  ({ imageSliderRef, setImageIndex }) =>
   (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (imageSliderRef.current) {
-      const target = e.currentTarget as HTMLElement;
-      const r = document.querySelector(':root') as HTMLDivElement;
+    if (imageSliderRef.current && imageSliderRef.current.onHandling) {
+      const r = document.getElementById('carousel') as HTMLDivElement;
       const width = parseFloat(r.style.getPropertyValue(CSSVAR_CAROUSEL_HEIGHT));
       const blockWidth = width + 16;
       const { left, imageListLength, startX, index: prevIndex } = imageSliderRef.current;
@@ -59,12 +59,13 @@ export const handleMouseUp: (props: HandleImageSliderEndProps) => MouseEventHand
 
       const leftCorrectionValue = calcImageListPosition({ left, width: blockWidth, index });
 
-      target.style.setProperty('--image-translate', `${leftCorrectionValue}px`);
-      target.style.setProperty('--transition-duration', `0.2s`);
+      r.style.setProperty('--image-translate', `${leftCorrectionValue}px`);
+      r.style.setProperty('--transition-duration', `0.2s`);
 
       reactRefUpdate({
         ref: imageSliderRef,
         update: { ...imageSliderRef.current, x: 0, startX: 0, onHandling: false, left: leftCorrectionValue, index },
       });
+      setImageIndex(index);
     }
   };

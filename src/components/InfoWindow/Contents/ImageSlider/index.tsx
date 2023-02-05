@@ -1,20 +1,25 @@
 import { CSSVAR_CAROUSEL_HEIGHT } from '@constants/cssVar';
+import { DOMID_CAROUSEL } from '@constants/DOM';
+import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import styled from '@emotion/styled';
+import { SlideUpWindowEvent } from '@libs/types/customEvents';
 import { ImageSliderRef } from '@libs/types/slider';
+import { calcImageListPosition } from '@libs/utils/calc';
 import { tabStateAtom } from '@states/infoWindow';
-import { useRef } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { reactRefUpdate } from '../PopUpWindow/utils/reactRefUpdate';
 import { handleMouseDown, handleMouseMove, handleMouseUp } from './eventHandler/mouse';
 import { handleTouchEnd, handleTouchMove, handleTouchStart } from './eventHandler/touch';
 
 interface SlideProps {
   imageList: string[];
-  imageIndex: number;
 }
 
-function ImageSlider({ imageList, imageIndex }: SlideProps) {
-  const setTabState = useSetRecoilState(tabStateAtom);
+function ImageSlider({ imageList }: SlideProps) {
+  const [imageIndex, setImageIndex] = useState(0);
+  const [tabState, setTabState] = useRecoilState(tabStateAtom);
   const imageSliderRef = useRef<ImageSliderRef>({
     x: 0,
     startX: 0,
@@ -26,14 +31,45 @@ function ImageSlider({ imageList, imageIndex }: SlideProps) {
 
   const onMouseDownCapture = handleMouseDown({ imageSliderRef });
   const onMouseMoveCapture = handleMouseMove({ imageSliderRef });
-  const onMouseUpCapture = handleMouseUp({ imageIndex, imageSliderRef });
+  const onMouseUpCapture = handleMouseUp({ imageSliderRef, setImageIndex });
   const onTouchStartCapture = handleTouchStart({ imageSliderRef });
   const onTouchMoveCapture = handleTouchMove({ imageSliderRef });
-  const onTouchEndCapture = handleTouchEnd({ imageIndex, imageSliderRef });
+  const onTouchEndCapture = handleTouchEnd({ imageSliderRef, setImageIndex });
+
+  useEffect(() => {
+    const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), {
+      currentTop: tabState.top,
+    });
+    document.getElementById(DOMID_CAROUSEL)?.dispatchEvent(slideEvent);
+    if (tabState.popUpState === 'half' || tabState.popUpState === 'thumbNail') {
+      const a = 170;
+      document.getElementById(DOMID_CAROUSEL)?.style.setProperty(CSSVAR_CAROUSEL_HEIGHT, `${a}px`);
+    }
+    if (tabState.popUpState === 'full') {
+      const a = window.innerWidth - 32;
+      document.getElementById(DOMID_CAROUSEL)?.style.setProperty(CSSVAR_CAROUSEL_HEIGHT, `${a}px`);
+    }
+
+    const r = document.getElementById('carousel') as HTMLDivElement;
+    const value = tabState.popUpState === 'full' ? window.innerWidth - 32 : 170;
+    const blockWidth = value + 16;
+
+    const leftCorrectionValue = calcImageListPosition({
+      left: imageSliderRef.current.left,
+      width: blockWidth,
+      index: imageIndex,
+    });
+    r.style.setProperty('--image-translate', `${leftCorrectionValue}px`);
+    r.style.setProperty('--transition-duration', `0s`);
+
+    reactRefUpdate({
+      ref: imageSliderRef,
+      update: { ...imageSliderRef.current, x: 0, startX: 0, onHandling: false, left: leftCorrectionValue },
+    });
+  }, [tabState]);
 
   return (
     <SlideContainer
-      imageIndex={imageIndex}
       onMouseMoveCapture={onMouseMoveCapture}
       onMouseDownCapture={onMouseDownCapture}
       onMouseUpCapture={onMouseUpCapture}
@@ -42,10 +78,13 @@ function ImageSlider({ imageList, imageIndex }: SlideProps) {
       onTouchMoveCapture={onTouchMoveCapture}
       onTouchEndCapture={onTouchEndCapture}
     >
-      {imageList.map((imageSrc) => (
+      {imageList.map((imageSrc, i) => (
         <Image
           src={imageSrc}
           key={imageSrc}
+          selected={i === imageIndex}
+          initHeight={tabState.popUpState === 'full' ? window.innerWidth - 32 : 170}
+          className={`${i === imageIndex ? 'selected' : ''}`}
           onDoubleClick={() => {
             setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.top], popUpState: 'full' }));
           }}
@@ -57,8 +96,8 @@ function ImageSlider({ imageList, imageIndex }: SlideProps) {
 
 export default ImageSlider;
 
-const SlideContainer = styled.div<{ imageIndex: number }>`
-  height: var(--carouset-height);
+const SlideContainer = styled.div`
+  height: var(${CSSVAR_CAROUSEL_HEIGHT});
   padding-left: 16px;
   width: 1000vw;
   display: flex;
@@ -71,18 +110,15 @@ const SlideContainer = styled.div<{ imageIndex: number }>`
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
-  :root {
-    --image-translate: translateX(0px);
-    --transition-duration: 0s;
-  }
+
   transform: translate3d(var(--image-translate), 0px, 0px);
   transition: ease-in-out var(--transition-duration);
 `;
-const Image = styled.img`
+const Image = styled.img<{ selected: boolean; initHeight: number }>`
   border-radius: 8px;
   flex: 0 0 auto;
-  width: var(${CSSVAR_CAROUSEL_HEIGHT});
-  height: var(${CSSVAR_CAROUSEL_HEIGHT});
+  height: ${(props) => (props.selected ? `var(${CSSVAR_CAROUSEL_HEIGHT})` : `${props.initHeight}px`)};
+  width: ${(props) => (props.selected ? `var(${CSSVAR_CAROUSEL_HEIGHT})` : `${props.initHeight}px`)};
   object-fit: cover;
   object-position: center;
 `;

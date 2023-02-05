@@ -18,6 +18,6 @@ export interface HandleImageSlideMoveProps {
 }
 
 export interface HandleImageSliderEndProps {
-  imageIndex: number;
   imageSliderRef: RefObject<ImageSliderRef>;
+  setImageIndex: React.Dispatch<React.SetStateAction<number>>;
 }

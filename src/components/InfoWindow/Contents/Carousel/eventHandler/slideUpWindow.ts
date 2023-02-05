@@ -24,6 +24,7 @@ export const handleSlidePopUpWindowForCarousel =
       ratio,
     });
 
-    const r = document.querySelector(':root') as HTMLHtmlElement;
+    const r = document.getElementById('carousel') as HTMLHtmlElement;
     r.style.setProperty(CSSVAR_CAROUSEL_HEIGHT, `${carouselHeight}px`);
+    r.style.setProperty('--transition-duration', '0s');
   };

@@ -1,10 +1,11 @@
+import { CSSVAR_CAROUSEL_HEIGHT } from '@constants/cssVar';
 import styled from '@emotion/styled';
 import { Carousel } from 'react-responsive-carousel';
 
 export const SkeltonWrapper = styled.div`
   padding: 0px 16px;
   width: 100%;
-  height: var(--carousel-height, 343);
+  height: var(${CSSVAR_CAROUSEL_HEIGHT}, 343);
   & > div {
     background-color: #d6d6d6;
     width: 100%;
@@ -18,11 +19,14 @@ export const SkeltonWrapper = styled.div`
 
 export const ComponentWrapper = styled.div`
   overflow: hidden;
+  :root {
+    --image-translate: translateX(0px);
+  }
 `;
 
 export const StyledCarousel = styled(Carousel)`
   padding: 0px 16px;
-  height: var(--carousel-height, 343);
+  height: var(${CSSVAR_CAROUSEL_HEIGHT}, 343);
   img {
     height: inherit;
     object-fit: cover;
@@ -30,7 +34,7 @@ export const StyledCarousel = styled(Carousel)`
   }
 
   li img {
-    height: var(--carousel-height, 343);
+    height: var(${CSSVAR_CAROUSEL_HEIGHT}, 343);
     border-radius: 8px;
   }
 
@@ -53,7 +57,10 @@ export const StyledCarousel = styled(Carousel)`
     padding: 2px 0px;
 
     position: absolute;
-    top: calc(var(--carousel-height, 343) - 30px);
+    top: calc(var(${CSSVAR_CAROUSEL_HEIGHT}, 343) - 30px);
     right: 8px;
+  }
+  :root {
+    ${CSSVAR_CAROUSEL_HEIGHT}: 140px;
   }
 `;

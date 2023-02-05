@@ -35,7 +35,7 @@ export default function InfoWindow() {
           </TitleWrapper>
           <CarouselWrapper>
             <MakeLodableSuspense lodableState={state} loading={<CustomCarouselSkeleton />}>
-              <CustomCarousel imageList={contents.imageList} id={DOMID_CAROUSEL} tabState={tabState} />
+              <CustomCarousel imageList={contents.imageList} id={DOMID_CAROUSEL} />
             </MakeLodableSuspense>
           </CarouselWrapper>
           <TabBar isSelected />
@@ -81,9 +81,7 @@ const TitleWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
-const CarouselWrapper = styled.div`
-  height: var(--carousel-height, 343);
-`;
+const CarouselWrapper = styled.div``;
 
 const Loading = styled.div`
   width: 100%;

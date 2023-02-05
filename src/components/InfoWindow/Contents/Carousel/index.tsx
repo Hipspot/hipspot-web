@@ -1,9 +1,6 @@
-import { DOMID_CAROUSEL } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import { popUpHeights } from '@constants/popUpHeights';
-import { SlideUpWindowEvent } from '@libs/types/customEvents';
-import { TabState } from '@libs/types/infowindow';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Loading from 'react-loading';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import ImageSlider from '../ImageSlider';
@@ -13,12 +10,9 @@ import * as S from './style';
 interface CarouselProps {
   id: string;
   imageList: string[];
-  tabState: TabState;
 }
 
-function CustomCarousel({ id, imageList, tabState }: CarouselProps) {
-  const [imageIndex, setImageIndex] = useState<number>(0);
-
+function CustomCarousel({ id, imageList }: CarouselProps) {
   const onSlidePopUpWindow = handleSlidePopUpWindow({ popUpHeights });
 
   useEffect(() => {
@@ -29,35 +23,9 @@ function CustomCarousel({ id, imageList, tabState }: CarouselProps) {
     }
   }, []);
 
-  useEffect(() => {
-    const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), {
-      currentTop: tabState.top,
-    });
-    document.getElementById(DOMID_CAROUSEL)?.dispatchEvent(slideEvent);
-  }, [tabState]);
-
   return (
     <S.ComponentWrapper id={id}>
-      {tabState.popUpState === 'full' ? (
-        <S.StyledCarousel
-          infiniteLoop
-          showIndicators={false}
-          showThumbs={false}
-          showArrows={false}
-          statusFormatter={(currentItem: number, total: number) => `${currentItem}/${total}`}
-          onChange={(index) => {
-            setImageIndex(index);
-          }}
-        >
-          {imageList.map((image) => (
-            <div key={image}>
-              <img src={image} alt="" />
-            </div>
-          ))}
-        </S.StyledCarousel>
-      ) : (
-        <ImageSlider imageList={imageList} imageIndex={imageIndex} />
-      )}
+      <ImageSlider imageList={imageList} />
     </S.ComponentWrapper>
   );
 }
