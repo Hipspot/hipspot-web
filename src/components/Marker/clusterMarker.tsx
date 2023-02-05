@@ -33,10 +33,6 @@ export default function ClusterMarker({ number }: ClusterMarkerProps) {
 }
 
 const Wrapper = styled.div<{ color: string }>`
-  position: absolute;
-  left: 106px;
-  top: 381px;
-
   width: 64px;
   height: 64px;
   background-color: ${(props) => props.color};

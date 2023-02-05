@@ -23,6 +23,7 @@ function MapComp({ handleClickMarker }: MapCompProps) {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const mapRef = useRef<mapboxgl.Map>();
   const markerList: { [id in number | string]: mapboxgl.Marker } = useMemo(() => ({}), []);
+  const clusterMarkerList: mapboxgl.Marker[] = useMemo(() => [], []);
 
   useEffect(() => {
     mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKKEN}`;
@@ -77,29 +78,9 @@ function MapComp({ handleClickMarker }: MapCompProps) {
   }, []);
 
   useEffect(() => {
-    const map = mapRef.current;
+    const map = mapRef?.current;
     if (!map) return;
     if (!featuresOnScreen) return;
-
-    const source = map.getSource('placeList') as GeoJSONSource;
-    clustersOnScreen.forEach((feature) => {
-      console.log(feature.geometry);
-
-      const id = feature.properties?.cluster_id;
-      const count = feature.properties?.point_count;
-
-      const geo = feature.geometry;
-      source.getClusterLeaves(id, 99, 0, (err, leaves) => {
-        console.log(leaves);
-      });
-      const marker = renderEmotionElementToHtml({
-        elem: <ClusterMarker number={count} />,
-        cssDataKey: 'cluster',
-      });
-      if (geo.type === 'GeometryCollection') return;
-      new mapboxgl.Marker(marker).setLngLat(geo.coordinates as [number, number]).addTo(map);
-    });
-    console.log(clustersOnScreen);
 
     Object.entries(markerList).forEach((markerEntry) => {
       const [id, marker] = markerEntry as [string, Marker];
@@ -130,7 +111,31 @@ function MapComp({ handleClickMarker }: MapCompProps) {
         console.error(e);
       }
     });
-  }, [activeFilterId, featuresOnScreen]);
+
+    clusterMarkerList.forEach((marker) => {
+      marker.remove();
+    });
+
+    const source = map.getSource('placeList') as GeoJSONSource;
+    console.log(clustersOnScreen);
+    clustersOnScreen.forEach((feature) => {
+      const id = feature.properties?.cluster_id;
+      const count = feature.properties?.point_count;
+
+      const geo = feature.geometry;
+      source.getClusterLeaves(id, 99, 0, (err, leaves) => {
+        console.log(leaves);
+      });
+      const marker = renderEmotionElementToHtml({
+        elem: <ClusterMarker number={count} />,
+        cssDataKey: 'cluster',
+      });
+      if (geo.type === 'GeometryCollection') return;
+
+      const newMarker = new mapboxgl.Marker(marker).setLngLat(geo.coordinates as [number, number]).addTo(map);
+      clusterMarkerList.push(newMarker);
+    });
+  }, [activeFilterId, featuresOnScreen, clustersOnScreen]);
 
   return (
     <div
