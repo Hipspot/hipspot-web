@@ -1,20 +1,22 @@
+import { DOMID_BLURFRAME, DOMID_CAROUSEL } from '@constants/DOMId';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import { popUpHeights } from '@constants/popUpHeights';
-import { PopUpWindowState } from '@libs/types/infowindow';
+import { SlideUpWindowEvent } from '@libs/types/customEvents';
+import { TabState } from '@libs/types/infowindow';
 import { useEffect, useState } from 'react';
 import Loading from 'react-loading';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import Slide from '../ImageSlider';
+import ImageSlider from '../ImageSlider';
 import { handleSlidePopUpWindowForCarousel as handleSlidePopUpWindow } from './eventHandler/slideUpWindow';
 import * as S from './style';
 
 interface CarouselProps {
   id: string;
   imageList: string[];
-  popUpState: PopUpWindowState;
+  tabState: TabState;
 }
 
-function CustomCarousel({ id, imageList, popUpState }: CarouselProps) {
+function CustomCarousel({ id, imageList, tabState }: CarouselProps) {
   const onSlidePopUpWindow = handleSlidePopUpWindow({ popUpHeights });
   const [imageIndex, setImageIndex] = useState<number>(0);
 
@@ -26,9 +28,17 @@ function CustomCarousel({ id, imageList, popUpState }: CarouselProps) {
     }
   }, []);
 
+  useEffect(() => {
+    const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), {
+      currentTop: tabState.top,
+    });
+
+    document.getElementById(DOMID_CAROUSEL)?.dispatchEvent(slideEvent);
+    document.getElementById(DOMID_BLURFRAME)?.dispatchEvent(slideEvent);
+  }, [tabState]);
   return (
-    <div id={id}>
-      {popUpState === 'full' ? (
+    <S.ComponentWrapper id={id}>
+      {tabState.popUpState === 'full' ? (
         <S.StyledCarousel
           infiniteLoop
           showIndicators={false}
@@ -46,9 +56,9 @@ function CustomCarousel({ id, imageList, popUpState }: CarouselProps) {
           ))}
         </S.StyledCarousel>
       ) : (
-        <Slide imageList={imageList} imageIndex={imageIndex} />
+        <ImageSlider imageList={imageList} imageIndex={imageIndex} />
       )}
-    </div>
+    </S.ComponentWrapper>
   );
 }
 

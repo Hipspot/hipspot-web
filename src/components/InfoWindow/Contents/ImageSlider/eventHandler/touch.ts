@@ -1,4 +1,6 @@
+import { CSSVAR_CAROUSEL_HEIGHT } from '@constants/cssVar';
 import { HandleImageSliderStartProps, HandleImageSlideMoveProps, HandleImageSliderEndProps } from '@libs/types/slider';
+import { calcImageIndex, calcImageListPosition, calcNumberClamp } from '@libs/utils/calc';
 import { TouchEventHandler } from 'react';
 import { reactRefUpdate } from '../../PopUpWindow/utils/reactRefUpdate';
 
@@ -6,9 +8,13 @@ export const handleTouchStart: (props: HandleImageSliderStartProps) => TouchEven
   ({ imageSliderRef }) =>
   (e) => {
     e.stopPropagation();
+
+    const target = e.currentTarget as HTMLDivElement;
+    target.style.setProperty('--transition-duration', `0s`);
+
     reactRefUpdate({
       ref: imageSliderRef,
-      update: { ...imageSliderRef.current, x: e.touches[0].clientX, y: e.touches[0].clientY, onHandling: true },
+      update: { ...imageSliderRef.current, x: e.touches[0].clientX, startX: e.touches[0].clientX, onHandling: true },
     });
   };
 
@@ -17,15 +23,16 @@ export const handleTouchMove: (props: HandleImageSlideMoveProps) => TouchEventHa
   (e) => {
     e.stopPropagation();
 
-    if (imageSliderRef.current && imageSliderRef.current.onHandling && imageSliderRef.current) {
-      const left = imageSliderRef.current.left + e.touches[0].clientX - imageSliderRef.current.x;
-      const target = e.target as HTMLElement;
-      const container = target.parentElement as HTMLDivElement;
+    if (imageSliderRef.current && imageSliderRef.current.onHandling) {
+      const { left: prevLeft, x } = imageSliderRef.current;
+      const move = e.touches[0].clientX - x;
+      const left = prevLeft + move;
+      const target = e.currentTarget as HTMLElement;
 
-      container.style.setProperty('--image-translate', `${left}px`);
+      target.style.setProperty('--image-translate', `${left}px`);
       reactRefUpdate({
         ref: imageSliderRef,
-        update: { ...imageSliderRef.current, x: e.touches[0].clientX, y: e.touches[0].clientY, left },
+        update: { ...imageSliderRef.current, x: e.touches[0].clientX, left },
       });
     }
   };
@@ -33,10 +40,29 @@ export const handleTouchMove: (props: HandleImageSlideMoveProps) => TouchEventHa
 export const handleTouchEnd: (props: HandleImageSliderEndProps) => TouchEventHandler<HTMLElement> =
   ({ imageSliderRef }) =>
   (e) => {
+    e.preventDefault();
     e.stopPropagation();
-    const target = e.target as HTMLElement;
-    const container = target.parentElement as HTMLDivElement;
-    container.style.setProperty('transition', `all 0.2s ease-in-out`);
+    if (imageSliderRef.current) {
+      const target = e.currentTarget as HTMLElement;
+      const r = document.querySelector(':root') as HTMLDivElement;
+      const width = parseFloat(r.style.getPropertyValue(CSSVAR_CAROUSEL_HEIGHT));
+      const blockWidth = width + 16;
+      const { left, imageListLength, startX, index: prevIndex } = imageSliderRef.current;
+      const displacement = e.changedTouches[0].clientX - startX;
 
-    reactRefUpdate({ ref: imageSliderRef, update: { ...imageSliderRef.current, x: 0, y: 0, onHandling: false } });
+      const index =
+        Math.abs(displacement) < blockWidth
+          ? calcNumberClamp({ num: prevIndex + Math.sign(displacement) * -1, min: 0, max: imageListLength - 1 })
+          : calcImageIndex({ width: blockWidth, left: -left, imageListLength });
+
+      const leftCorrectionValue = calcImageListPosition({ left, width: blockWidth, index });
+
+      target.style.setProperty('--image-translate', `${leftCorrectionValue}px`);
+      target.style.setProperty('--transition-duration', `0.2s`);
+
+      reactRefUpdate({
+        ref: imageSliderRef,
+        update: { ...imageSliderRef.current, x: 0, startX: 0, onHandling: false, left: leftCorrectionValue, index },
+      });
+    }
   };

@@ -10,26 +10,33 @@ interface SlideProps {
   imageIndex: number;
 }
 
-function ImageSliderSlide({ imageList, imageIndex }: SlideProps) {
-  const imageSliderRef = useRef<ImageSliderRef>({ x: 0, y: 0, left: 0, onHandling: false });
+function ImageSlider({ imageList, imageIndex }: SlideProps) {
+  const imageSliderRef = useRef<ImageSliderRef>({
+    x: 0,
+    startX: 0,
+    left: 0,
+    onHandling: false,
+    index: 0,
+    imageListLength: imageList.length,
+  });
 
-  const onMouseDown = handleMouseDown({ imageSliderRef });
-  const onMouseMove = handleMouseMove({ imageSliderRef });
-  const onMouseUp = handleMouseUp({ imageIndex, imageSliderRef });
-  const onTouchStart = handleTouchStart({ imageSliderRef });
-  const onTouchMove = handleTouchMove({ imageSliderRef });
-  const onTouchEnd = handleTouchEnd({ imageIndex, imageSliderRef });
+  const onMouseDownCapture = handleMouseDown({ imageSliderRef });
+  const onMouseMoveCapture = handleMouseMove({ imageSliderRef });
+  const onMouseUpCapture = handleMouseUp({ imageIndex, imageSliderRef });
+  const onTouchStartCapture = handleTouchStart({ imageSliderRef });
+  const onTouchMoveCapture = handleTouchMove({ imageSliderRef });
+  const onTouchEndCapture = handleTouchEnd({ imageIndex, imageSliderRef });
 
   return (
     <SlideContainer
       imageIndex={imageIndex}
-      onMouseMove={onMouseMove}
-      onMouseDown={onMouseDown}
-      onMouseUp={onMouseUp}
-      onMouseLeave={onMouseUp}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
+      onMouseMoveCapture={onMouseMoveCapture}
+      onMouseDownCapture={onMouseDownCapture}
+      onMouseUpCapture={onMouseUpCapture}
+      onMouseLeave={onMouseUpCapture}
+      onTouchStartCapture={onTouchStartCapture}
+      onTouchMoveCapture={onTouchMoveCapture}
+      onTouchEndCapture={onTouchEndCapture}
     >
       {imageList.map((imageSrc) => (
         <Image src={imageSrc} key={imageSrc} />
@@ -38,34 +45,34 @@ function ImageSliderSlide({ imageList, imageIndex }: SlideProps) {
   );
 }
 
-export default ImageSliderSlide;
+export default ImageSlider;
 
 const SlideContainer = styled.div<{ imageIndex: number }>`
-  width: 100%;
   height: var(--carouset-height);
   padding-left: 16px;
+  width: 1000vw;
   display: flex;
   flex-wrap: nowrap;
   gap: 16px;
-  overflow: hidden;
+  overflow: visible;
 
   &::-webkit-scrollbar {
     display: none;
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
-  z-index: 11;
   :root {
     --image-translate: translateX(0px);
+    --transition-duration: 0s;
   }
+  transform: translate3d(var(--image-translate), 0px, 0px);
+  transition: ease-in-out var(--transition-duration);
 `;
 const Image = styled.img`
   border-radius: 8px;
   flex: 0 0 auto;
   width: var(${CSSVAR_CAROUSEL_HEIGHT});
   height: var(${CSSVAR_CAROUSEL_HEIGHT});
-
-  transform: translate3d(var(--image-translate), 0px, 0px);
   object-fit: cover;
   object-position: center;
 `;

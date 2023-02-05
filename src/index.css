@@ -29,6 +29,8 @@ h1, h2, h3, h4, p {
 div {
   box-sizing: border-box;
 }
-
+:root{
+    --carousel-height: 140px;
+}
 /* skeleton css */
 @import url('react-loading-skeleton/dist/skeleton.css');

@@ -16,6 +16,10 @@ export const SkeltonWrapper = styled.div`
   }
 `;
 
+export const ComponentWrapper = styled.div`
+  overflow: hidden;
+`;
+
 export const StyledCarousel = styled(Carousel)`
   padding: 0px 16px;
   height: var(--carousel-height, 343);

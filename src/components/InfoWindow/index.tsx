@@ -27,7 +27,7 @@ export default function InfoWindow() {
           </TitleWrapper>
           <CarouselWrapper>
             <MakeLodableSuspense lodableState={state} loading={<CustomCarouselSkeleton />}>
-              <CustomCarousel imageList={contents.imageList} id={DOMID_CAROUSEL} popUpState={tabState.popUpState} />
+              <CustomCarousel imageList={contents.imageList} id={DOMID_CAROUSEL} tabState={tabState} />
             </MakeLodableSuspense>
           </CarouselWrapper>
           <TabBar isSelected />

@@ -3,8 +3,10 @@ import { RefObject } from 'react';
 export interface ImageSliderRef {
   onHandling: boolean;
   x: number;
-  y: number;
+  startX: number;
+  index: number;
   left: number;
+  imageListLength: number;
 }
 
 export interface HandleImageSliderStartProps {
