@@ -6,11 +6,12 @@
     "start": "react-app-rewired start",
     "build": "CI=false react-app-rewired build",
     "test": "react-app-rewired test --watchAll=false --transformIgnorePatterns \"node_modules/(?!axios)/\"",
-    "test:watch": "react-app-rewired test --watch",
+    "test:watch": "react-app-rewired test --watch --transformIgnorePatterns \"node_modules/(?!axios)/\"",
     "eject": "react-scripts eject",
     "lint": "eslint './src/**/*.{ts,tsx,js,jsx}'",
     "lint:fix": "eslint --fix './src/**/*.{ts,tsx,js,jsx}'",
-    "prettier": "prettier --write --config ./.prettierrc './src/**/*.{ts,tsx}'"
+    "prettier": "prettier --write --config ./.prettierrc './src/**/*.{ts,tsx}'",
+    "deploy": "npm run build && netlify deploy --prod"
   },
   "dependencies": {
     "@emotion/cache": "^11.10.5",
