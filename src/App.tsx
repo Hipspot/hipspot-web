@@ -2,21 +2,22 @@ import ClusterList from '@components/ClusterList';
 import Filtering from '@components/Filtering';
 import styled from '@emotion/styled';
 import MapCompContainer from '@containers/MapCompContainer';
-import { useLayoutEffect } from 'react';
+import InfoWindow from '@components/InfoWindow';
+import { useEffect } from 'react';
 import fromflutterMessageHandler from '@libs/webview/fromFlutterMessageHandler';
-import InfoWindowContainer from '@containers/InfoWindowContainer';
 import { Toaster } from 'react-hot-toast';
 
 function App() {
-  useLayoutEffect(() => {
+  useEffect(() => {
     window.fromflutterMessageHandler = fromflutterMessageHandler;
   });
+
   return (
     <Wrapper>
       <MapCompContainer />
       <Filtering />
       <ClusterList />
-      <InfoWindowContainer />
+      <InfoWindow />
       <Toaster
         position="bottom-center"
         containerClassName="toaster"

@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+import modifyInfoWindowTop from '@components/InfoWindow/view/modifyInfoWindowTop';
 import { TabState } from '@libs/types/infowindow';
 
 interface SmoothMoveArgs {
@@ -14,10 +15,11 @@ export default function smoothMove({ parentElement, endPointTabState, smoothLoop
     const endY = endPointTabState.top;
     const acc = 0.1;
     curY += (endY - curY) * acc;
-    parentElement.style.setProperty('top', `${curY}px`);
+
+    modifyInfoWindowTop({ currentTop: curY });
     const check = curY - endPointTabState.top > -1 && curY - endPointTabState.top < 1;
     if (debounce <= 1 || check) {
-      return parentElement.style.setProperty('top', `${endPointTabState.top}`);
+      return modifyInfoWindowTop({ currentTop: endPointTabState.top });
     }
     debounce -= 1;
     smoothLoopId.id = requestAnimationFrame(loop);
