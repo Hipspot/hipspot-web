@@ -6,6 +6,7 @@ import MakeLodableSuspense from '@components/MakeLodableSuspense';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import { DOMID_BLURFRAME, DOMID_IMAGE_SLIDER, DOMID_POP_UP_WINDOW, DOMTargetList } from '@constants/DOM';
 import {
+  CSSVAR_IMAGE_CONCEAL,
   CSSVAR_IMAGE_SLIDER_HEIGHT,
   CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION,
   CSSVAR_IMAGE_SLIDER_WIDTH,
@@ -102,6 +103,7 @@ const ImageSliderWrapper = styled.div`
     ${CSSVAR_IMAGE_SLIDER_HEIGHT} : 0px;
     ${CSSVAR_IMAGE_SLIDER_WIDTH} : 0px;
     ${CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION} : 0s;
+    ${CSSVAR_IMAGE_CONCEAL} : block;
   }
 `;
 

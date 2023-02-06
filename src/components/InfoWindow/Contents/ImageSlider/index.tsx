@@ -1,6 +1,8 @@
+import concealNotSelectedImage from '@components/InfoWindow/view/concealNotSelectedImage';
 import modifyImageSliderHeight from '@components/InfoWindow/view/modifyImageSliderHeight';
 import modifyImageSliderWidth from '@components/InfoWindow/view/modifyImageSliderWidth';
 import {
+  CSSVAR_IMAGE_CONCEAL,
   CSSVAR_IMAGE_SLIDER_HEIGHT,
   CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION,
   CSSVAR_IMAGE_SLIDER_WIDTH,
@@ -84,6 +86,7 @@ function ImageSlider({ wrapperId, imageList }: SlideProps) {
     });
     carousel.style.setProperty(CSSVAR_IMAGE_TRANSLATE, `${leftCorrectionValue}px`);
     carousel.style.setProperty(CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION, `0s`);
+    concealNotSelectedImage(false);
 
     reactRefUpdate({
       ref: imageSliderRef,
@@ -92,32 +95,33 @@ function ImageSlider({ wrapperId, imageList }: SlideProps) {
   }, [tabState]);
 
   return (
-    <SlideContainer
-      onMouseMoveCapture={onMouseMoveCapture}
-      onMouseDownCapture={onMouseDownCapture}
-      onMouseUpCapture={onMouseUpCapture}
-      onMouseLeave={onMouseUpCapture}
-      onTouchStartCapture={onTouchStartCapture}
-      onTouchMoveCapture={onTouchMoveCapture}
-      onTouchEndCapture={onTouchEndCapture}
-    >
-      {imageList.map((imageSrc, i) => (
-        <Image
-          src={imageSrc}
-          key={imageSrc}
-          selected={i === imageIndex}
-          initSize={
-            tabState.popUpState === 'full'
-              ? { height: imageSliderHeightTween.max, width: imageSliderWidthTween.max }
-              : { height: imageSliderWidthTween.min, width: imageSliderWidthTween.min }
-          }
-          className={`${i === imageIndex ? 'selected' : ''}`}
-          onDoubleClick={() => {
-            setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.top], popUpState: 'full' }));
-          }}
-        />
-      ))}
-    </SlideContainer>
+    <SliderWrapper>
+      <SlideContainer
+        onMouseMoveCapture={onMouseMoveCapture}
+        onMouseDownCapture={onMouseDownCapture}
+        onMouseUpCapture={onMouseUpCapture}
+        onMouseLeave={onMouseUpCapture}
+        onTouchStartCapture={onTouchStartCapture}
+        onTouchMoveCapture={onTouchMoveCapture}
+        onTouchEndCapture={onTouchEndCapture}
+      >
+        {imageList.map((imageSrc, i) => (
+          <Image
+            src={imageSrc}
+            key={imageSrc}
+            selected={i === imageIndex}
+            initSize={
+              tabState.popUpState === 'full'
+                ? { height: imageSliderHeightTween.max, width: imageSliderWidthTween.max }
+                : { height: imageSliderWidthTween.min, width: imageSliderWidthTween.min }
+            }
+            onDoubleClick={() => {
+              setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.top], popUpState: 'full' }));
+            }}
+          />
+        ))}
+      </SlideContainer>
+    </SliderWrapper>
   );
 }
 
@@ -148,6 +152,10 @@ const SkeltonWrapper = styled.div`
   }
 `;
 
+const SliderWrapper = styled.div`
+  overflow: hidden;
+`;
+
 const SlideContainer = styled.div`
   height: var(${CSSVAR_IMAGE_SLIDER_HEIGHT});
   padding-left: 16px;
@@ -155,7 +163,6 @@ const SlideContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
   gap: 16px;
-  overflow: visible;
 
   &::-webkit-scrollbar {
     display: none;
@@ -166,6 +173,7 @@ const SlideContainer = styled.div`
   transform: translate3d(var(${CSSVAR_IMAGE_TRANSLATE}), 0px, 0px);
   transition: ease-in-out var(${CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION});
 `;
+
 const Image = styled.img<{ selected: boolean; initSize: { height: number; width: number } }>`
   border-radius: 8px;
   flex: 0 0 auto;
@@ -173,4 +181,8 @@ const Image = styled.img<{ selected: boolean; initSize: { height: number; width:
   width: ${(props) => (props.selected ? `var(${CSSVAR_IMAGE_SLIDER_WIDTH})` : `${props.initSize.width}px`)};
   object-fit: cover;
   object-position: center;
+  position: relative;
+  z-index: ${(props) => (props.selected ? 11 : 1)};
+
+  visibility: ${(props) => (props.selected ? 'visible' : `var(${CSSVAR_IMAGE_CONCEAL})`)};
 `;

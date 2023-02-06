@@ -4,6 +4,7 @@ import modifyImageSliderHeight from '@components/InfoWindow/view/modifyImageSlid
 import { imageSliderHeightTween, imageSliderWidthTween } from '@constants/Tween';
 import { calcInterpolation, calcProgressRatio } from '@libs/utils/calc';
 import modifyImageSliderWidth from '@components/InfoWindow/view/modifyImageSliderWidth';
+import concealNotSelectedImage from '@components/InfoWindow/view/concealNotSelectedImage';
 
 export interface HandleSlidePopUpWindowForImageSlideProps {
   popUpHeights: { [key in PopUpHeightsType]: number };
@@ -34,4 +35,5 @@ export const handleSlidePopUpWindowForImageSlide =
 
     modifyImageSliderHeight({ height });
     modifyImageSliderWidth({ width });
+    concealNotSelectedImage(true);
   };

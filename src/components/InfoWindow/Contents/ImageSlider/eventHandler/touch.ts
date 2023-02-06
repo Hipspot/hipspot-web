@@ -1,6 +1,7 @@
 import slideImageSlider from '@components/InfoWindow/view/slideImageSlider';
 import moveImageSlider from '@components/InfoWindow/view/moveImageSlider';
 import stopImageSlideTransition from '@components/InfoWindow/view/stopImageSlideTransition';
+import concealNotSelectedImage from '@components/InfoWindow/view/concealNotSelectedImage';
 import { CSSVAR_IMAGE_SLIDER_WIDTH } from '@constants/cssVar';
 import { HandleImageSliderStartProps, HandleImageSlideMoveProps, HandleImageSliderEndProps } from '@libs/types/slider';
 import { calcImageIndex, calcImageListPosition, calcNumberClamp } from '@libs/utils/calc';
@@ -21,6 +22,7 @@ export const handleTouchStart: (props: HandleImageSliderStartProps) => TouchEven
 export const handleTouchMove: (props: HandleImageSlideMoveProps) => TouchEventHandler<HTMLElement> =
   ({ imageSliderRef }) =>
   (e) => {
+    e.preventDefault();
     if (imageSliderRef.current && imageSliderRef.current.onHandling) {
       const { left: prevLeft, x } = imageSliderRef.current;
       const move = e.touches[0].clientX - x;
@@ -38,7 +40,6 @@ export const handleTouchMove: (props: HandleImageSlideMoveProps) => TouchEventHa
 export const handleTouchEnd: (props: HandleImageSliderEndProps) => TouchEventHandler<HTMLElement> =
   ({ imageSliderRef, setImageIndex }) =>
   (e) => {
-    e.preventDefault();
     if (imageSliderRef.current && imageSliderRef.current.onHandling) {
       const r = document.getElementById(DOMID_IMAGE_SLIDER) as HTMLDivElement;
       const width = parseFloat(r.style.getPropertyValue(CSSVAR_IMAGE_SLIDER_WIDTH));
@@ -54,6 +55,7 @@ export const handleTouchEnd: (props: HandleImageSliderEndProps) => TouchEventHan
       const leftCorrectionValue = calcImageListPosition({ left, width: blockWidth, index });
 
       slideImageSlider({ leftCorrectionValue });
+      concealNotSelectedImage(false);
 
       reactRefUpdate({
         ref: imageSliderRef,
