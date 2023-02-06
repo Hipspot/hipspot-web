@@ -60,16 +60,15 @@ function MapComp({ handleClickMarker }: MapCompProps) {
     });
 
     map.on('render', handleMapRenderTrigger);
+    map.on('moveend', handleMapRenderTrigger);
     map.once('movestart', () => {
       map.off('render', handleMapRenderTrigger);
     });
-    map.on('moveend', handleMapRenderTrigger);
   }, []);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    if (!map.isStyleLoaded()) return;
 
     const mapboxFeaturesOnScreen = map.querySourceFeatures(`cafeList/${activeFilterId}`);
     const clustersOnScreen: MapboxGeoJSONFeature[] = [];
