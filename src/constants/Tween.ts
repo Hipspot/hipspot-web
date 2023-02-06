@@ -1,6 +1,6 @@
 export const carouselHeightsTween = {
-  min: 180,
-  max: 343,
+  min: 170,
+  max: window.innerWidth - 32,
 };
 
 export const blurFrameTween = {

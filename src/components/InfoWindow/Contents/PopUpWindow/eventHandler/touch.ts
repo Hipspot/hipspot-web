@@ -1,5 +1,6 @@
 import { TouchEventHandler } from 'react';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
+import modifyInfoWindowTop from '@components/InfoWindow/view/modifyInfoWindowTop';
 import { TabState, HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps } from '@libs/types/infowindow';
 import { DOMID_BLURFRAME, DOMID_CAROUSEL } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
@@ -28,16 +29,15 @@ export const handleTouchMove: (props: HandleEventMoveProps) => TouchEventHandler
   (e) => {
     const { onHandling } = tabState;
     if (onHandling && available) {
-      reactRefUpdate({ ref: topCoordRef, update: e.touches[0].clientY });
-
-      const target = e.target as HTMLDivElement;
-      const infoWindowElem = target.parentElement as HTMLDivElement;
       const currentTop = e.touches[0].clientY + modifyRef.current;
-      infoWindowElem.style.setProperty('top', `${currentTop}px`);
+
+      modifyInfoWindowTop({ currentTop });
 
       const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), { currentTop });
       document.getElementById(DOMID_CAROUSEL)!.dispatchEvent(slideEvent);
       document.getElementById(DOMID_BLURFRAME)!.dispatchEvent(slideEvent);
+
+      reactRefUpdate({ ref: topCoordRef, update: e.touches[0].clientY });
     }
   };
 

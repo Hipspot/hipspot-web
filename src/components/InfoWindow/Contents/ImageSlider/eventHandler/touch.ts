@@ -1,3 +1,6 @@
+import moveCarousel from '@components/InfoWindow/view/moveCarousel';
+import slideHorizon from '@components/InfoWindow/view/slideHorizon';
+import stopImageSlideTransition from '@components/InfoWindow/view/stopImageSlideTransition';
 import { CSSVAR_CAROUSEL_HEIGHT } from '@constants/cssVar';
 import { HandleImageSliderStartProps, HandleImageSlideMoveProps, HandleImageSliderEndProps } from '@libs/types/slider';
 import { calcImageIndex, calcImageListPosition, calcNumberClamp } from '@libs/utils/calc';
@@ -7,9 +10,7 @@ import { reactRefUpdate } from '../../PopUpWindow/utils/reactRefUpdate';
 export const handleTouchStart: (props: HandleImageSliderStartProps) => TouchEventHandler<HTMLElement> =
   ({ imageSliderRef }) =>
   (e) => {
-    const r = document.getElementById('carousel') as HTMLDivElement;
-    r.style.setProperty('--transition-duration', `0s`);
-
+    stopImageSlideTransition();
     reactRefUpdate({
       ref: imageSliderRef,
       update: { ...imageSliderRef.current, x: e.touches[0].clientX, startX: e.touches[0].clientX, onHandling: true },
@@ -20,13 +21,12 @@ export const handleTouchMove: (props: HandleImageSlideMoveProps) => TouchEventHa
   ({ imageSliderRef }) =>
   (e) => {
     if (imageSliderRef.current && imageSliderRef.current.onHandling) {
-      const r = document.getElementById('carousel') as HTMLDivElement;
-
       const { left: prevLeft, x } = imageSliderRef.current;
       const move = e.touches[0].clientX - x;
       const left = prevLeft + move;
 
-      r.style.setProperty('--image-translate', `${left}px`);
+      slideHorizon({ left });
+
       reactRefUpdate({
         ref: imageSliderRef,
         update: { ...imageSliderRef.current, x: e.touches[0].clientX, left },
@@ -52,8 +52,7 @@ export const handleTouchEnd: (props: HandleImageSliderEndProps) => TouchEventHan
 
       const leftCorrectionValue = calcImageListPosition({ left, width: blockWidth, index });
 
-      r.style.setProperty('--image-translate', `${leftCorrectionValue}px`);
-      r.style.setProperty('--transition-duration', `0.2s`);
+      moveCarousel({ leftCorrectionValue });
 
       reactRefUpdate({
         ref: imageSliderRef,

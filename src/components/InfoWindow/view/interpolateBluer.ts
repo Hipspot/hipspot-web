@@ -2,9 +2,9 @@ import { DOMID_BLURFRAME, DOMTargetList } from '@constants/DOM';
 import { blurFrameTween, blurOpacityTween } from '@constants/Tween';
 import { calcInterpolation } from '@libs/utils/calc';
 
-export const blurInteraction = ({ ratio }: { ratio: number }) => {
-  const target = DOMTargetList[DOMID_BLURFRAME];
-  if (!target) return;
+const interpolateBlur = ({ ratio }: { ratio: number }) => {
+  const dom = DOMTargetList[DOMID_BLURFRAME];
+  if (!dom) return;
   const opacity = calcInterpolation({
     min: blurOpacityTween.min,
     max: blurOpacityTween.max,
@@ -17,6 +17,8 @@ export const blurInteraction = ({ ratio }: { ratio: number }) => {
     ratio,
   });
 
-  target.style.setProperty('backdrop-filter', `blur(${blurPixels}px)`);
-  target.style.setProperty('background', `rgba(255, 255, 255, ${opacity})`);
+  dom.style.setProperty('backdrop-filter', `blur(${blurPixels}px)`);
+  dom.style.setProperty('background', `rgba(255, 255, 255, ${opacity})`);
 };
+
+export default interpolateBlur;

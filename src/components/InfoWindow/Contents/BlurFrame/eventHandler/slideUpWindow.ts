@@ -1,7 +1,7 @@
+import interpolateBlur from '@components/InfoWindow/view/interpolateBluer';
 import { PopUpHeightsType } from '@constants/popUpHeights';
 import { SlideUpWindowEvent } from '@libs/types/customEvents';
 import { calcProgressRatio } from '@libs/utils/calc';
-import { blurInteraction } from '../interaction/blur';
 
 export interface HandleSlideUpWindowForBlurEventProps {
   popUpHeights: { [key in PopUpHeightsType]: number };
@@ -17,5 +17,5 @@ export const handleSlideUpWindowForBlurFrame =
       end: topHeight,
     });
 
-    blurInteraction({ ratio });
+    interpolateBlur({ ratio });
   };
