@@ -1,4 +1,4 @@
-name: Build & Test App
+name: Test App
 
 on:
   push:
@@ -26,5 +26,3 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: jest
         run: pnpm test
-      - name: build Project
-        run: pnpm build

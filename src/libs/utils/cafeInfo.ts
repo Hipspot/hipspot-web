@@ -1,6 +1,6 @@
 import { CafeInfo } from '@libs/types/cafe';
 
-// 카페 영업일을 가공하는 함수
+/** 카페 영업일을 가공하는 함수 */
 export const stringifyBusinessDate = ({
   businessDay,
   businessTime,
@@ -34,6 +34,7 @@ export const stringifyBusinessDate = ({
   return `${day} / ${time}`;
 };
 
+/** 텍스트를 클라이언트의 클립보드에 복사하는 함수 */
 export const copyToClipboard = (text: string) => {
   const input = document.createElement('input');
   input.value = text;
