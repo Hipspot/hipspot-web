@@ -7,9 +7,10 @@ import { CustomGeoJSONFeatures } from '@libs/types/map';
 import { renderEmotionElementToHtml } from '@libs/utils/renderEmotionElementToHtml';
 import { geoJsonSelector } from '@states/map';
 import { activeFilterIdAtom } from '@states/ui';
-import mapboxgl, { GeoJSONSource, GeoJSONSourceRaw, MapboxGeoJSONFeature, Marker } from 'mapbox-gl';
+import mapboxgl, { MapboxGeoJSONFeature, Marker } from 'mapbox-gl';
 import { FeatureCollection } from 'geojson';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { FilterId } from '@libs/types/filter';
 import { mapConfig } from './utils/mapConfig';
 
 type MapCompProps = {
@@ -17,70 +18,79 @@ type MapCompProps = {
 };
 
 function MapComp({ handleClickMarker }: MapCompProps) {
-  const features = useRecoilValue(geoJsonSelector);
-  const [featuresOnScreen, setFeaturesOnScreen] = useState<CustomGeoJSONFeatures[]>();
-  const [clustersOnScreen, setClustersOnScreen] = useState<MapboxGeoJSONFeature[]>([]);
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
+  const features = useRecoilValue(geoJsonSelector);
+  const [mapRenderTrigger, setMapRenderTrigger] = useState<boolean>(false);
   const mapRef = useRef<mapboxgl.Map>();
   const markerList: { [id in number | string]: mapboxgl.Marker } = useMemo(() => ({}), []);
   const clusterMarkerList: mapboxgl.Marker[] = useMemo(() => [], []);
+
+  const handleMapRenderTrigger = () => {
+    setMapRenderTrigger((state) => !state);
+  };
 
   useEffect(() => {
     mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKKEN}`;
     mapRef.current = new mapboxgl.Map(mapConfig);
     const map = mapRef.current;
 
-    const updateFeaturesOnScreen = () => {
-      const mapboxFeaturesOnScreen = map.querySourceFeatures('placeList');
-      const uniqueIds = new Set<number>();
-
-      const clusters: MapboxGeoJSONFeature[] = [];
-      mapboxFeaturesOnScreen.forEach((feature) => {
-        if (feature.properties?.cluster) {
-          clusters.push(feature);
-          return;
-        }
-
-        const id = feature.properties?.id;
-        if (id !== undefined) {
-          uniqueIds.add(id);
-        }
-      });
-
-      setClustersOnScreen(clusters);
-      setFeaturesOnScreen(features.filter((feature: CustomGeoJSONFeatures) => uniqueIds.has(feature.properties.id)));
-    };
-
     map.on('load', () => {
-      const sourceJson: GeoJSONSourceRaw = {
-        type: 'geojson',
-        data: { type: 'FeatureCollection', features } as FeatureCollection,
-        cluster: true,
-        clusterMaxZoom: 16,
-        clusterRadius: 60,
-      };
-      map.addSource('placeList', sourceJson);
-      map.addLayer({
-        id: 'placeList',
-        type: 'circle',
-        source: 'placeList',
-        paint: {
-          'circle-opacity': 0,
-        },
+      Object.values(FilterId).forEach((filterId) => {
+        map.addSource(`placeList/${filterId}`, {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: features.filter((feature: CustomGeoJSONFeatures) =>
+              feature.properties.filterList.includes(filterId as number)
+            ),
+          } as FeatureCollection,
+          cluster: true,
+          clusterMaxZoom: 16,
+          clusterRadius: 60,
+        });
+        map.addLayer({
+          id: `placeList/${filterId}`,
+          type: 'circle',
+          source: `placeList/${filterId}`,
+          paint: {
+            'circle-opacity': 0,
+          },
+        });
       });
     });
 
-    map.on('render', updateFeaturesOnScreen);
+    map.on('render', handleMapRenderTrigger);
     map.once('movestart', () => {
-      map.off('render', updateFeaturesOnScreen);
+      map.off('render', handleMapRenderTrigger);
     });
-    map.on('moveend', updateFeaturesOnScreen);
+    map.on('moveend', handleMapRenderTrigger);
   }, []);
 
   useEffect(() => {
-    const map = mapRef?.current;
+    const map = mapRef.current;
     if (!map) return;
-    if (!featuresOnScreen) return;
+    if (!map.isStyleLoaded()) return;
+
+    // const source = map.getSource(`placeList/${activeFilterId}`) as GeoJSONSource;
+
+    const mapboxFeaturesOnScreen = map.querySourceFeatures(`placeList/${activeFilterId}`);
+    const uniqueIds = new Set<number>();
+
+    const clusters: MapboxGeoJSONFeature[] = [];
+    mapboxFeaturesOnScreen.forEach((feature) => {
+      if (feature.properties?.cluster) {
+        clusters.push(feature);
+        return;
+      }
+
+      const id = feature.properties?.id;
+      if (id !== undefined) {
+        uniqueIds.add(id);
+      }
+    });
+
+    const clustersOnScreen = clusters;
+    const featuresOnScreen = features.filter((feature: CustomGeoJSONFeatures) => uniqueIds.has(feature.properties.id));
 
     Object.entries(markerList).forEach((markerEntry) => {
       const [id, marker] = markerEntry as [string, Marker];
@@ -89,9 +99,7 @@ function MapComp({ handleClickMarker }: MapCompProps) {
     });
 
     featuresOnScreen.forEach((feature: CustomGeoJSONFeatures) => {
-      const { id, filterList } = feature.properties;
-
-      if (!filterList.includes(activeFilterId)) return;
+      const { id } = feature.properties;
 
       try {
         const marker = renderEmotionElementToHtml({
@@ -115,19 +123,20 @@ function MapComp({ handleClickMarker }: MapCompProps) {
     clusterMarkerList.forEach((marker) => {
       marker.remove();
     });
+    clusterMarkerList.length = 0;
 
-    const source = map.getSource('placeList') as GeoJSONSource;
-    console.log(clustersOnScreen);
     clustersOnScreen.forEach((feature) => {
-      const id = feature.properties?.cluster_id;
+      // const id = feature.properties?.cluster_id;
       const count = feature.properties?.point_count;
 
       const geo = feature.geometry;
+      /*
       source.getClusterLeaves(id, 99, 0, (err, leaves) => {
         console.log(leaves);
       });
+      */
       const marker = renderEmotionElementToHtml({
-        elem: <ClusterMarker number={count} />,
+        elem: <ClusterMarker number={count} filterId={activeFilterId} />,
         cssDataKey: 'cluster',
       });
       if (geo.type === 'GeometryCollection') return;
@@ -135,7 +144,7 @@ function MapComp({ handleClickMarker }: MapCompProps) {
       const newMarker = new mapboxgl.Marker(marker).setLngLat(geo.coordinates as [number, number]).addTo(map);
       clusterMarkerList.push(newMarker);
     });
-  }, [activeFilterId, featuresOnScreen, clustersOnScreen]);
+  }, [mapRenderTrigger, activeFilterId]);
 
   return (
     <div

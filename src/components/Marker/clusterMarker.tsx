@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { filterColor } from '@libs/styles/color';
+import { FilterId } from '@libs/types/filter';
 // import { activeFilterIdAtom, openClusterListAtom } from '@states/ui';
 // import { useRecoilValue, useSetRecoilState } from 'recoil';
 
@@ -9,9 +10,11 @@ type ClusterMarkerProps = {
    * @example 3
    */
   number: number;
+
+  filterId: FilterId;
 };
 
-export default function ClusterMarker({ number }: ClusterMarkerProps) {
+export default function ClusterMarker({ number, filterId }: ClusterMarkerProps) {
   /*
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const setOpenClusterList = useSetRecoilState(openClusterListAtom);
@@ -26,7 +29,7 @@ export default function ClusterMarker({ number }: ClusterMarkerProps) {
   );
   */
   return (
-    <Wrapper id="marker" color={filterColor[0]}>
+    <Wrapper id="marker" color={filterColor[filterId]}>
       +{number}
     </Wrapper>
   );
