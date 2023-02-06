@@ -1,6 +1,8 @@
 import concealNotSelectedImage from '@components/InfoWindow/view/concealNotSelectedImage';
 import modifyImageSliderHeight from '@components/InfoWindow/view/modifyImageSliderHeight';
 import modifyImageSliderWidth from '@components/InfoWindow/view/modifyImageSliderWidth';
+import moveImageSlider from '@components/InfoWindow/view/moveImageSlider';
+import stopImageSlideTransition from '@components/InfoWindow/view/stopImageSlideTransition';
 import {
   CSSVAR_IMAGE_CONCEAL,
   CSSVAR_IMAGE_SLIDER_HEIGHT,
@@ -84,8 +86,9 @@ function ImageSlider({ wrapperId, imageList }: SlideProps) {
       width: blockWidth,
       index: imageIndex,
     });
-    carousel.style.setProperty(CSSVAR_IMAGE_TRANSLATE, `${leftCorrectionValue}px`);
-    carousel.style.setProperty(CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION, `0s`);
+
+    stopImageSlideTransition();
+    moveImageSlider({ left: leftCorrectionValue });
     concealNotSelectedImage(false);
 
     reactRefUpdate({
