@@ -3,16 +3,36 @@ import Filtering from '@components/Filtering';
 import styled from '@emotion/styled';
 import MapCompContainer from '@containers/MapCompContainer';
 import InfoWindow from '@components/InfoWindow';
+import { useLayoutEffect } from 'react';
+import fromflutterMessageHandler from '@libs/webview/fromFlutterMessageHandler';
 import { Toaster } from 'react-hot-toast';
 
 function App() {
+  useLayoutEffect(() => {
+    window.fromflutterMessageHandler = fromflutterMessageHandler;
+  });
   return (
     <Wrapper>
       <MapCompContainer />
       <Filtering />
       <ClusterList />
       <InfoWindow />
-      <Toaster position="bottom-center" containerClassName="toaster" />
+      <Toaster
+        position="bottom-center"
+        containerClassName="toaster"
+        toastOptions={{
+          success: {
+            style: {
+              width: '100%',
+              background: 'rgba(64, 64, 64, 0.9)',
+              opacity: '0.9',
+              backdropFilter: 'blur(30px)',
+              fontWeight: '600',
+              color: '#FFFFFF',
+            },
+          },
+        }}
+      />
     </Wrapper>
   );
 }

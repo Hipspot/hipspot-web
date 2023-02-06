@@ -1,8 +1,11 @@
+import data from '@mocks/place/data';
 import { render, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import InfoWindow from '.';
 
 test('Render InfoWindow without crash', async () => {
+  const mockData = data[0];
+
   const component = render(
     <RecoilRoot>
       <InfoWindow />
@@ -11,6 +14,6 @@ test('Render InfoWindow without crash', async () => {
 
   await waitFor(() => {
     expect(component).toBeTruthy();
-    expect(component.findByText('영업시간')).toBeTruthy();
+    expect(component.findByText(mockData.placeName)).toBeTruthy();
   });
 });
