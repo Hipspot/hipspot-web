@@ -72,20 +72,22 @@ function MapComp({ handleClickMarker }: MapCompProps) {
 
     const mapboxFeaturesOnScreen = map.querySourceFeatures(`cafeList/${activeFilterId}`);
     const clustersOnScreen: MapboxGeoJSONFeature[] = [];
-    const uniquePointMarkersId = new Set<number>();
+    const uniqueClustersId = new Set<number>();
+    const uniquePointsId = new Set<number>();
     mapboxFeaturesOnScreen.forEach((feature) => {
       if (feature.properties?.cluster) {
+        if (uniqueClustersId.has(feature.properties.cluster_id)) return;
         clustersOnScreen.push(feature);
-        return;
-      }
-
-      const id = feature.properties?.id;
-      if (id !== undefined) {
-        uniquePointMarkersId.add(id);
+        uniqueClustersId.add(feature.properties.cluster_id);
+      } else {
+        const id = feature.properties?.id;
+        if (id !== undefined) {
+          uniquePointsId.add(id);
+        }
       }
     });
-    const featuresOnScreen = allFeatures.filter((feature: CustomGeoJSONFeatures) =>
-      uniquePointMarkersId.has(feature.properties.id)
+    const pointsOnScreen = allFeatures.filter((feature: CustomGeoJSONFeatures) =>
+      uniquePointsId.has(feature.properties.id)
     );
 
     Object.entries(pointMarkerList).forEach((markerEntry) => {
@@ -94,7 +96,7 @@ function MapComp({ handleClickMarker }: MapCompProps) {
       delete pointMarkerList[id];
     });
 
-    featuresOnScreen.forEach((feature: CustomGeoJSONFeatures) => {
+    pointsOnScreen.forEach((feature: CustomGeoJSONFeatures) => {
       const { id } = feature.properties;
 
       try {
