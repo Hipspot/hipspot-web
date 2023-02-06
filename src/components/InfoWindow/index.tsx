@@ -3,14 +3,21 @@ import styled from '@emotion/styled';
 import { activatedCafeIdAtom, cafeInfoQuery, tabStateAtom } from '@states/infoWindow';
 import { useRecoilValue, useRecoilValueLoadable } from 'recoil';
 import MakeLodableSuspense from '@components/MakeLodableSuspense';
-import { DOMID_BLURFRAME, DOMID_CAROUSEL, DOMID_POP_UP_WINDOW, DOMTargetList } from '@constants/DOM';
+import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
+import { DOMID_BLURFRAME, DOMID_IMAGE_SLIDER, DOMID_POP_UP_WINDOW, DOMTargetList } from '@constants/DOM';
+import {
+  CSSVAR_IMAGE_SLIDER_HEIGHT,
+  CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION,
+  CSSVAR_IMAGE_SLIDER_WIDTH,
+  CSSVAR_IMAGE_TRANSLATE,
+} from '@constants/cssVar';
 import * as MapButtonList from './Contents/MapButtonList';
 import TabBar from './Contents/TabBar';
 import Title, { TitleSkeleton } from './Contents/Title';
-import CustomCarousel, { CustomCarouselSkeleton } from './Contents/Carousel';
 import Information, { InformationSkeleton } from './Contents/Information';
 import PopUpWindow from './Contents/PopUpWindow';
 import BlurFrame from './Contents/BlurFrame';
+import ImageSlider, { CustomImageSliderSkeleton } from './Contents/ImageSlider';
 
 export default function InfoWindow() {
   const tabState = useRecoilValue(tabStateAtom);
@@ -18,9 +25,17 @@ export default function InfoWindow() {
   const { state, contents } = useRecoilValueLoadable(cafeInfoQuery(activatedCafeId));
 
   useEffect(() => {
+    window.addEventListener('resize', (e) => {
+      e.stopPropagation();
+      popUpHeights[PopUpHeightsType.middle] = window.innerHeight * 0.6;
+      popUpHeights[PopUpHeightsType.bottom] = window.innerHeight - 30;
+    });
+  }, []);
+
+  useEffect(() => {
     if (!contents) return;
     DOMTargetList[DOMID_BLURFRAME] = document.getElementById(DOMID_BLURFRAME);
-    DOMTargetList[DOMID_CAROUSEL] = document.getElementById(DOMID_CAROUSEL);
+    DOMTargetList[DOMID_IMAGE_SLIDER] = document.getElementById(DOMID_IMAGE_SLIDER);
     DOMTargetList[DOMID_POP_UP_WINDOW] = document.getElementById(DOMID_POP_UP_WINDOW);
   }, [contents]);
 
@@ -33,11 +48,11 @@ export default function InfoWindow() {
               <Title placeName={contents.placeName} />
             </MakeLodableSuspense>
           </TitleWrapper>
-          <CarouselWrapper>
-            <MakeLodableSuspense lodableState={state} loading={<CustomCarouselSkeleton />}>
-              <CustomCarousel imageList={contents.imageList} id={DOMID_CAROUSEL} />
+          <ImageSliderWrapper id={DOMID_IMAGE_SLIDER}>
+            <MakeLodableSuspense lodableState={state} loading={<CustomImageSliderSkeleton />}>
+              <ImageSlider imageList={contents.imageList} wrapperId={DOMID_IMAGE_SLIDER} />
             </MakeLodableSuspense>
-          </CarouselWrapper>
+          </ImageSliderWrapper>
           <TabBar isSelected />
         </TopSection>
         <Section>
@@ -81,7 +96,14 @@ const TitleWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
-const CarouselWrapper = styled.div``;
+const ImageSliderWrapper = styled.div`
+  :root {
+    ${CSSVAR_IMAGE_TRANSLATE}: translateX(0px);
+    ${CSSVAR_IMAGE_SLIDER_HEIGHT} : 0px;
+    ${CSSVAR_IMAGE_SLIDER_WIDTH} : 0px;
+    ${CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION} : 0s;
+  }
+`;
 
 const Loading = styled.div`
   width: 100%;

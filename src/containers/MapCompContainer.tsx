@@ -9,7 +9,11 @@ function MapCompContainer() {
   const setTabState = useSetRecoilState(tabStateAtom);
   const handleClickMarker = (id: number) => {
     setActivatedCafeId(id);
-    setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.middle] }));
+    setTabState((prev) => ({
+      ...prev,
+      popUpState: 'half',
+      top: popUpHeights[PopUpHeightsType.middle],
+    }));
   };
 
   return (

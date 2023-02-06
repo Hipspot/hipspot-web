@@ -1,4 +1,4 @@
-import interpolateBlur from '@components/InfoWindow/view/interpolateBluer';
+import interpolateBlur from '@components/InfoWindow/view/interpolateBlur';
 import { PopUpHeightsType } from '@constants/popUpHeights';
 import { SlideUpWindowEvent } from '@libs/types/customEvents';
 import { calcProgressRatio } from '@libs/utils/calc';

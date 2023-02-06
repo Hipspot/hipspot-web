@@ -1,24 +1,34 @@
-import { CSSVAR_CAROUSEL_HEIGHT } from '@constants/cssVar';
-import { DOMID_CAROUSEL } from '@constants/DOM';
+import modifyImageSliderHeight from '@components/InfoWindow/view/modifyImageSliderHeight';
+import modifyImageSliderWidth from '@components/InfoWindow/view/modifyImageSliderWidth';
+import {
+  CSSVAR_IMAGE_SLIDER_HEIGHT,
+  CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION,
+  CSSVAR_IMAGE_SLIDER_WIDTH,
+  CSSVAR_IMAGE_TRANSLATE,
+} from '@constants/cssVar';
+import { DOMID_IMAGE_SLIDER } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
-import { carouselHeightsTween } from '@constants/Tween';
+import { imageSliderHeightTween, imageSliderWidthTween } from '@constants/Tween';
 import styled from '@emotion/styled';
 import { SlideUpWindowEvent } from '@libs/types/customEvents';
 import { ImageSliderRef } from '@libs/types/slider';
 import { calcImageListPosition } from '@libs/utils/calc';
 import { tabStateAtom } from '@states/infoWindow';
 import { useEffect, useRef, useState } from 'react';
+import Loading from 'react-loading';
 import { useRecoilState } from 'recoil';
 import { reactRefUpdate } from '../PopUpWindow/utils/reactRefUpdate';
 import { handleMouseDown, handleMouseMove, handleMouseUp } from './eventHandler/mouse';
+import { handleSlidePopUpWindowForImageSlide } from './eventHandler/slideUpWindow';
 import { handleTouchEnd, handleTouchMove, handleTouchStart } from './eventHandler/touch';
 
 interface SlideProps {
+  wrapperId: string;
   imageList: string[];
 }
 
-function ImageSlider({ imageList }: SlideProps) {
+function ImageSlider({ wrapperId, imageList }: SlideProps) {
   const [imageIndex, setImageIndex] = useState(0);
   const [tabState, setTabState] = useRecoilState(tabStateAtom);
   const imageSliderRef = useRef<ImageSliderRef>({
@@ -29,7 +39,7 @@ function ImageSlider({ imageList }: SlideProps) {
     index: 0,
     imageListLength: imageList.length,
   });
-  const { max, min } = carouselHeightsTween;
+  const { max, min } = imageSliderWidthTween;
 
   const onMouseDownCapture = handleMouseDown({ imageSliderRef });
   const onMouseMoveCapture = handleMouseMove({ imageSliderRef });
@@ -38,17 +48,30 @@ function ImageSlider({ imageList }: SlideProps) {
   const onTouchMoveCapture = handleTouchMove({ imageSliderRef });
   const onTouchEndCapture = handleTouchEnd({ imageSliderRef, setImageIndex });
 
+  const onSlidePopUpWindow = handleSlidePopUpWindowForImageSlide({ popUpHeights });
+
+  useEffect(() => {
+    const elem = document.getElementById(wrapperId);
+    if (elem !== null) {
+      elem.removeEventListener(EVENT_SLIDE_UP_WINDOW, onSlidePopUpWindow);
+      elem.addEventListener(EVENT_SLIDE_UP_WINDOW, onSlidePopUpWindow);
+    }
+  }, []);
+
   useEffect(() => {
     const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), {
       currentTop: tabState.top,
     });
-    const carousel = document.getElementById(DOMID_CAROUSEL) as HTMLDivElement;
+    const carousel = document.getElementById(DOMID_IMAGE_SLIDER) as HTMLDivElement;
     carousel.dispatchEvent(slideEvent);
+
     if (tabState.popUpState === 'half' || tabState.popUpState === 'thumbNail') {
-      carousel.style.setProperty(CSSVAR_CAROUSEL_HEIGHT, `${min}px`);
+      modifyImageSliderHeight({ height: imageSliderHeightTween.min });
+      modifyImageSliderWidth({ width: imageSliderWidthTween.min });
     }
     if (tabState.popUpState === 'full') {
-      carousel.style.setProperty(CSSVAR_CAROUSEL_HEIGHT, `${max}px`);
+      modifyImageSliderHeight({ height: imageSliderHeightTween.max });
+      modifyImageSliderWidth({ width: imageSliderWidthTween.max });
     }
 
     const value = tabState.popUpState === 'full' ? max : min;
@@ -59,8 +82,8 @@ function ImageSlider({ imageList }: SlideProps) {
       width: blockWidth,
       index: imageIndex,
     });
-    carousel.style.setProperty('--image-translate', `${leftCorrectionValue}px`);
-    carousel.style.setProperty('--transition-duration', `0s`);
+    carousel.style.setProperty(CSSVAR_IMAGE_TRANSLATE, `${leftCorrectionValue}px`);
+    carousel.style.setProperty(CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION, `0s`);
 
     reactRefUpdate({
       ref: imageSliderRef,
@@ -83,7 +106,11 @@ function ImageSlider({ imageList }: SlideProps) {
           src={imageSrc}
           key={imageSrc}
           selected={i === imageIndex}
-          initHeight={tabState.popUpState === 'full' ? max : min}
+          initSize={
+            tabState.popUpState === 'full'
+              ? { height: imageSliderHeightTween.max, width: imageSliderWidthTween.max }
+              : { height: imageSliderWidthTween.min, width: imageSliderWidthTween.min }
+          }
           className={`${i === imageIndex ? 'selected' : ''}`}
           onDoubleClick={() => {
             setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.top], popUpState: 'full' }));
@@ -96,8 +123,33 @@ function ImageSlider({ imageList }: SlideProps) {
 
 export default ImageSlider;
 
+export function CustomImageSliderSkeleton() {
+  return (
+    <SkeltonWrapper>
+      <div>
+        <Loading color="pink" />
+      </div>
+    </SkeltonWrapper>
+  );
+}
+
+const SkeltonWrapper = styled.div`
+  padding: 0px 16px;
+  width: 100%;
+  height: var(${CSSVAR_IMAGE_SLIDER_HEIGHT}, 343);
+  & > div {
+    background-color: #d6d6d6;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
 const SlideContainer = styled.div`
-  height: var(${CSSVAR_CAROUSEL_HEIGHT});
+  height: var(${CSSVAR_IMAGE_SLIDER_HEIGHT});
   padding-left: 16px;
   width: 1000vw;
   display: flex;
@@ -111,14 +163,14 @@ const SlideContainer = styled.div`
   -ms-overflow-style: none;
   scrollbar-width: none;
 
-  transform: translate3d(var(--image-translate), 0px, 0px);
-  transition: ease-in-out var(--transition-duration);
+  transform: translate3d(var(${CSSVAR_IMAGE_TRANSLATE}), 0px, 0px);
+  transition: ease-in-out var(${CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION});
 `;
-const Image = styled.img<{ selected: boolean; initHeight: number }>`
+const Image = styled.img<{ selected: boolean; initSize: { height: number; width: number } }>`
   border-radius: 8px;
   flex: 0 0 auto;
-  height: ${(props) => (props.selected ? `var(${CSSVAR_CAROUSEL_HEIGHT})` : `${props.initHeight}px`)};
-  width: ${(props) => (props.selected ? `var(${CSSVAR_CAROUSEL_HEIGHT})` : `${props.initHeight}px`)};
+  height: ${(props) => (props.selected ? `var(${CSSVAR_IMAGE_SLIDER_HEIGHT})` : `${props.initSize.height}px`)};
+  width: ${(props) => (props.selected ? `var(${CSSVAR_IMAGE_SLIDER_WIDTH})` : `${props.initSize.width}px`)};
   object-fit: cover;
   object-position: center;
 `;

@@ -1,7 +1,8 @@
-import moveCarousel from '@components/InfoWindow/view/moveCarousel';
-import slideHorizon from '@components/InfoWindow/view/slideHorizon';
+import slideImageSlider from '@components/InfoWindow/view/slideImageSlider';
+import moveImageSlider from '@components/InfoWindow/view/moveImageSlider';
 import stopImageSlideTransition from '@components/InfoWindow/view/stopImageSlideTransition';
-import { CSSVAR_CAROUSEL_HEIGHT } from '@constants/cssVar';
+import { CSSVAR_IMAGE_SLIDER_WIDTH } from '@constants/cssVar';
+import { DOMID_IMAGE_SLIDER } from '@constants/DOM';
 import { HandleImageSliderStartProps, HandleImageSlideMoveProps, HandleImageSliderEndProps } from '@libs/types/slider';
 import { calcImageIndex, calcImageListPosition, calcNumberClamp } from '@libs/utils/calc';
 import { MouseEventHandler } from 'react';
@@ -32,7 +33,7 @@ export const handleMouseMove: (props: HandleImageSlideMoveProps) => MouseEventHa
       const move = e.clientX - x;
       const left = prevLeft + move;
 
-      slideHorizon({ left });
+      moveImageSlider({ left });
 
       reactRefUpdate({
         ref: imageSliderRef,
@@ -48,8 +49,8 @@ export const handleMouseUp: (props: HandleImageSliderEndProps) => MouseEventHand
     e.stopPropagation();
 
     if (imageSliderRef.current && imageSliderRef.current.onHandling) {
-      const r = document.getElementById('carousel') as HTMLDivElement;
-      const width = parseFloat(r.style.getPropertyValue(CSSVAR_CAROUSEL_HEIGHT));
+      const r = document.getElementById(DOMID_IMAGE_SLIDER) as HTMLDivElement;
+      const width = parseFloat(r.style.getPropertyValue(CSSVAR_IMAGE_SLIDER_WIDTH));
       const blockWidth = width + 16;
       const { left, imageListLength, startX, index: prevIndex } = imageSliderRef.current;
       const displacement = e.clientX - startX;
@@ -61,7 +62,7 @@ export const handleMouseUp: (props: HandleImageSliderEndProps) => MouseEventHand
 
       const leftCorrectionValue = calcImageListPosition({ left, width: blockWidth, index });
 
-      moveCarousel({ leftCorrectionValue });
+      slideImageSlider({ leftCorrectionValue });
 
       reactRefUpdate({
         ref: imageSliderRef,

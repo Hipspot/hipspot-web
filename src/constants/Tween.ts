@@ -1,6 +1,17 @@
-export const carouselHeightsTween = {
+import { calcNumberClamp } from '@libs/utils/calc';
+
+export const imageSliderHeightTween = {
   min: 170,
-  max: window.innerWidth - 32,
+  get max() {
+    return calcNumberClamp({ num: window.innerWidth, min: 170, max: 343 });
+  },
+};
+
+export const imageSliderWidthTween = {
+  min: 170,
+  get max() {
+    return calcNumberClamp({ num: window.innerWidth, min: 170, max: 600 }) - 32;
+  },
 };
 
 export const blurFrameTween = {

@@ -3,14 +3,15 @@ import Filtering from '@components/Filtering';
 import styled from '@emotion/styled';
 import MapCompContainer from '@containers/MapCompContainer';
 import InfoWindow from '@components/InfoWindow';
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import fromflutterMessageHandler from '@libs/webview/fromFlutterMessageHandler';
 import { Toaster } from 'react-hot-toast';
 
 function App() {
-  useLayoutEffect(() => {
+  useEffect(() => {
     window.fromflutterMessageHandler = fromflutterMessageHandler;
   });
+
   return (
     <Wrapper>
       <MapCompContainer />

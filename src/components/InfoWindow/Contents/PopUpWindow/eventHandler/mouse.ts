@@ -1,7 +1,7 @@
 import { MouseEventHandler } from 'react';
 import { HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps, TabState } from '@libs/types/infowindow';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
-import { DOMID_BLURFRAME, DOMID_CAROUSEL } from '@constants/DOM';
+import { DOMID_BLURFRAME, DOMID_IMAGE_SLIDER } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import modifyInfoWindowTop from '@components/InfoWindow/view/modifyInfoWindowTop';
 import { SlideUpWindowEvent } from '@libs/types/customEvents';
@@ -37,7 +37,7 @@ export const handleMouseMove: (eventMoveProps: HandleEventMoveProps) => MouseEve
       modifyInfoWindowTop({ currentTop });
 
       const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), { currentTop });
-      document.getElementById(DOMID_CAROUSEL)?.dispatchEvent(slideEvent);
+      document.getElementById(DOMID_IMAGE_SLIDER)?.dispatchEvent(slideEvent);
       document.getElementById(DOMID_BLURFRAME)?.dispatchEvent(slideEvent);
 
       reactRefUpdate({ ref: topCoordRef, update: e.clientY });

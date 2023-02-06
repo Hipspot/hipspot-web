@@ -1,5 +1,6 @@
 import { atom, selectorFamily } from 'recoil';
 import { LngLatLike } from 'mapbox-gl';
+import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import { getCafeInfo } from '@libs/apis/cafe';
 import { TabState } from '../libs/types/infowindow';
 
@@ -15,7 +16,7 @@ export const tabStateAtom = atom<TabState>({
   key: 'atom / tabState',
   default: {
     // eslint-disable-next-line no-restricted-globals
-    top: innerHeight,
+    top: popUpHeights[PopUpHeightsType.bottom],
     onHandling: false,
     popUpState: 'thumbNail',
   },
