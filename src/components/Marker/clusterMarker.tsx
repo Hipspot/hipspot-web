@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { FilterId } from '@libs/types/filter';
+// Recoil Root 에러 발생하여 주석처리했습니다.
 // import { activeFilterIdAtom, openClusterListAtom } from '@states/ui';
 // import { useRecoilValue, useSetRecoilState } from 'recoil';
 
@@ -9,7 +10,6 @@ type ClusterMarkerProps = {
    * @example 3
    */
   number: number;
-
   filterId: FilterId;
 };
 
@@ -34,7 +34,7 @@ const filteredClusterColor = [
   },
   {
     wrapperColor: '#F2BE19',
-    wrapperBoxShadowColor: 'rgba(133, 50, 3, 0.35)',
+    wrapperBoxShadowColor: 'rgba(133, 50, 3, 0.2)',
     innerCircleColor: '#F2BE19',
     innerCircleBoxShadowColorX: 'rgba(249, 199, 125, 0.9)',
     innerCircleBoxShadowColorY: 'rgba(23, 10, 0, 0.12)',
@@ -71,18 +71,14 @@ const filteredClusterColor = [
 ];
 
 export default function ClusterMarker({ number, filterId }: ClusterMarkerProps) {
-  /*
+  // Recoil Root 에러 발생하여 주석처리했습니다.
+  /* 
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const setOpenClusterList = useSetRecoilState(openClusterListAtom);
 
   const handleClick = () => {
     setOpenClusterList(true);
   };
-  return (
-    <Wrapper id="marker" onClick={handleClick} color={filterColor[activeFilterId]}>
-      +{number}
-    </Wrapper>
-  );
   */
   const clusterColors = filteredClusterColor[filterId];
   return (

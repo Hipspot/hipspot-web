@@ -19,28 +19,28 @@ type MapCompProps = {
 
 function MapComp({ handleClickMarker }: MapCompProps) {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
-  const features = useRecoilValue(geoJsonSelector);
+  const allFeatures = useRecoilValue(geoJsonSelector);
   const [mapRenderTrigger, setMapRenderTrigger] = useState<boolean>(false);
   const mapRef = useRef<mapboxgl.Map>();
-  const markerList: { [id in number | string]: mapboxgl.Marker } = useMemo(() => ({}), []);
-  const clusterMarkerList: mapboxgl.Marker[] = useMemo(() => [], []);
-
-  const handleMapRenderTrigger = () => {
-    setMapRenderTrigger((state) => !state);
-  };
+  const pointMarkerList: { [id in number | string]: Marker } = useMemo(() => ({}), []);
+  const clusterMarkerList: Marker[] = useMemo(() => [], []);
 
   useEffect(() => {
     mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKKEN}`;
     mapRef.current = new mapboxgl.Map(mapConfig);
     const map = mapRef.current;
 
+    const handleMapRenderTrigger = () => {
+      setMapRenderTrigger((state) => !state);
+    };
+
     map.on('load', () => {
       Object.values(FilterId).forEach((filterId) => {
-        map.addSource(`placeList/${filterId}`, {
+        map.addSource(`cafeList/${filterId}`, {
           type: 'geojson',
           data: {
             type: 'FeatureCollection',
-            features: features.filter((feature: CustomGeoJSONFeatures) =>
+            features: allFeatures.filter((feature: CustomGeoJSONFeatures) =>
               feature.properties.filterList.includes(filterId as number)
             ),
           } as FeatureCollection,
@@ -49,9 +49,9 @@ function MapComp({ handleClickMarker }: MapCompProps) {
           clusterRadius: 60,
         });
         map.addLayer({
-          id: `placeList/${filterId}`,
+          id: `cafeList/${filterId}`,
           type: 'circle',
-          source: `placeList/${filterId}`,
+          source: `cafeList/${filterId}`,
           paint: {
             'circle-opacity': 0,
           },
@@ -71,31 +71,28 @@ function MapComp({ handleClickMarker }: MapCompProps) {
     if (!map) return;
     if (!map.isStyleLoaded()) return;
 
-    // const source = map.getSource(`placeList/${activeFilterId}`) as GeoJSONSource;
-
-    const mapboxFeaturesOnScreen = map.querySourceFeatures(`placeList/${activeFilterId}`);
-    const uniqueIds = new Set<number>();
-
-    const clusters: MapboxGeoJSONFeature[] = [];
+    const mapboxFeaturesOnScreen = map.querySourceFeatures(`cafeList/${activeFilterId}`);
+    const clustersOnScreen: MapboxGeoJSONFeature[] = [];
+    const uniquePointMarkersId = new Set<number>();
     mapboxFeaturesOnScreen.forEach((feature) => {
       if (feature.properties?.cluster) {
-        clusters.push(feature);
+        clustersOnScreen.push(feature);
         return;
       }
 
       const id = feature.properties?.id;
       if (id !== undefined) {
-        uniqueIds.add(id);
+        uniquePointMarkersId.add(id);
       }
     });
+    const featuresOnScreen = allFeatures.filter((feature: CustomGeoJSONFeatures) =>
+      uniquePointMarkersId.has(feature.properties.id)
+    );
 
-    const clustersOnScreen = clusters;
-    const featuresOnScreen = features.filter((feature: CustomGeoJSONFeatures) => uniqueIds.has(feature.properties.id));
-
-    Object.entries(markerList).forEach((markerEntry) => {
+    Object.entries(pointMarkerList).forEach((markerEntry) => {
       const [id, marker] = markerEntry as [string, Marker];
       marker.remove();
-      delete markerList[id];
+      delete pointMarkerList[id];
     });
 
     featuresOnScreen.forEach((feature: CustomGeoJSONFeatures) => {
@@ -113,7 +110,7 @@ function MapComp({ handleClickMarker }: MapCompProps) {
           ),
           cssDataKey: 'marker',
         });
-        markerList[id] = new mapboxgl.Marker(marker).setLngLat(feature.geometry.coordinates).addTo(map);
+        pointMarkerList[id] = new mapboxgl.Marker(marker).setLngLat(feature.geometry.coordinates).addTo(map);
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
@@ -125,25 +122,24 @@ function MapComp({ handleClickMarker }: MapCompProps) {
     });
     clusterMarkerList.length = 0;
 
-    clustersOnScreen.forEach((feature) => {
-      // const id = feature.properties?.cluster_id;
-      const count = feature.properties?.point_count;
+    try {
+      clustersOnScreen.forEach((feature) => {
+        const count = feature.properties?.point_count;
+        const geo = feature.geometry;
 
-      const geo = feature.geometry;
-      /*
-      source.getClusterLeaves(id, 99, 0, (err, leaves) => {
-        console.log(leaves);
-      });
-      */
-      const marker = renderEmotionElementToHtml({
-        elem: <ClusterMarker number={count} filterId={activeFilterId} />,
-        cssDataKey: 'cluster',
-      });
-      if (geo.type === 'GeometryCollection') return;
+        const marker = renderEmotionElementToHtml({
+          elem: <ClusterMarker number={count} filterId={activeFilterId} />,
+          cssDataKey: 'cluster',
+        });
 
-      const newMarker = new mapboxgl.Marker(marker).setLngLat(geo.coordinates as [number, number]).addTo(map);
-      clusterMarkerList.push(newMarker);
-    });
+        if (geo.type === 'GeometryCollection') return;
+        const newMarker = new mapboxgl.Marker(marker).setLngLat(geo.coordinates as [number, number]).addTo(map);
+        clusterMarkerList.push(newMarker);
+      });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
   }, [mapRenderTrigger, activeFilterId]);
 
   return (
