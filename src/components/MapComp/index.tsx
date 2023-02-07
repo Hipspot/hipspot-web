@@ -8,7 +8,6 @@ import { renderEmotionElementToHtml } from '@libs/utils/renderEmotionElementToHt
 import { geoJsonSelector } from '@states/map';
 import { activeFilterIdAtom } from '@states/ui';
 import mapboxgl, { MapboxGeoJSONFeature, Marker } from 'mapbox-gl';
-import { FeatureCollection } from 'geojson';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { FilterId } from '@libs/types/filter';
 import { mapConfig } from './utils/mapConfig';
@@ -32,22 +31,22 @@ function MapComp({ handleClickMarker }: MapCompProps) {
     if (!map) return;
     const mapboxFeaturesOnScreen = map.querySourceFeatures(`cafeList/${filterId}`);
     const clustersOnScreen: MapboxGeoJSONFeature[] = [];
-    const uniqueClustersId = new Set<number>();
-    const uniquePointsId = new Set<number>();
+    const uniqueClusterIds = new Set<number>();
+    const uniquePointIds = new Set<number>();
     mapboxFeaturesOnScreen.forEach((feature) => {
       if (feature.properties?.cluster) {
-        if (uniqueClustersId.has(feature.properties.cluster_id)) return;
+        if (uniqueClusterIds.has(feature.properties.cluster_id)) return;
         clustersOnScreen.push(feature);
-        uniqueClustersId.add(feature.properties.cluster_id);
+        uniqueClusterIds.add(feature.properties.cluster_id);
       } else {
         const id = feature.properties?.id;
         if (id !== undefined) {
-          uniquePointsId.add(id);
+          uniquePointIds.add(id);
         }
       }
     });
     const pointsOnScreen = allFeatures.filter((feature: CustomGeoJSONFeatures) =>
-      uniquePointsId.has(feature.properties.id)
+      uniquePointIds.has(feature.properties.id)
     );
 
     Object.entries(pointMarkerList).forEach((markerEntry) => {
@@ -109,15 +108,24 @@ function MapComp({ handleClickMarker }: MapCompProps) {
     const map = mapRef.current;
 
     map.on('load', () => {
-      Object.values(FilterId).forEach((filterId) => {
+      const filterValues = Object.values(FilterId)
+        .filter((v) => !Number.isNaN(Number(v)))
+        .map((v) => Number(v));
+      const filteredFeatures: MapboxGeoJSONFeature[][] = filterValues.map(() => []);
+
+      allFeatures.forEach((feature: MapboxGeoJSONFeature) => {
+        feature.properties?.filterList.forEach((filterId: number) => {
+          filteredFeatures[filterId].push(feature);
+        });
+      });
+
+      filterValues.forEach((filterId) => {
         map.addSource(`cafeList/${filterId}`, {
           type: 'geojson',
           data: {
             type: 'FeatureCollection',
-            features: allFeatures.filter((feature: CustomGeoJSONFeatures) =>
-              feature.properties.filterList.includes(filterId as number)
-            ),
-          } as FeatureCollection,
+            features: filteredFeatures[filterId],
+          },
           cluster: true,
           clusterMaxZoom: 16,
           clusterRadius: 60,
@@ -143,8 +151,8 @@ function MapComp({ handleClickMarker }: MapCompProps) {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    activeFilterIdRef.current = activeFilterId;
 
+    activeFilterIdRef.current = activeFilterId;
     updateMarkers();
   }, [activeFilterId]);
 
