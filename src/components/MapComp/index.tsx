@@ -1,17 +1,15 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
-import PointMarker from '@components/Marker/pointMarker';
-import ClusterMarker from '@components/Marker/clusterMarker';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
-import { renderEmotionElementToHtml } from '@libs/utils/renderEmotionElementToHtml';
 import { geoJsonSelector } from '@states/map';
 import { activeFilterIdAtom } from '@states/ui';
-import mapboxgl, { MapboxGeoJSONFeature, Marker } from 'mapbox-gl';
+import mapboxgl, { Marker } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { FilterId } from '@libs/types/filter';
 import { FeatureCollection } from 'geojson';
 import { mapConfig } from './utils/mapConfig';
+import { updateMarkers } from './utils/updateMarkers';
 
 type MapCompProps = {
   handleClickMarker: (id: number) => void;
@@ -25,82 +23,19 @@ function MapComp({ handleClickMarker }: MapCompProps) {
   const pointMarkerList: { [id in number | string]: Marker } = useMemo(() => ({}), []);
   const clusterMarkerList: Marker[] = useMemo(() => [], []);
 
-  const updateMarkers = () => {
+  const handleUpdateMarkers = () => {
     const map = mapRef.current;
     const filterId = activeFilterIdRef.current;
 
     if (!map) return;
-    const mapboxFeaturesOnScreen = map.querySourceFeatures(`cafeList/${filterId}`);
-    const clustersOnScreen: MapboxGeoJSONFeature[] = [];
-    const uniqueClusterIds = new Set<number>();
-    const uniquePointIds = new Set<number>();
-    mapboxFeaturesOnScreen.forEach((feature) => {
-      if (feature.properties?.cluster) {
-        if (uniqueClusterIds.has(feature.properties.cluster_id)) return;
-        clustersOnScreen.push(feature);
-        uniqueClusterIds.add(feature.properties.cluster_id);
-      } else {
-        const id = feature.properties?.id;
-        if (id !== undefined) {
-          uniquePointIds.add(id);
-        }
-      }
+    updateMarkers({
+      map,
+      filterId,
+      allFeatures,
+      pointMarkerList,
+      clusterMarkerList,
+      handleClickMarker,
     });
-    const pointsOnScreen = allFeatures.filter((feature: CustomGeoJSONFeatures) =>
-      uniquePointIds.has(feature.properties.id)
-    );
-
-    Object.entries(pointMarkerList).forEach((markerEntry) => {
-      const [id, marker] = markerEntry as [string, Marker];
-      marker.remove();
-      delete pointMarkerList[id];
-    });
-
-    pointsOnScreen.forEach((feature: CustomGeoJSONFeatures) => {
-      const { id } = feature.properties;
-
-      try {
-        const marker = renderEmotionElementToHtml({
-          elem: (
-            <PointMarker
-              handleClickMarker={handleClickMarker}
-              feature={feature}
-              image="https://hipspot.s3.ap-northeast-2.amazonaws.com/store/0.jpg"
-              id={id}
-            />
-          ),
-          cssDataKey: 'marker',
-        });
-        pointMarkerList[id] = new mapboxgl.Marker(marker).setLngLat(feature.geometry.coordinates).addTo(map);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      }
-    });
-
-    clusterMarkerList.forEach((marker) => {
-      marker.remove();
-    });
-    clusterMarkerList.length = 0;
-
-    try {
-      clustersOnScreen.forEach((feature) => {
-        const count = feature.properties?.point_count;
-        const geo = feature.geometry;
-
-        const marker = renderEmotionElementToHtml({
-          elem: <ClusterMarker number={count} filterId={filterId} />,
-          cssDataKey: 'cluster',
-        });
-
-        if (geo.type === 'GeometryCollection') return;
-        const newMarker = new mapboxgl.Marker(marker).setLngLat(geo.coordinates as [number, number]).addTo(map);
-        clusterMarkerList.push(newMarker);
-      });
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-    }
   };
 
   useEffect(() => {
@@ -142,10 +77,10 @@ function MapComp({ handleClickMarker }: MapCompProps) {
       });
     });
 
-    map.on('render', updateMarkers);
-    map.on('moveend', updateMarkers);
+    map.on('render', handleUpdateMarkers);
+    map.on('moveend', handleUpdateMarkers);
     map.once('movestart', () => {
-      map.off('render', updateMarkers);
+      map.off('render', handleUpdateMarkers);
     });
   }, []);
 
@@ -154,7 +89,7 @@ function MapComp({ handleClickMarker }: MapCompProps) {
     if (!map) return;
 
     activeFilterIdRef.current = activeFilterId;
-    updateMarkers();
+    handleUpdateMarkers();
   }, [activeFilterId]);
 
   return (
