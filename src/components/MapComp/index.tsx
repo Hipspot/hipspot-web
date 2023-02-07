@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import PointMarker from '@components/Marker/pointMarker';
@@ -20,57 +20,17 @@ type MapCompProps = {
 function MapComp({ handleClickMarker }: MapCompProps) {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const allFeatures = useRecoilValue(geoJsonSelector);
-  const [mapRenderTrigger, setMapRenderTrigger] = useState<boolean>(false);
   const mapRef = useRef<mapboxgl.Map>();
+  const activeFilterIdRef = useRef(activeFilterId);
   const pointMarkerList: { [id in number | string]: Marker } = useMemo(() => ({}), []);
   const clusterMarkerList: Marker[] = useMemo(() => [], []);
 
-  useEffect(() => {
-    mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKKEN}`;
-    mapRef.current = new mapboxgl.Map(mapConfig);
+  const updateMarkers = () => {
     const map = mapRef.current;
+    const filterId = activeFilterIdRef.current;
 
-    const handleMapRenderTrigger = () => {
-      setMapRenderTrigger((state) => !state);
-    };
-
-    map.on('load', () => {
-      Object.values(FilterId).forEach((filterId) => {
-        map.addSource(`cafeList/${filterId}`, {
-          type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: allFeatures.filter((feature: CustomGeoJSONFeatures) =>
-              feature.properties.filterList.includes(filterId as number)
-            ),
-          } as FeatureCollection,
-          cluster: true,
-          clusterMaxZoom: 16,
-          clusterRadius: 60,
-        });
-        map.addLayer({
-          id: `cafeList/${filterId}`,
-          type: 'circle',
-          source: `cafeList/${filterId}`,
-          paint: {
-            'circle-opacity': 0,
-          },
-        });
-      });
-    });
-
-    map.on('render', handleMapRenderTrigger);
-    map.on('moveend', handleMapRenderTrigger);
-    map.once('movestart', () => {
-      map.off('render', handleMapRenderTrigger);
-    });
-  }, []);
-
-  useEffect(() => {
-    const map = mapRef.current;
     if (!map) return;
-
-    const mapboxFeaturesOnScreen = map.querySourceFeatures(`cafeList/${activeFilterId}`);
+    const mapboxFeaturesOnScreen = map.querySourceFeatures(`cafeList/${filterId}`);
     const clustersOnScreen: MapboxGeoJSONFeature[] = [];
     const uniqueClustersId = new Set<number>();
     const uniquePointsId = new Set<number>();
@@ -129,7 +89,7 @@ function MapComp({ handleClickMarker }: MapCompProps) {
         const geo = feature.geometry;
 
         const marker = renderEmotionElementToHtml({
-          elem: <ClusterMarker number={count} filterId={activeFilterId} />,
+          elem: <ClusterMarker number={count} filterId={filterId} />,
           cssDataKey: 'cluster',
         });
 
@@ -141,7 +101,52 @@ function MapComp({ handleClickMarker }: MapCompProps) {
       // eslint-disable-next-line no-console
       console.error(e);
     }
-  }, [mapRenderTrigger, activeFilterId]);
+  };
+
+  useEffect(() => {
+    mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKKEN}`;
+    mapRef.current = new mapboxgl.Map(mapConfig);
+    const map = mapRef.current;
+
+    map.on('load', () => {
+      Object.values(FilterId).forEach((filterId) => {
+        map.addSource(`cafeList/${filterId}`, {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: allFeatures.filter((feature: CustomGeoJSONFeatures) =>
+              feature.properties.filterList.includes(filterId as number)
+            ),
+          } as FeatureCollection,
+          cluster: true,
+          clusterMaxZoom: 16,
+          clusterRadius: 60,
+        });
+        map.addLayer({
+          id: `cafeList/${filterId}`,
+          type: 'circle',
+          source: `cafeList/${filterId}`,
+          paint: {
+            'circle-opacity': 0,
+          },
+        });
+      });
+    });
+
+    map.on('render', updateMarkers);
+    map.on('moveend', updateMarkers);
+    map.once('movestart', () => {
+      map.off('render', updateMarkers);
+    });
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    activeFilterIdRef.current = activeFilterId;
+
+    updateMarkers();
+  }, [activeFilterId]);
 
   return (
     <div
