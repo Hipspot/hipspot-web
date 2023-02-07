@@ -10,6 +10,7 @@ import { activeFilterIdAtom } from '@states/ui';
 import mapboxgl, { MapboxGeoJSONFeature, Marker } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { FilterId } from '@libs/types/filter';
+import { FeatureCollection } from 'geojson';
 import { mapConfig } from './utils/mapConfig';
 
 type MapCompProps = {
@@ -111,9 +112,9 @@ function MapComp({ handleClickMarker }: MapCompProps) {
       const filterValues = Object.values(FilterId)
         .filter((v) => !Number.isNaN(Number(v)))
         .map((v) => Number(v));
-      const filteredFeatures: MapboxGeoJSONFeature[][] = filterValues.map(() => []);
+      const filteredFeatures: CustomGeoJSONFeatures[][] = filterValues.map(() => []);
 
-      allFeatures.forEach((feature: MapboxGeoJSONFeature) => {
+      allFeatures.forEach((feature: CustomGeoJSONFeatures) => {
         feature.properties?.filterList.forEach((filterId: number) => {
           filteredFeatures[filterId].push(feature);
         });
@@ -125,7 +126,7 @@ function MapComp({ handleClickMarker }: MapCompProps) {
           data: {
             type: 'FeatureCollection',
             features: filteredFeatures[filterId],
-          },
+          } as FeatureCollection,
           cluster: true,
           clusterMaxZoom: 16,
           clusterRadius: 60,
