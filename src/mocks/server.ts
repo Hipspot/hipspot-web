@@ -1,4 +1,4 @@
 import { setupServer } from 'msw/node';
-import { placeHandler } from './place/handler';
+import { cafeController } from './domain/cafe/controller';
 
-export const server = setupServer(...placeHandler);
+export const server = setupServer(...cafeController);

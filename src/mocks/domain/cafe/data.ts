@@ -1,6 +1,6 @@
 import { CafeInfo } from '@libs/types/cafe';
 
-const data: CafeInfo[] = [
+export const cafeData: CafeInfo[] = [
   {
     id: 1,
     placeName: 'Honor',
@@ -18,5 +18,3 @@ const data: CafeInfo[] = [
     naverMapUrl: 'https://map.naver.com/v5/search/%EC%B9%B4%ED%8E%98%ED%9E%99%EC%8A%A4%ED%8C%9F/place/1234567890',
   },
 ];
-
-export default data;

@@ -1,4 +1,4 @@
 import { setupWorker } from 'msw';
-import { placeHandler } from './place/handler';
+import { cafeController } from './domain/cafe/controller';
 
-export const worker = setupWorker(...placeHandler);
+export const worker = setupWorker(...cafeController);
