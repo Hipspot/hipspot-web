@@ -1,4 +1,4 @@
-import { act, render, RenderOptions } from '@testing-library/react';
+import { render, RenderOptions } from '@testing-library/react';
 import { Suspense, useEffect } from 'react';
 import { RecoilRoot, RecoilValue, useRecoilValue } from 'recoil';
 
@@ -14,16 +14,6 @@ export function RecoilObserver({ node, onChange }: { node: RecoilValue<unknown>;
   const value = useRecoilValue(node);
   useEffect(() => onChange(value), [onChange, value]);
   return null;
-}
-
-export function flushPromisesAndTimers(): Promise<unknown> {
-  return act(
-    () =>
-      new Promise((resolve) => {
-        setTimeout(resolve, 100);
-        jest.runAllTimers();
-      })
-  );
 }
 
 export * from '@testing-library/react';
