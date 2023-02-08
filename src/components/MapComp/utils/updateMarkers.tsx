@@ -13,6 +13,16 @@ interface UpdateMarkersArgs {
   handleClickMarker: (id: number) => void;
 }
 
+type GetFeaturesOnScreenArgs = Pick<UpdateMarkersArgs, 'map' | 'allFeatures' | 'filterId'>;
+
+interface UpdatePointMarkersArgs extends Pick<UpdateMarkersArgs, 'map' | 'pointMarkerList' | 'handleClickMarker'> {
+  pointsOnScreen: CustomGeoJSONFeatures[];
+}
+
+interface UpdateClusterMarkersArgs extends Pick<UpdateMarkersArgs, 'map' | 'filterId' | 'clusterMarkerList'> {
+  clustersOnScreen: MapboxGeoJSONFeature[];
+}
+
 export const updateMarkers = ({
   map,
   filterId,
@@ -21,6 +31,13 @@ export const updateMarkers = ({
   clusterMarkerList,
   handleClickMarker,
 }: UpdateMarkersArgs) => {
+  const { pointsOnScreen, clustersOnScreen } = getFeaturesOnScreen({ map, allFeatures, filterId });
+
+  updatePointMarkers({ map, pointMarkerList, pointsOnScreen, handleClickMarker });
+  updateClusterMarkers({ map, filterId, clusterMarkerList, clustersOnScreen });
+};
+
+const getFeaturesOnScreen = ({ map, allFeatures, filterId }: GetFeaturesOnScreenArgs) => {
   const mapboxFeaturesOnScreen = map.querySourceFeatures(`cafeList/${filterId}`);
   const clustersOnScreen: MapboxGeoJSONFeature[] = [];
   const uniqueClusterIds = new Set<number>();
@@ -41,6 +58,10 @@ export const updateMarkers = ({
     uniquePointIds.has(feature.properties.id)
   );
 
+  return { pointsOnScreen, clustersOnScreen };
+};
+
+const updatePointMarkers = ({ map, pointMarkerList, pointsOnScreen, handleClickMarker }: UpdatePointMarkersArgs) => {
   Object.entries(pointMarkerList).forEach((markerEntry) => {
     const [id, marker] = markerEntry as [string, Marker];
     marker.remove();
@@ -68,7 +89,9 @@ export const updateMarkers = ({
       console.error(e);
     }
   });
+};
 
+const updateClusterMarkers = ({ map, filterId, clusterMarkerList, clustersOnScreen }: UpdateClusterMarkersArgs) => {
   clusterMarkerList.forEach((marker) => {
     marker.remove();
   });

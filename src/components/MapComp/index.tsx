@@ -8,6 +8,7 @@ import mapboxgl, { Marker } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { FilterId } from '@libs/types/filter';
 import { FeatureCollection } from 'geojson';
+import getEnumNumberValues from '@libs/utils/getEnumNumberValues';
 import { mapConfig } from './utils/mapConfig';
 import { updateMarkers } from './utils/updateMarkers';
 
@@ -44,9 +45,7 @@ function MapComp({ handleClickMarker }: MapCompProps) {
     const map = mapRef.current;
 
     map.on('load', () => {
-      const filterValues = Object.values(FilterId)
-        .filter((v) => !Number.isNaN(Number(v)))
-        .map((v) => Number(v));
+      const filterValues = getEnumNumberValues(FilterId);
       const filteredFeatures: CustomGeoJSONFeatures[][] = filterValues.map(() => []);
 
       allFeatures.forEach((feature: CustomGeoJSONFeatures) => {
@@ -85,9 +84,6 @@ function MapComp({ handleClickMarker }: MapCompProps) {
   }, []);
 
   useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-
     activeFilterIdRef.current = activeFilterId;
     handleUpdateMarkers();
   }, [activeFilterId]);
