@@ -41,7 +41,7 @@ export default function InfoWindow() {
   }, [contents]);
 
   return contents ? (
-    <PopUpWindow id={DOMID_POP_UP_WINDOW} available={!!contents} tabState={tabState}>
+    <PopUpWindow data-testid={DOMID_POP_UP_WINDOW} id={DOMID_POP_UP_WINDOW} available={!!contents} tabState={tabState}>
       <BlurFrame id={DOMID_BLURFRAME} tabState={tabState}>
         <TopSection>
           <TitleWrapper>
@@ -77,7 +77,7 @@ export default function InfoWindow() {
       </BlurFrame>
     </PopUpWindow>
   ) : (
-    <Loading />
+    <Loading data-testid="loading" />
   );
 }
 

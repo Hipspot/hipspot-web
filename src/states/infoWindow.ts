@@ -15,7 +15,6 @@ export type CameraStateType = {
 export const tabStateAtom = atom<TabState>({
   key: 'atom / tabState',
   default: {
-    // eslint-disable-next-line no-restricted-globals
     top: popUpHeights[PopUpHeightsType.bottom],
     onHandling: false,
     popUpState: 'thumbNail',
