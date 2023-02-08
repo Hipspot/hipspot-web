@@ -1,5 +1,3 @@
-import { FilterId } from './filter';
-
 /** 카페 정보 타입 */
 export type CafeInfo = {
   /**
@@ -52,27 +50,4 @@ export type CafeInfo = {
    * @example 'https://map.kakao.com/link/map/카페 힙스팟,37.5446694,127.051352'
    */
   kakaoMapUrl: string | null;
-};
-
-/** 카페 위치 정보 타입 */
-export type MarkerInfo = {
-  type: 'Feature';
-  /**
-   * 마커 데이터
-   * @example { id: 1, instaId: 'cafehipspot', placeName: '카페 힙스팟', filterList: [FilterId.Hipspot, FilterId.Franchise] }
-   */
-  properties: {
-    id: number;
-    instaId: string;
-    placeName: string;
-    filterList: FilterId[];
-  };
-  /**
-   * 카페의 Geolocation
-   * @example { type: 'Point', coordinates: [127.051352, 37.5446694] }
-   */
-  geometry: {
-    type: 'Point';
-    coordinates: [number, number];
-  };
 };
