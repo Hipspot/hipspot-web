@@ -22,7 +22,7 @@ function MapComp({ handleClickMarker }: MapCompProps) {
   const mapRef = useRef<mapboxgl.Map>();
   const activeFilterIdRef = useRef(activeFilterId);
   const pointMarkerList: { [id in number | string]: Marker } = useMemo(() => ({}), []);
-  const clusterMarkerList: Marker[] = useMemo(() => [], []);
+  const clusterMarkerList: { [id in number | string]: Marker } = useMemo(() => ({}), []);
 
   const handleUpdateMarkers = () => {
     const map = mapRef.current;
