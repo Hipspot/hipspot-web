@@ -15,7 +15,8 @@ interface UpdateMarkersArgs {
 
 type GetFeaturesOnScreenArgs = Pick<UpdateMarkersArgs, 'map' | 'allFeatures' | 'filterId'>;
 
-interface UpdatePointMarkersArgs extends Pick<UpdateMarkersArgs, 'map' | 'pointMarkerList' | 'handleClickMarker'> {
+interface UpdatePointMarkersArgs
+  extends Pick<UpdateMarkersArgs, 'map' | 'filterId' | 'pointMarkerList' | 'handleClickMarker'> {
   pointsOnScreen: CustomGeoJSONFeatures[];
 }
 
@@ -33,7 +34,7 @@ export const updateMarkers = ({
 }: UpdateMarkersArgs) => {
   const { pointsOnScreen, clustersOnScreen } = getFeaturesOnScreen({ map, allFeatures, filterId });
 
-  updatePointMarkers({ map, pointMarkerList, pointsOnScreen, handleClickMarker });
+  updatePointMarkers({ map, filterId, pointMarkerList, pointsOnScreen, handleClickMarker });
   updateClusterMarkers({ map, filterId, clusterMarkerList, clustersOnScreen });
 };
 
@@ -61,7 +62,13 @@ const getFeaturesOnScreen = ({ map, allFeatures, filterId }: GetFeaturesOnScreen
   return { pointsOnScreen, clustersOnScreen };
 };
 
-const updatePointMarkers = ({ map, pointMarkerList, pointsOnScreen, handleClickMarker }: UpdatePointMarkersArgs) => {
+const updatePointMarkers = ({
+  map,
+  filterId,
+  pointMarkerList,
+  pointsOnScreen,
+  handleClickMarker,
+}: UpdatePointMarkersArgs) => {
   Object.entries(pointMarkerList).forEach((markerEntry) => {
     const [id, marker] = markerEntry as [string, Marker];
     marker.remove();
@@ -77,6 +84,7 @@ const updatePointMarkers = ({ map, pointMarkerList, pointsOnScreen, handleClickM
           <PointMarker
             handleClickMarker={handleClickMarker}
             feature={feature}
+            activeFilterId={filterId}
             image="https://hipspot.s3.ap-northeast-2.amazonaws.com/store/0.jpg"
             id={id}
           />
