@@ -32,7 +32,7 @@ export const updateMarkers = ({
   // update point markers
   pointsOnScreen.forEach((feature: CustomGeoJSONFeatures) => {
     const { id } = feature.properties;
-    if (pointMarkerList[id]) return;
+    if (Object.hasOwn(pointMarkerList, id)) return;
 
     try {
       const marker = renderEmotionElementToHtml({
@@ -66,7 +66,8 @@ export const updateMarkers = ({
   // update cluster markers
   clustersOnScreen.forEach((feature) => {
     const id = feature.properties?.cluster_id;
-    if (clusterMarkerList[id]) return;
+    if (Object.hasOwn(clusterMarkerList, id)) return;
+
     const count = feature.properties?.point_count;
     const geo = feature.geometry;
 
