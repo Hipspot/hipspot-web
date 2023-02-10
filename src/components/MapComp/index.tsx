@@ -11,6 +11,7 @@ import { FeatureCollection } from 'geojson';
 import getEnumNumberValues from '@libs/utils/getEnumNumberValues';
 import { mapConfig } from './utils/mapConfig';
 import { updateMarkers } from './utils/updateMarkers';
+import removeAllMarkers from './utils/removeAllMarkers';
 
 type MapCompProps = {
   handleClickMarker: (id: number) => void;
@@ -26,9 +27,10 @@ function MapComp({ handleClickMarker }: MapCompProps) {
 
   const handleUpdateMarkers = () => {
     const map = mapRef.current;
+    if (!map) return;
+
     const filterId = activeFilterIdRef.current;
 
-    if (!map) return;
     updateMarkers({
       map,
       filterId,
@@ -85,6 +87,9 @@ function MapComp({ handleClickMarker }: MapCompProps) {
 
   useEffect(() => {
     activeFilterIdRef.current = activeFilterId;
+
+    removeAllMarkers({ pointMarkerList, clusterMarkerList });
+
     handleUpdateMarkers();
   }, [activeFilterId]);
 
