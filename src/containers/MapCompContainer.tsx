@@ -3,11 +3,14 @@ import { Suspense } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { activatedCafeIdAtom, tabStateAtom } from '@states/infoWindow';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
+import { clusterListAtom, openClusterListAtom } from '@states/clusterList';
 
 function MapCompContainer() {
   const setActivatedCafeId = useSetRecoilState(activatedCafeIdAtom);
   const setTabState = useSetRecoilState(tabStateAtom);
-  const handleClickMarker = (id: number) => {
+  const setOpenClusterList = useSetRecoilState(openClusterListAtom);
+  const setClusterList = useSetRecoilState(clusterListAtom);
+  const handleClickPointMarker = (id: number) => {
     setActivatedCafeId(id);
     setTabState((prev) => ({
       ...prev,
@@ -16,9 +19,15 @@ function MapCompContainer() {
     }));
   };
 
+  const handleClickClusterMarker = (clusterList: any) => {
+    setOpenClusterList(true);
+    setTabState((prev) => ({ ...prev, popUpState: 'thumbNail', top: popUpHeights[PopUpHeightsType.bottom] }));
+    setClusterList(clusterList);
+  };
+
   return (
     <Suspense fallback={<div> loading </div>}>
-      <MapComp handleClickMarker={handleClickMarker} />
+      <MapComp handleClickPointMarker={handleClickPointMarker} handleClickClusterMarker={handleClickClusterMarker} />
     </Suspense>
   );
 }

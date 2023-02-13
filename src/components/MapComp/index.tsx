@@ -4,23 +4,26 @@ import { css } from '@emotion/react';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 import { geoJsonAtom } from '@states/map';
 import { activeFilterIdAtom } from '@states/clusterList';
-import mapboxgl, { Marker } from 'mapbox-gl';
+import mapboxgl, { GeoJSONSource, Marker } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { FilterId } from '@libs/types/filter';
 import { FeatureCollection } from 'geojson';
 import getEnumNumberValues from '@libs/utils/getEnumNumberValues';
+import { DOMID_MAP_COMPONENT } from '@constants/DOM';
 import { mapConfig } from './utils/mapConfig';
 import { updateMarkers } from './utils/updateMarkers';
 import removeAllMarkers from './utils/removeAllMarkers';
 
 type MapCompProps = {
-  handleClickMarker: (id: number) => void;
+  handleClickPointMarker: (id: number) => void;
+  handleClickClusterMarker: (id: any[]) => void;
 };
 
-function MapComp({ handleClickMarker }: MapCompProps) {
+function MapComp({ handleClickPointMarker, handleClickClusterMarker }: MapCompProps) {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const allFeatures = useRecoilValue(geoJsonAtom);
   const mapRef = useRef<mapboxgl.Map>();
+
   const activeFilterIdRef = useRef(activeFilterId);
   const pointMarkerList: { [id in number | string]: Marker } = useMemo(() => ({}), []);
   const clusterMarkerList: { [id in number | string]: Marker } = useMemo(() => ({}), []);
@@ -37,7 +40,18 @@ function MapComp({ handleClickMarker }: MapCompProps) {
       allFeatures,
       pointMarkerList,
       clusterMarkerList,
-      handleClickMarker,
+      handleClickPointMarker,
+      handleClickClusterMarker: (id: number) => {
+        const source = map.getSource(`cafeList/${activeFilterId}`) as GeoJSONSource;
+
+        source.getClusterLeaves(id, 200, 0, (err, aFeatures) => {
+          const properties = aFeatures.map((feature) => ({
+            ...feature.properties,
+            image: 'https://hipspot.s3.ap-northeast-2.amazonaws.com/store/0.jpg',
+          }));
+          handleClickClusterMarker(properties);
+        });
+      },
     });
   };
 
@@ -95,7 +109,7 @@ function MapComp({ handleClickMarker }: MapCompProps) {
 
   return (
     <div
-      id="map"
+      id={DOMID_MAP_COMPONENT}
       css={css`
         width: 100%;
         height: 100%;

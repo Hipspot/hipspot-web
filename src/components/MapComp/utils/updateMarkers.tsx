@@ -10,7 +10,8 @@ interface UpdateMarkersArgs {
   allFeatures: CustomGeoJSONFeatures[];
   pointMarkerList: { [id in number | string]: Marker };
   clusterMarkerList: { [id in number | string]: Marker };
-  handleClickMarker: (id: number) => void;
+  handleClickPointMarker: (id: number) => void;
+  handleClickClusterMarker: (id: number) => void;
 }
 
 type GetFeaturesOnScreenArgs = Pick<UpdateMarkersArgs, 'map' | 'allFeatures' | 'filterId'>;
@@ -21,7 +22,8 @@ export const updateMarkers = ({
   allFeatures,
   pointMarkerList,
   clusterMarkerList,
-  handleClickMarker,
+  handleClickPointMarker,
+  handleClickClusterMarker,
 }: UpdateMarkersArgs) => {
   const { pointsOnScreen, clustersOnScreen, uniquePointIds, uniqueClusterIds } = getFeaturesOnScreen({
     map,
@@ -38,7 +40,7 @@ export const updateMarkers = ({
       const marker = renderEmotionElementToHtml({
         elem: (
           <PointMarker
-            handleClickMarker={handleClickMarker}
+            handleClickPointMarker={handleClickPointMarker}
             feature={feature}
             activeFilterId={filterId}
             image="https://hipspot.s3.ap-northeast-2.amazonaws.com/store/0.jpg"
@@ -72,7 +74,14 @@ export const updateMarkers = ({
     const geo = feature.geometry;
 
     const marker = renderEmotionElementToHtml({
-      elem: <ClusterMarker number={count} filterId={filterId} />,
+      elem: (
+        <ClusterMarker
+          number={count}
+          filterId={filterId}
+          handleClickClusteMarker={handleClickClusterMarker}
+          clusterId={id}
+        />
+      ),
       cssDataKey: 'cluster',
     });
 
