@@ -1,10 +1,32 @@
 import { FilterId } from '@libs/types/filter';
 import { CafeInfo } from '@libs/types/cafe';
-import { atom } from 'recoil';
+import { CustomGeoJSONFeatures } from '@libs/types/map';
+import { atom, selectorFamily } from 'recoil';
+import { geoJsonAtom } from './map';
 
 export const openClusterListAtom = atom<boolean>({
   key: 'openClusterList',
-  default: false,
+  default: true,
+});
+
+export const clusterListStateSelector = selectorFamily({
+  key: 'selector / clusteListState',
+  get:
+    (leafIds: number[]) =>
+    ({ get }) => {
+      if (!leafIds.length) return [];
+
+      const featureList: CustomGeoJSONFeatures['properties'][] = [];
+      const geoJsonData = get(geoJsonAtom);
+      leafIds.forEach((leafId: number) => {
+        for (let i = 0; i < geoJsonData.length; i += 1) {
+          if (featureList.length === leafIds.length) break;
+          const { properties } = geoJsonData[i];
+          if (Number(properties.id) === leafId) featureList.push(properties);
+        }
+      });
+      return featureList;
+    },
 });
 
 export const clusterListAtom = atom({

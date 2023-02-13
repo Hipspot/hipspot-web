@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
-import { geoJsonSelector } from '@states/map';
-import { activeFilterIdAtom } from '@states/ui';
+import { geoJsonAtom } from '@states/map';
+import { activeFilterIdAtom } from '@states/clusterList';
 import mapboxgl, { Marker } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { FilterId } from '@libs/types/filter';
@@ -19,7 +19,7 @@ type MapCompProps = {
 
 function MapComp({ handleClickMarker }: MapCompProps) {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
-  const allFeatures = useRecoilValue(geoJsonSelector);
+  const allFeatures = useRecoilValue(geoJsonAtom);
   const mapRef = useRef<mapboxgl.Map>();
   const activeFilterIdRef = useRef(activeFilterId);
   const pointMarkerList: { [id in number | string]: Marker } = useMemo(() => ({}), []);

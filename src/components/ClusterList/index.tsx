@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { clusterListAtom, openClusterListAtom } from '@states/ui';
+import { clusterListAtom, clusterListStateSelector, openClusterListAtom } from '@states/clusterList';
 import { useCallback, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import ItemList from './ItemList';
@@ -9,6 +9,7 @@ export default function ClusterList() {
 
   const [open, setOpen] = useRecoilState(openClusterListAtom);
   const clusterList = useRecoilValue(clusterListAtom);
+  const test = useRecoilValue(clusterListStateSelector([16, 17, 18]));
 
   const handleCloseModal: EventListener = useCallback(
     (e) => {
@@ -19,6 +20,7 @@ export default function ClusterList() {
   );
 
   useEffect(() => {
+    console.log('오나연', test);
     window.addEventListener('click', handleCloseModal);
 
     return () => {
