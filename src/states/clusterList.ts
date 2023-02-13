@@ -1,6 +1,5 @@
 import { FilterId } from '@libs/types/filter';
 import { CafeInfo } from '@libs/types/cafe';
-import { CustomGeoJSONFeatures } from '@libs/types/map';
 import { atom, selectorFamily } from 'recoil';
 import { geoJsonAtom } from './map';
 
@@ -16,17 +15,15 @@ export const clusterListStateSelector = selectorFamily({
     ({ get }) => {
       if (!leafIds.length) return [];
 
-      const featureList: CustomGeoJSONFeatures['properties'][] = [];
       const geoJsonData = get(geoJsonAtom);
-      leafIds.forEach((leafId: number) => {
-        for (let i = 0; i < geoJsonData.length; i += 1) {
-          if (featureList.length === leafIds.length) break;
-          const { properties } = geoJsonData[i];
-          if (Number(properties.id) === leafId) featureList.push(properties);
-        }
-      });
-      return featureList;
+      const filterByleafId = (leafId: number) =>
+        geoJsonData.filter(({ properties }) => Number(properties.id) === leafId)[0] || null;
+
+      return leafIds.map((leafId: number) => filterByleafId(leafId));
     },
+
+  // 파라미터로 전달하는 id Array 값 계속 바뀌니까 캐싱 하지 않음
+  cachePolicy_UNSTABLE: { eviction: 'most-recent' },
 });
 
 export const clusterListAtom = atom({
