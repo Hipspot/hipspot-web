@@ -1,8 +1,10 @@
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 import { GeoJSONSource, Marker } from 'mapbox-gl';
-import { updateMarkers } from '../utils/updateMarkers';
+import getFeaturesOnScreen from '../utils/getFeaturesOnScreen';
+import { updateClusterMarkers } from '../utils/updateClusterMarkers';
+import { updatePointMarkers } from '../utils/updatePointMarkers';
 
-interface HandlerRenderProps {
+interface UpdateMarkerProps {
   map: mapboxgl.Map;
   allFeatures: CustomGeoJSONFeatures[];
   pointMarkerList: { [id in number | string]: Marker };
@@ -12,7 +14,7 @@ interface HandlerRenderProps {
   activeFilterId: number;
 }
 
-function handleRender({
+function updateMarker({
   map,
   allFeatures,
   pointMarkerList,
@@ -20,14 +22,26 @@ function handleRender({
   clusterMarkerClickAction,
   pointMarkerClickAction,
   activeFilterId,
-}: HandlerRenderProps) {
-  updateMarkers({
+}: UpdateMarkerProps) {
+  const { pointFeaturesOnScreen, clusterFeaturesOnScreen, uniquePointIds, uniqueClusterIds } = getFeaturesOnScreen({
     map,
-    filterId: activeFilterId,
     allFeatures,
+    filterId: activeFilterId,
+  });
+
+  updatePointMarkers({
+    map,
+    pointFeaturesOnScreen,
     pointMarkerList,
-    clusterMarkerList,
     handleClickPointMarker: pointMarkerClickAction,
+    filterId: activeFilterId,
+    uniquePointIds,
+  });
+
+  updateClusterMarkers({
+    map,
+    clusterFeaturesOnScreen,
+    clusterMarkerList,
     handleClickClusterMarker: (id: number) => {
       const source = map.getSource(`cafeList/${activeFilterId}`) as GeoJSONSource;
 
@@ -39,7 +53,9 @@ function handleRender({
         clusterMarkerClickAction(properties);
       });
     },
+    filterId: activeFilterId,
+    uniqueClusterIds,
   });
 }
 
-export default handleRender;
+export default updateMarker;

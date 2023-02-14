@@ -2,21 +2,21 @@ import styled from '@emotion/styled';
 import { FilterId } from '@libs/types/filter';
 import { MouseEventHandler } from 'react';
 
-type ClusterMarkerProps = {
+export type ClusterMarkerProps = {
   /**
    * 클러스터링 된 장소의 개수
    * @example 3
    */
-  number: number;
+  count: number;
   filterId: FilterId;
   clusterId: number;
-  handleClickClusteMarker: (id: number) => void;
+  handleClickClusterMarker: (id: number) => void;
 };
 
-export default function ClusterMarker({ number, filterId, handleClickClusteMarker, clusterId }: ClusterMarkerProps) {
+export default function ClusterMarker({ count, filterId, handleClickClusterMarker, clusterId }: ClusterMarkerProps) {
   const onClick: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
-    handleClickClusteMarker(clusterId);
+    handleClickClusterMarker(clusterId);
   };
 
   const clusterColors = filteredClusterColor[filterId];
@@ -32,12 +32,12 @@ export default function ClusterMarker({ number, filterId, handleClickClusteMarke
         innerCircleBoxShadowColorX={clusterColors.innerCircleBoxShadowColorX}
         innerCircleBoxShadowColorY={clusterColors.innerCircleBoxShadowColorY}
       >
-        <ClusterPointNumberText>+{number}</ClusterPointNumberText>
+        <ClusterPointNumberText>+{count}</ClusterPointNumberText>
         <ClusterPointNumberShadow
           textShadowColorX={clusterColors.textShadowColorX}
           textShadowColorY={clusterColors.textShadowColorY}
         >
-          +{number}
+          +{count}
         </ClusterPointNumberShadow>
       </InnerCircle>
     </Wrapper>

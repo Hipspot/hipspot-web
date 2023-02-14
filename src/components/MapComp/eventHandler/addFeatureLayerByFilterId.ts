@@ -8,7 +8,7 @@ interface HandleMapLoadProps {
   allFeatures: CustomGeoJSONFeatures[];
 }
 
-function handleMapLoad({ map, allFeatures }: HandleMapLoadProps) {
+function addFeatureLayerByFilterId({ map, allFeatures }: HandleMapLoadProps) {
   const filterValues = getEnumNumberValues(FilterId);
   const filteredFeatures: CustomGeoJSONFeatures[][] = filterValues.map(() => []);
 
@@ -18,6 +18,7 @@ function handleMapLoad({ map, allFeatures }: HandleMapLoadProps) {
     });
   });
 
+  // add source layer
   filterValues.forEach((filterId) => {
     map.addSource(`cafeList/${filterId}`, {
       type: 'geojson',
@@ -39,4 +40,4 @@ function handleMapLoad({ map, allFeatures }: HandleMapLoadProps) {
     });
   });
 }
-export default handleMapLoad;
+export default addFeatureLayerByFilterId;

@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { FilterId } from '@libs/types/filter';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 
-type PointMarkerProps = {
+export type PointMarkerProps = {
   id: number;
   image: string;
   feature: CustomGeoJSONFeatures;
