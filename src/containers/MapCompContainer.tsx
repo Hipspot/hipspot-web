@@ -10,7 +10,7 @@ function MapCompContainer() {
   const setTabState = useSetRecoilState(tabStateAtom);
   const setOpenClusterList = useSetRecoilState(openClusterListAtom);
   const setClusterList = useSetRecoilState(clusterListAtom);
-  const handleClickPointMarker = (id: number) => {
+  const pointMarkerClickAction = (id: number) => {
     setActivatedCafeId(id);
     setTabState((prev) => ({
       ...prev,
@@ -19,7 +19,7 @@ function MapCompContainer() {
     }));
   };
 
-  const handleClickClusterMarker = (clusterList: any) => {
+  const clusterMarkerClickAction = (clusterList: any) => {
     setOpenClusterList(true);
     setTabState((prev) => ({ ...prev, popUpState: 'thumbNail', top: popUpHeights[PopUpHeightsType.bottom] }));
     setClusterList(clusterList);
@@ -27,7 +27,7 @@ function MapCompContainer() {
 
   return (
     <Suspense fallback={<div> loading </div>}>
-      <MapComp handleClickPointMarker={handleClickPointMarker} handleClickClusterMarker={handleClickClusterMarker} />
+      <MapComp pointMarkerClickAction={pointMarkerClickAction} clusterMarkerClickAction={clusterMarkerClickAction} />
     </Suspense>
   );
 }
