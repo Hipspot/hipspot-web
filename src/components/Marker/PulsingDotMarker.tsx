@@ -1,13 +1,7 @@
 import { calcInterpolation } from '@libs/utils/calc';
 import mapboxgl from 'mapbox-gl';
 
-function PulsingDotMarker(map: mapboxgl.Map) {
-  return new PulsingDot(map);
-}
-
-export default PulsingDotMarker;
-
-class PulsingDot {
+export default class PulsingDot {
   width: number;
 
   height: number;
@@ -33,7 +27,7 @@ class PulsingDot {
     const canvas = document.createElement('canvas');
     canvas.width = this.size;
     canvas.height = this.size;
-    this.context = canvas.getContext('2d');
+    this.context = canvas.getContext('2d', { willReadFrequently: true });
   }
 
   render() {
@@ -50,32 +44,34 @@ class PulsingDot {
 
     context.clearRect(0, 0, size, size);
 
+    // draw background
     context.beginPath();
     context.lineWidth = 0;
     context.arc(size / 2, size / 2, radius * 3, 0, Math.PI * 2);
-    context.fillStyle = `rgba(190, 190, 190, 0.5)`;
+    context.fillStyle = colorGenerator('background', 0.5);
     context.fill();
     context.closePath();
 
+    // draw Pulsing Line
     context.beginPath();
-    context.lineWidth = 4;
-    context.strokeStyle = `rgba(255, 255, 255, ${1 - p})`;
+    context.lineWidth = 6 * (1 - p);
+    context.strokeStyle = colorGenerator('white', 1 - p);
     context.arc(size / 2, size / 2, i, 0, Math.PI * 2);
     context.stroke();
     context.closePath();
 
-    const gradient = context.createRadialGradient(size / 2, size / 2, 20, size / 2, size / 2, 40);
-    gradient.addColorStop(0, 'rgba(13,13,13,0.2)');
-    gradient.addColorStop(0.7, 'rgba(216,216,216,0.1)');
-
-    gradient.addColorStop(1, 'rgba(255, 255, 255, 0');
-
+    // draw gradient
+    const gradient = context.createRadialGradient(size / 2, size / 2, 20, size / 2, size / 2, 30);
+    gradient.addColorStop(0, colorGenerator('black', 0.2));
+    gradient.addColorStop(0.7, colorGenerator('shadow', 0.1));
+    gradient.addColorStop(1, colorGenerator('white', 0));
     context.fillStyle = gradient;
     context.fillRect(0, 0, size, size);
 
+    // draw black dot
     context.beginPath();
     context.arc(size / 2, size / 2, radius, 0, Math.PI * 2);
-    context.fillStyle = `rgba(13, 13, 13, 1)`;
+    context.fillStyle = colorGenerator('black', 1);
     context.fill();
     context.lineWidth = 4;
     context.strokeStyle = 'white';
@@ -90,3 +86,22 @@ class PulsingDot {
     return true;
   }
 }
+
+enum PulsingDotColor {
+  background = 190,
+  white = 255,
+  shadow = 216,
+  black = 13,
+}
+
+const colorGenerator = (colorType: keyof typeof PulsingDotColor, a: number) => {
+  if (
+    !Object.keys(PulsingDotColor)
+      .filter((v) => !+v && v !== '0')
+      .includes(colorType)
+  )
+    return `rgba(0,0,0,0)`;
+
+  const v = PulsingDotColor[colorType];
+  return `rgba(${v},${v},${v},${a})`;
+};

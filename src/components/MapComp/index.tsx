@@ -5,13 +5,13 @@ import { geoJsonAtom } from '@states/map';
 import { activeFilterIdAtom } from '@states/clusterList';
 import mapboxgl, { MapboxEvent } from 'mapbox-gl';
 import { MarkerList } from '@libs/types/map';
-import PulsingDotMarker from '@components/Marker/PulsingDotMarker';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { DOMID_MAP_COMPONENT } from '@constants/DOM';
 import removeAllMarkers from './utils/removeAllMarkers';
 import { mapConfig } from './utils/mapConfig';
 import addFeatureLayerByFilterId from './eventHandler/addFeatureLayerByFilterId';
 import updateMarker from './eventHandler/updateMarker';
+import drawPulsingDotMarker from './eventHandler/drawPulsingDotMarker';
 
 type MapCompProps = {
   pointMarkerClickAction: (id: number) => void;
@@ -45,32 +45,10 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
     map.on('load', onMapLoad);
     map.on('render', onRender);
 
-    map.on('load', () => {
-      map.addImage('pulsing-dot', PulsingDotMarker(map), { pixelRatio: 2 });
-      map.addSource('dot-point', {
-        type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: [
-            {
-              type: 'Feature',
-              properties: {},
-              geometry: {
-                type: 'Point',
-                coordinates: [127.0582071, 37.5447481],
-              },
-            },
-          ],
-        },
-      });
-      map.addLayer({
-        id: 'layer-with-pulsing-dot',
-        type: 'symbol',
-        source: 'dot-point',
-        layout: {
-          'icon-image': 'pulsing-dot',
-        },
-      });
+    map.on('load', () => drawPulsingDotMarker({ map, coordinates: [127.0582071, 37.5447481] }));
+
+    map.on('click', (e) => {
+      drawPulsingDotMarker({ map, coordinates: Object.values(e.lngLat) });
     });
   }, []);
 
