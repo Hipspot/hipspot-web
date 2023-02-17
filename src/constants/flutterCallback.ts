@@ -3,4 +3,5 @@
 
 export enum FlutterCallback {
   initFilterling,
+  setAuth,
 }
