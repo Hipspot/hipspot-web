@@ -17,7 +17,7 @@ function App() {
     <Wrapper>
       <MapCompContainer />
       <Filtering />
-      <FindMyLocationButton onClick={() => console.log(123)} />
+      <FindMyLocationButton />
       <ClusterList />
       <InfoWindow />
       <Toaster

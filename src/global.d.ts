@@ -1,5 +1,5 @@
-import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
-import { SlideUpWindowEvent } from '@libs/types/customEvents';
+import { EVENT_FIND_MY_LOCATION, EVENT_SLIDE_UP_WINDOW } from '@constants/event';
+import { FindMyLocationEvent, SlideUpWindowEvent } from '@libs/types/customEvents';
 import { JS_CHANNEL_NAME } from '@constants/jsChannelName';
 
 declare global {
@@ -8,6 +8,7 @@ declare global {
   }
   interface HTMLElementEventMap {
     [EVENT_SLIDE_UP_WINDOW]: SlideUpWindowEvent;
+    [EVENT_FIND_MY_LOCATION]: FindMyLocationEvent;
   }
 }
 
