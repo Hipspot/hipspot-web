@@ -1,4 +1,4 @@
-import { LngLatLike } from 'mapbox-gl';
+import { LngLatLike, Marker } from 'mapbox-gl';
 import { CafeInfo } from './cafe';
 
 interface CustomGeoJSONProperties extends Pick<CafeInfo, 'id' | 'placeName' | 'instaId'> {
@@ -33,3 +33,7 @@ export interface CustomGeoJSONFeatures {
   properties: CustomGeoJSONProperties;
   geometry: GeoJSONPointType;
 }
+
+export type MarkerList = {
+  [id in string | number]: Marker;
+};

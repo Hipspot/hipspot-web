@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { clusterListAtom, openClusterListAtom } from '@states/ui';
+import { clusterListAtom, openClusterListAtom } from '@states/clusterList';
 import { useCallback, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import ItemList from './ItemList';
@@ -12,7 +12,6 @@ export default function ClusterList() {
 
   const handleCloseModal: EventListener = useCallback(
     (e) => {
-      if (e.target === document.getElementById('marker')) return;
       if (open && (!ref.current || !ref.current.contains(e.target as Node))) setOpen(false);
     },
     [open, setOpen]
@@ -20,7 +19,6 @@ export default function ClusterList() {
 
   useEffect(() => {
     window.addEventListener('click', handleCloseModal);
-
     return () => {
       window.removeEventListener('click', handleCloseModal);
     };
@@ -32,7 +30,7 @@ export default function ClusterList() {
         <ItemList.Wrapper>
           {clusterList.map((cluster) => (
             <ItemList.Item key={cluster.id}>
-              <ItemList.ItemImg src={cluster.imageList[0]} alt={cluster.placeName} />
+              <ItemList.ItemImg src={cluster.image} alt={cluster.placeName} />
               <ItemList.ItemName>{cluster.placeName}</ItemList.ItemName>
             </ItemList.Item>
           ))}
@@ -63,8 +61,7 @@ const Wrapper = styled.div<{ open: boolean }>`
 
   ${(props) =>
     props.open &&
-    `
-    transform: translateX(0);
+    `transform: translateX(0);
   `}
 `;
 

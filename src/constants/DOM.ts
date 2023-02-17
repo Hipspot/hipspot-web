@@ -7,3 +7,6 @@ export const DOMTargetList: { [key in string]: HTMLElement | null } = {
   [DOMID_BLURFRAME]: null,
   [DOMID_IMAGE_SLIDER]: null,
 };
+
+export const DOMID_MAP_COMPONENT = 'map';
+export const DOMCLASS_CLUSTER_MARKER = 'cluster_marker';

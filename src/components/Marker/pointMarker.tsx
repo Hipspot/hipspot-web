@@ -2,22 +2,22 @@ import styled from '@emotion/styled';
 import { FilterId } from '@libs/types/filter';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 
-type PointMarkerProps = {
+export type PointMarkerProps = {
   id: number;
   image: string;
   feature: CustomGeoJSONFeatures;
   activeFilterId: FilterId;
-  handleClickMarker: (id: number) => void;
+  handleClickPointMarker: (id: number) => void;
 };
 
-export default function PointMarker({ handleClickMarker, feature, activeFilterId, image, id }: PointMarkerProps) {
+export default function PointMarker({ handleClickPointMarker, feature, activeFilterId, image, id }: PointMarkerProps) {
   const { placeName, filterList } = feature.properties;
 
   /* 임시 값 삽입, 가성비가격 데이터 추가 이후 수정할 것 */
   const reasonablePrice = 2500;
 
   return (
-    <Wrapper className="mapgl-marker-animation" id={`${id}`} onClick={() => handleClickMarker(id)}>
+    <Wrapper className="mapgl-marker-animation" id={`${id}`} onClick={() => handleClickPointMarker(id)}>
       {/* filterList에 맞게 랜더링해주는지 테스트하기 위한 tag 추후 삭제해주세요 */}
       <div>{filterList.map((filter) => FilterId[filter]).join(', ')}</div>
       <CafeName>{placeName}</CafeName>

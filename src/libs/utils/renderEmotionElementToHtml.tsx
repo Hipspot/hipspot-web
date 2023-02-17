@@ -24,7 +24,10 @@ export const renderEmotionElementToHtml = ({
   cssDataKey: string;
   render?: boolean;
 }) => {
-  if (!checkStringComposedOnlyLetter(cssDataKey)) throw new Error('cssDataKey 값을 확인해주세요');
+  if (!checkStringComposedOnlyLetter(cssDataKey))
+    throw new Error(
+      `cssDataKey 값을 확인해주세요, cssDataKey 값은 오직 알파벳 소문자만 가능합니다. cssDataKey: ${cssDataKey}`
+    );
   if (!cache[cssDataKey]) cache[cssDataKey] = createCache({ key: cssDataKey });
   const container = document.createElement(`div`);
   const component = createRoot(container);
