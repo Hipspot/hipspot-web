@@ -6,6 +6,7 @@ import InfoWindow from '@components/InfoWindow';
 import { useEffect } from 'react';
 import fromflutterMessageHandler from '@libs/webview/fromFlutterMessageHandler';
 import { Toaster } from 'react-hot-toast';
+import FindMyLocationButton from '@components/Button/FindMyLocationButton';
 
 function App() {
   useEffect(() => {
@@ -16,6 +17,7 @@ function App() {
     <Wrapper>
       <MapCompContainer />
       <Filtering />
+      <FindMyLocationButton onClick={() => console.log(123)} />
       <ClusterList />
       <InfoWindow />
       <Toaster
