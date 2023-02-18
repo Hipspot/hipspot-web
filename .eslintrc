@@ -25,8 +25,9 @@
     "import/prefer-default-export": "off",
     "react/require-default-props": "off",
     "@typescript-eslint/no-use-before-define": "off",
-    "react-hooks/exhaustive-deps":"off",
+    "react-hooks/exhaustive-deps": "off",
     "react/react-in-jsx-scope": "off",
+    "consistent-return": "off",
     "react/no-unknown-property": [
       "error",
       {
@@ -46,9 +47,11 @@
         ]
       }
     ],
-    "no-param-reassign":[
+    "no-param-reassign": [
       0,
-      {"props" : false }
+      {
+        "props": false
+      }
     ],
   }
 }

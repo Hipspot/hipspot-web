@@ -4,12 +4,13 @@ import styled from '@emotion/styled';
 import MapCompContainer from '@containers/MapCompContainer';
 import InfoWindow from '@components/InfoWindow';
 import { useEffect } from 'react';
-import fromflutterMessageHandler from '@libs/webview/fromFlutterMessageHandler';
+import useFlutterMessageHandler from '@libs/webview/useFlutterMessageHandler';
 import { Toaster } from 'react-hot-toast';
 
 function App() {
+  const flutterMessageHandler = useFlutterMessageHandler();
   useEffect(() => {
-    window.fromflutterMessageHandler = fromflutterMessageHandler;
+    window.flutterChannel = flutterMessageHandler;
   });
 
   return (
