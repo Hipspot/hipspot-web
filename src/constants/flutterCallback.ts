@@ -3,4 +3,9 @@
 
 export enum FlutterCallback {
   initFilterling,
+  setAuth,
+}
+
+export enum MessageToFlutterType {
+  openLoginModal = 'openLoginModal',
 }

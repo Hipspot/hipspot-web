@@ -4,14 +4,15 @@ import styled from '@emotion/styled';
 import MapCompContainer from '@containers/MapCompContainer';
 import InfoWindow from '@components/InfoWindow';
 import { useEffect } from 'react';
-import fromflutterMessageHandler from '@libs/webview/fromFlutterMessageHandler';
+import useFlutterMessageHandler from '@libs/webview/useFlutterMessageHandler';
 import { Toaster } from 'react-hot-toast';
 import FindMyLocationButton from '@components/Button/FindMyLocationButton';
 import { JS_CHANNEL_NAME } from '@constants/jsChannelName';
 
 function App() {
+  const flutterMessageHandler = useFlutterMessageHandler();
   useEffect(() => {
-    window[JS_CHANNEL_NAME] = fromflutterMessageHandler;
+    window[JS_CHANNEL_NAME] = flutterMessageHandler;
   });
 
   return (

@@ -4,7 +4,7 @@ import { JS_CHANNEL_NAME } from '@constants/jsChannelName';
 
 declare global {
   interface Window {
-    [JS_CHANNEL_NAME]: fromflutterMessageHandler;
+    [JS_CHANNEL_NAME]: flutterChannel;
   }
   interface HTMLElementEventMap {
     [EVENT_SLIDE_UP_WINDOW]: SlideUpWindowEvent;
