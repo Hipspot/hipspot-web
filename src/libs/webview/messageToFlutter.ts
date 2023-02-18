@@ -28,6 +28,8 @@ export default function messageToFlutter(type: MessageToFlutterType, data: any) 
  */
 
 function mockFlutterMessage({ type }: { type: MessageToFlutterType; data: any }) {
+  const flutterMessageHandler = window[FLUTTER_CHANNEL];
+
   switch (type) {
     case MessageToFlutterType.openLoginModal:
       return;
@@ -39,7 +41,7 @@ function mockFlutterMessage({ type }: { type: MessageToFlutterType; data: any })
       ];
       const position = [randomRange(bounds[0][0], bounds[1][0]), randomRange(bounds[0][1], bounds[1][1])];
       const responseMessage = JSON.parse(JSON.stringify({ type: 'setMyLocation', data: position }));
-      return window[FLUTTER_CHANNEL](responseMessage);
+      return flutterMessageHandler(responseMessage);
     }
     case MessageToFlutterType.getAuth:
     default:

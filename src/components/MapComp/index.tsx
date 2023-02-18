@@ -3,6 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import { geoJsonAtom } from '@states/map';
 import { activeFilterIdAtom } from '@states/clusterList';
+import { cameraStateAtom, CameraStateType } from '@states/infoWindow';
 import mapboxgl, { MapboxEvent } from 'mapbox-gl';
 import { MarkerList } from '@libs/types/map';
 import { FindMyLocationEvent } from '@libs/types/customEvents';
@@ -24,11 +25,18 @@ type MapCompProps = {
 function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompProps) {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const allFeatures = useRecoilValue(geoJsonAtom);
+  const cameraState = useRecoilValue(cameraStateAtom);
   const pointMarkerList: MarkerList = useMemo(() => ({}), []);
   const clusterMarkerList: MarkerList = useMemo(() => ({}), []);
   const activeFilterIdRef = useRef(activeFilterId);
-
   const mapRef = useRef<mapboxgl.Map>();
+  const cameraRef = useRef<CameraStateType>({
+    center: [127.0582071, 37.5447481],
+    pitch: 0,
+    bearing: 0,
+    markerClicked: false,
+    zoom: 17,
+  });
 
   const onMapLoad = ({ target: map }: MapboxEvent) => addFeatureLayerByFilterId({ map, allFeatures });
   const onRender = ({ target: map }: MapboxEvent) => {
@@ -71,12 +79,31 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
 
   useEffect(() => {
     const map = mapRef.current;
+    if (!map) {
+      return;
+    }
+    const { pitch, bearing, center, zoom } = cameraState;
+    map.flyTo({
+      pitch,
+      bearing,
+      center,
+      duration: 500,
+      zoom,
+    });
+    cameraRef.current = {
+      ...cameraState,
+    };
+  }, [cameraState]);
+
+  useEffect(() => {
+    const map = mapRef.current;
     if (!map) return;
     DOMTargetList[DOMID_MAP_COMPONENT] = document.getElementById(DOMID_MAP_COMPONENT);
     const mapElem = DOMTargetList[DOMID_MAP_COMPONENT];
-    mapElem?.addEventListener(EVENT_FIND_MY_LOCATION, (e: FindMyLocationEvent) =>
-      drawPulsingDotMarker({ map, coordinates: e.coordinates })
-    );
+    mapElem?.addEventListener(EVENT_FIND_MY_LOCATION, (e: FindMyLocationEvent) => {
+      drawPulsingDotMarker({ map, coordinates: e.coordinates });
+      map.flyTo({ center: e.coordinates });
+    });
   }, []);
 
   return (
