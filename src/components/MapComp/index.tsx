@@ -22,11 +22,13 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
   const allFeatures = useRecoilValue(geoJsonAtom);
   const pointMarkerList: MarkerList = useMemo(() => ({}), []);
   const clusterMarkerList: MarkerList = useMemo(() => ({}), []);
+  const activeFilterIdRef = useRef(activeFilterId);
 
   const mapRef = useRef<mapboxgl.Map>();
 
   const onMapLoad = ({ target: map }: MapboxEvent) => addFeatureLayerByFilterId({ map, allFeatures });
-  const onRender = ({ target: map }: MapboxEvent) =>
+  const onRender = ({ target: map }: MapboxEvent) => {
+    const filterId = activeFilterIdRef.current;
     updateMarker({
       map,
       allFeatures,
@@ -34,8 +36,9 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
       clusterMarkerList,
       clusterMarkerClickAction,
       pointMarkerClickAction,
-      activeFilterId,
+      filterId,
     });
+  };
 
   useEffect(() => {
     mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKKEN}`;
@@ -48,6 +51,8 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+    activeFilterIdRef.current = activeFilterId;
+    const filterId = activeFilterIdRef.current;
     removeAllMarkers({ pointMarkerList, clusterMarkerList });
     updateMarker({
       map,
@@ -56,7 +61,7 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
       clusterMarkerList,
       clusterMarkerClickAction,
       pointMarkerClickAction,
-      activeFilterId,
+      filterId,
     });
   }, [activeFilterId]);
 

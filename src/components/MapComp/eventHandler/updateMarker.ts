@@ -11,7 +11,7 @@ interface UpdateMarkerProps {
   clusterMarkerList: { [id in number | string]: Marker };
   pointMarkerClickAction: (id: number) => void;
   clusterMarkerClickAction: (id: any[]) => void;
-  activeFilterId: number;
+  filterId: number;
 }
 
 function updateMarker({
@@ -21,12 +21,12 @@ function updateMarker({
   clusterMarkerList,
   clusterMarkerClickAction,
   pointMarkerClickAction,
-  activeFilterId,
+  filterId,
 }: UpdateMarkerProps) {
   const { pointFeaturesOnScreen, clusterFeaturesOnScreen, uniquePointIds, uniqueClusterIds } = getFeaturesOnScreen({
     map,
     allFeatures,
-    filterId: activeFilterId,
+    filterId,
   });
 
   updatePointMarkers({
@@ -34,7 +34,7 @@ function updateMarker({
     pointFeaturesOnScreen,
     pointMarkerList,
     handleClickPointMarker: pointMarkerClickAction,
-    filterId: activeFilterId,
+    filterId,
     uniquePointIds,
   });
 
@@ -43,7 +43,7 @@ function updateMarker({
     clusterFeaturesOnScreen,
     clusterMarkerList,
     handleClickClusterMarker: (id: number) => {
-      const source = map.getSource(`cafeList/${activeFilterId}`) as GeoJSONSource;
+      const source = map.getSource(`cafeList/${filterId}`) as GeoJSONSource;
 
       source.getClusterLeaves(id, 200, 0, (err, aFeatures) => {
         const properties = aFeatures.map((feature) => ({
@@ -54,7 +54,7 @@ function updateMarker({
         clusterMarkerClickAction(properties);
       });
     },
-    filterId: activeFilterId,
+    filterId,
     uniqueClusterIds,
   });
 }
