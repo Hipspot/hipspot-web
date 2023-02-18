@@ -1,101 +1,73 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
-import { CustomGeoJSONFeatures } from '@libs/types/map';
-import { geoJsonSelector } from '@states/map';
-import { activeFilterIdAtom } from '@states/ui';
-import mapboxgl, { Marker } from 'mapbox-gl';
+import { geoJsonAtom } from '@states/map';
+import { activeFilterIdAtom } from '@states/clusterList';
+import mapboxgl, { MapboxEvent } from 'mapbox-gl';
+import { MarkerList } from '@libs/types/map';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { FilterId } from '@libs/types/filter';
-import { FeatureCollection } from 'geojson';
-import getEnumNumberValues from '@libs/utils/getEnumNumberValues';
-import { mapConfig } from './utils/mapConfig';
-import { updateMarkers } from './utils/updateMarkers';
+import { DOMID_MAP_COMPONENT } from '@constants/DOM';
 import removeAllMarkers from './utils/removeAllMarkers';
+import { mapConfig } from './utils/mapConfig';
+import addFeatureLayerByFilterId from './eventHandler/addFeatureLayerByFilterId';
+import updateMarker from './eventHandler/updateMarker';
 
 type MapCompProps = {
-  handleClickMarker: (id: number) => void;
+  pointMarkerClickAction: (id: number) => void;
+  clusterMarkerClickAction: (id: any[]) => void;
 };
 
-function MapComp({ handleClickMarker }: MapCompProps) {
+function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompProps) {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
-  const allFeatures = useRecoilValue(geoJsonSelector);
-  const mapRef = useRef<mapboxgl.Map>();
+  const allFeatures = useRecoilValue(geoJsonAtom);
+  const pointMarkerList: MarkerList = useMemo(() => ({}), []);
+  const clusterMarkerList: MarkerList = useMemo(() => ({}), []);
   const activeFilterIdRef = useRef(activeFilterId);
-  const pointMarkerList: { [id in number | string]: Marker } = useMemo(() => ({}), []);
-  const clusterMarkerList: { [id in number | string]: Marker } = useMemo(() => ({}), []);
 
-  const handleUpdateMarkers = () => {
-    const map = mapRef.current;
-    if (!map) return;
+  const mapRef = useRef<mapboxgl.Map>();
 
+  const onMapLoad = ({ target: map }: MapboxEvent) => addFeatureLayerByFilterId({ map, allFeatures });
+  const onRender = ({ target: map }: MapboxEvent) => {
     const filterId = activeFilterIdRef.current;
-
-    updateMarkers({
+    updateMarker({
       map,
-      filterId,
       allFeatures,
       pointMarkerList,
       clusterMarkerList,
-      handleClickMarker,
+      clusterMarkerClickAction,
+      pointMarkerClickAction,
+      filterId,
     });
   };
 
   useEffect(() => {
     mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKKEN}`;
-    mapRef.current = new mapboxgl.Map(mapConfig);
-    const map = mapRef.current;
-
-    map.on('load', () => {
-      const filterValues = getEnumNumberValues(FilterId);
-      const filteredFeatures: CustomGeoJSONFeatures[][] = filterValues.map(() => []);
-
-      allFeatures.forEach((feature: CustomGeoJSONFeatures) => {
-        feature.properties?.filterList.forEach((filterId: number) => {
-          filteredFeatures[filterId].push(feature);
-        });
-      });
-
-      filterValues.forEach((filterId) => {
-        map.addSource(`cafeList/${filterId}`, {
-          type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: filteredFeatures[filterId],
-          } as FeatureCollection,
-          cluster: true,
-          clusterMaxZoom: 16,
-          clusterRadius: 60,
-        });
-        map.addLayer({
-          id: `cafeList/${filterId}`,
-          type: 'circle',
-          source: `cafeList/${filterId}`,
-          paint: {
-            'circle-opacity': 0,
-          },
-        });
-      });
-    });
-
-    map.on('render', handleUpdateMarkers);
-    map.on('moveend', handleUpdateMarkers);
-    map.once('movestart', () => {
-      map.off('render', handleUpdateMarkers);
-    });
+    const map = new mapboxgl.Map(mapConfig);
+    mapRef.current = map;
+    map.on('load', onMapLoad);
+    map.on('render', onRender);
   }, []);
 
   useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
     activeFilterIdRef.current = activeFilterId;
-
+    const filterId = activeFilterIdRef.current;
     removeAllMarkers({ pointMarkerList, clusterMarkerList });
-
-    handleUpdateMarkers();
+    updateMarker({
+      map,
+      allFeatures,
+      pointMarkerList,
+      clusterMarkerList,
+      clusterMarkerClickAction,
+      pointMarkerClickAction,
+      filterId,
+    });
   }, [activeFilterId]);
 
   return (
     <div
-      id="map"
+      id={DOMID_MAP_COMPONENT}
       css={css`
         width: 100%;
         height: 100%;
