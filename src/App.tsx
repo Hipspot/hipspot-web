@@ -7,12 +7,12 @@ import { useEffect } from 'react';
 import useFlutterMessageHandler from '@libs/webview/useFlutterMessageHandler';
 import { Toaster } from 'react-hot-toast';
 import FindMyLocationButton from '@components/Button/FindMyLocationButton';
-import { JS_CHANNEL_NAME } from '@constants/jsChannelName';
+import { FLUTTER_CHANNEL } from '@constants/jsChannelName';
 
 function App() {
   const flutterMessageHandler = useFlutterMessageHandler();
   useEffect(() => {
-    window[JS_CHANNEL_NAME] = flutterMessageHandler;
+    window[FLUTTER_CHANNEL] = flutterMessageHandler;
   });
 
   return (
