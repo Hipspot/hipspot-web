@@ -9,6 +9,12 @@ import { useSetRecoilState } from 'recoil';
 export default function useSetAuth() {
   const setAuth = useSetRecoilState(authAtom);
   return (data: string) => {
-    setAuth(JSON.parse(data));
+    const JsonData = JSON.parse(data);
+    if (!!JsonData && typeof JsonData === 'object' && Object.prototype.hasOwnProperty.call(JsonData, 'isAuth')) {
+      setAuth(JsonData as { isAuth: boolean });
+    } else {
+      // eslint-disable-next-line no-console
+      console.error('데이터 형식이 잘못되었습니다.');
+    }
   };
 }

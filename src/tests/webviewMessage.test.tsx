@@ -23,12 +23,23 @@ describe('웹뷰에서', () => {
     });
   });
 
-  it('잘못된 메세지를 수신하면 에러를 출력한다.', async () => {
+  it('잘못된 메세지 제목을 수신하면 에러를 출력한다.', async () => {
     console.error = jest.fn();
     render(<App />);
 
     await waitFor(() => {
       window.flutterChannel({ type: 'asd', data: null });
+    });
+
+    expect(console.error).toBeCalled();
+  });
+
+  it('잘못된 메세지 내용을 수신하면 에러를 출력한다.', async () => {
+    console.error = jest.fn();
+    render(<App />);
+
+    await waitFor(() => {
+      window.flutterChannel({ type: 'setAuth', data: null });
     });
 
     expect(console.error).toBeCalled();
