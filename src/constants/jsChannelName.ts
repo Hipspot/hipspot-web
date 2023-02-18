@@ -1,1 +1,1 @@
-export const JS_CHANNEL_NAME = 'fromflutterMessageHandler';
+export const JS_CHANNEL_NAME = 'flutterChannel';
