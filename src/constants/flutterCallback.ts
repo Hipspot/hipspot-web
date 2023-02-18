@@ -4,8 +4,11 @@
 export enum FlutterCallback {
   initFilterling,
   setAuth,
+  setMyLocation,
 }
 
 export enum MessageToFlutterType {
   openLoginModal = 'openLoginModal',
+  getMyLocation = 'getMyLocation',
+  getAuth = 'getAuth',
 }

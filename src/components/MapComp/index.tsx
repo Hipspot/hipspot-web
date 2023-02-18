@@ -50,10 +50,6 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
     mapRef.current = map;
     map.on('load', onMapLoad);
     map.on('render', onRender);
-    map.on('load', () => drawPulsingDotMarker({ map, coordinates: [127.0582071, 37.5447481] }));
-    map.on('click', (e) => {
-      drawPulsingDotMarker({ map, coordinates: Object.values(e.lngLat) });
-    });
   }, []);
 
   useEffect(() => {
