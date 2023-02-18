@@ -6,9 +6,9 @@ import { activeFilterIdAtom } from '@states/clusterList';
 import mapboxgl, { MapboxEvent } from 'mapbox-gl';
 import { MarkerList } from '@libs/types/map';
 import { FindMyLocationEvent } from '@libs/types/customEvents';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { DOMID_MAP_COMPONENT } from '@constants/DOM';
 import { EVENT_FIND_MY_LOCATION } from '@constants/event';
+import { DOMID_MAP_COMPONENT } from '@constants/DOM';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import removeAllMarkers from './utils/removeAllMarkers';
 import { mapConfig } from './utils/mapConfig';
 import addFeatureLayerByFilterId from './eventHandler/addFeatureLayerByFilterId';
@@ -26,11 +26,13 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
   const allFeatures = useRecoilValue(geoJsonAtom);
   const pointMarkerList: MarkerList = useMemo(() => ({}), []);
   const clusterMarkerList: MarkerList = useMemo(() => ({}), []);
+  const activeFilterIdRef = useRef(activeFilterId);
 
   const mapRef = useRef<mapboxgl.Map>();
 
   const onMapLoad = ({ target: map }: MapboxEvent) => addFeatureLayerByFilterId({ map, allFeatures });
-  const onRender = ({ target: map }: MapboxEvent) =>
+  const onRender = ({ target: map }: MapboxEvent) => {
+    const filterId = activeFilterIdRef.current;
     updateMarker({
       map,
       allFeatures,
@@ -38,8 +40,9 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
       clusterMarkerList,
       clusterMarkerClickAction,
       pointMarkerClickAction,
-      activeFilterId,
+      filterId,
     });
+  };
 
   useEffect(() => {
     mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKKEN}`;
@@ -56,6 +59,8 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+    activeFilterIdRef.current = activeFilterId;
+    const filterId = activeFilterIdRef.current;
     removeAllMarkers({ pointMarkerList, clusterMarkerList });
     updateMarker({
       map,
@@ -64,7 +69,7 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
       clusterMarkerList,
       clusterMarkerClickAction,
       pointMarkerClickAction,
-      activeFilterId,
+      filterId,
     });
   }, [activeFilterId]);
 
