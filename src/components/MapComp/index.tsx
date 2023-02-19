@@ -50,14 +50,6 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    map.on('load', onMapLoad);
-    map.on('render', onRender);
-    map.on('moveend', onMoveEnd);
-  }, []);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
     activeFilterIdRef.current = activeFilterId;
     const filterId = activeFilterIdRef.current;
     removeAllMarkers({ pointMarkerList, clusterMarkerList });
@@ -67,9 +59,18 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
       pointMarkerList,
       clusterMarkerList,
       clusterMarkerClickAction,
-      pointMarkerClickAction,
+      pointMarkerClickAction: pointMarkerClickAction(filterId),
       filterId,
     });
+    map.on('load', onMapLoad);
+    map.on('render', onRender);
+    map.on('moveend', onMoveEnd);
+
+    return () => {
+      map.off('load', onMapLoad);
+      map.off('render', onRender);
+      map.off('moveend', onMoveEnd);
+    };
   }, [activeFilterId]);
 
   useEffect(() => {
