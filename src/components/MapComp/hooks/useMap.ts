@@ -18,6 +18,9 @@ export const mapConfig: MapboxOptions = {
   },
 };
 
+/**
+ * mapboxgl.Map 인스턴스 저장 객체
+ */
 const mapRef: { current: Map | null } = { current: null };
 
 /**
