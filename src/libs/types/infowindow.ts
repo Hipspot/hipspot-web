@@ -1,4 +1,3 @@
-import { CameraStateType } from '@states/infoWindow';
 import { SetterOrUpdater } from 'recoil';
 
 export type PopUpWindowState = 'thumbNail' | 'half' | 'full';
@@ -15,9 +14,8 @@ export interface CoordState {
 }
 
 export interface HandleEventEndProps {
-  setCameraState: SetterOrUpdater<CameraStateType>;
+  endCameraMove: () => void;
   setTabState: SetterOrUpdater<TabState>;
-  cameraState: CameraStateType;
   tabState: TabState;
   topCoordRef: React.MutableRefObject<number>;
 }

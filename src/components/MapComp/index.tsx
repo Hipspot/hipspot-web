@@ -30,7 +30,7 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
   const activeFilterIdRef = useRef(activeFilterId);
   const mapRef = useMap();
 
-  const { flyTo } = useCameraMove();
+  const { flyTo, savePrevPostion } = useCameraMove();
   const onMapLoad = ({ target: targetMap }: MapboxEvent) => addFeatureLayerByFilterId({ map: targetMap, allFeatures });
   const onRender = ({ target: targetMap }: MapboxEvent) => {
     const filterId = activeFilterIdRef.current;
@@ -40,16 +40,19 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
       pointMarkerList,
       clusterMarkerList,
       clusterMarkerClickAction,
-      pointMarkerClickAction: pointMarkerClickAction(activeFilterId),
+      pointMarkerClickAction: pointMarkerClickAction(filterId),
       filterId,
     });
   };
+  const onMoveEnd = ({ target: targetMap }: MapboxEvent) =>
+    savePrevPostion(targetMap.getCenter(), { zoom: targetMap.getZoom() });
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
     map.on('load', onMapLoad);
     map.on('render', onRender);
+    map.on('moveend', onMoveEnd);
   }, []);
 
   useEffect(() => {
