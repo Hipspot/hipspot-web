@@ -21,7 +21,7 @@ function MapComp() {
   const mapRef = useMap();
 
   const { flyTo, savePrevPostion } = useCameraMove();
-  const updateMarkers = useMarkerUpdate();
+  const { updateMarkers, removeAllMarkers } = useMarkerUpdate();
   const onMapLoad = ({ target: targetMap }: MapboxEvent) => addFeatureLayerByFilterId({ map: targetMap, allFeatures });
   const onRender = () => updateMarkers();
   const onMoveEnd = ({ target: targetMap }: MapboxEvent) =>
@@ -30,6 +30,8 @@ function MapComp() {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+
+    removeAllMarkers();
     updateMarkers();
     map.on('load', onMapLoad);
     map.on('render', onRender);

@@ -106,7 +106,21 @@ function useMarkerUpdate() {
     });
   };
 
-  return updateMarkers;
+  const removeAllMarkers = () => {
+    Object.entries(pointMarkerList).forEach((markerEntry) => {
+      const [id, marker] = markerEntry as [string, Marker];
+      marker.remove();
+      delete pointMarkerList[id];
+    });
+
+    Object.entries(clusterMarkerList).forEach((markerEntry) => {
+      const [id, marker] = markerEntry as [string, Marker];
+      marker.remove();
+      delete clusterMarkerList[id];
+    });
+  };
+
+  return { updateMarkers, removeAllMarkers };
 }
 
 export default useMarkerUpdate;
