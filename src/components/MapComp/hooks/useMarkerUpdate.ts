@@ -43,9 +43,7 @@ function useMarkerUpdate() {
           }),
           cssDataKey: 'marker',
         });
-        pointMarkerList[id] = new mapboxgl.Marker(marker, { anchor: 'bottom' })
-          .setLngLat(feature.geometry.coordinates)
-          .addTo(map);
+        pointMarkerList[id] = new mapboxgl.Marker(marker, { anchor: 'bottom' }).setLngLat(feature.geometry.coordinates);
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
@@ -56,9 +54,11 @@ function useMarkerUpdate() {
     Object.entries(pointMarkerList).forEach((markerEntry) => {
       const [id, marker] = markerEntry as [string, Marker];
 
-      if (uniquePointIds.has(Number(id))) return;
-      marker.remove();
-      delete pointMarkerList[id];
+      if (uniquePointIds.has(Number(id))) {
+        marker.addTo(map);
+      } else {
+        marker.remove();
+      }
     });
 
     // cluster markers
