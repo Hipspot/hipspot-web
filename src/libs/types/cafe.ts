@@ -29,10 +29,7 @@ export type CafeInfo = {
 	        }
       ]
    */
-  openingHours: {
-    annotation: string;
-    timeBlock: [{ day: Days[]; time: string }];
-  };
+  openingHours: OpeningHours;
   /**
    * 카페 전화번호
    * @example '02-1234-5678'
@@ -56,4 +53,9 @@ export type CafeInfo = {
   kakaoMapUrl: string | null;
 };
 
-type Days = '월' | '화' | '수' | '목' | '금' | '토' | '일' | '매일';
+export type Days = '월' | '화' | '수' | '목' | '금' | '토' | '일' | '매일';
+
+export type OpeningHours = {
+  annotation: string;
+  timeBlock: [{ day: Days[]; time: string }];
+};
