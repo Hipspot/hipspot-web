@@ -21,8 +21,8 @@ export const updatePointMarkers = ({
   uniquePointIds,
 }: UpdatePointMarkersParam) => {
   pointFeaturesOnScreen.forEach((feature) => {
-    const { id } = feature.properties;
-    if (Object.hasOwn(pointMarkerList, id)) return;
+    const { cafeId } = feature.properties;
+    if (Object.hasOwn(pointMarkerList, cafeId)) return;
     try {
       const marker = renderEmotionElementToHtml({
         elem: PointMarker({
@@ -30,11 +30,11 @@ export const updatePointMarkers = ({
           feature,
           activeFilterId: filterId,
           image: 'https://hipspot.s3.ap-northeast-2.amazonaws.com/store/0.jpg',
-          id,
+          id: cafeId,
         }),
         cssDataKey: 'marker',
       });
-      pointMarkerList[id] = new mapboxgl.Marker(marker, { anchor: 'bottom' })
+      pointMarkerList[cafeId] = new mapboxgl.Marker(marker, { anchor: 'bottom' })
         .setLngLat(feature.geometry.coordinates)
         .addTo(map);
     } catch (e) {
@@ -46,7 +46,6 @@ export const updatePointMarkers = ({
   // remove points markers
   Object.entries(pointMarkerList).forEach((markerEntry) => {
     const [id, marker] = markerEntry as [string, Marker];
-
     if (uniquePointIds.has(Number(id))) return;
     marker.remove();
     delete pointMarkerList[id];
