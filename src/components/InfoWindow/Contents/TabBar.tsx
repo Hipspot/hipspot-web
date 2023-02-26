@@ -1,15 +1,25 @@
 import styled from '@emotion/styled';
+import { useState } from 'react';
+import { BookmarkFilledIcon, BookmarkIcon } from '@assets/index';
 
 interface TabBarProps {
   isSelected: boolean;
 }
 
 function TabBar({ isSelected }: TabBarProps) {
+  const [isBookmarked, setIsBookmarked] = useState(false);
   return (
     <Wrapper>
       <Tab isSelected={isSelected}>업체제공사진</Tab>
       <Tab>메뉴</Tab>
       <Tab>인스타그램</Tab>
+      <Icon
+        onClick={() => {
+          setIsBookmarked(!isBookmarked);
+        }}
+      >
+        {isBookmarked ? <BookmarkFilledIcon /> : <BookmarkIcon />}
+      </Icon>
     </Wrapper>
   );
 }
@@ -23,6 +33,8 @@ const Wrapper = styled.div`
   display: flex;
   gap: 32px;
   flex-shrink: 0;
+
+  align-items: center;
 `;
 
 const Tab = styled.div<{ isSelected?: boolean }>`
@@ -45,4 +57,8 @@ const Tab = styled.div<{ isSelected?: boolean }>`
     color: black;
     filter: none;
   `}
+`;
+
+const Icon = styled.div<{ isClicked?: boolean }>`
+  margin-left: auto;
 `;
