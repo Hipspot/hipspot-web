@@ -5,6 +5,8 @@ export { ReactComponent as PhoneIcon } from './svg/PhoneIcon.svg';
 export { ReactComponent as CopyIcon } from './svg/CopyIcon.svg';
 export { ReactComponent as BookmarkIcon } from './svg/BookmarkIcon.svg';
 export { ReactComponent as BookmarkFilledIcon } from './svg/BookmarkFilledIcon.svg';
+export { ReactComponent as FindMyLocationIcon } from './svg/FindMyLocationIcon.svg';
+
 // assets/img
 export { default as DessertColoredIcon } from './img/DessertColoredIcon.png';
 export { default as DessertGrayIcon } from './img/DessertGrayIcon.png';

@@ -42,7 +42,7 @@ export const handleTouchMove: (props: HandleEventMoveProps) => TouchEventHandler
   };
 
 export const handleTouchEnd: (props: HandleEventEndProps) => TouchEventHandler<HTMLDivElement> =
-  ({ setCameraState, cameraState, tabState, setTabState, topCoordRef }) =>
+  ({ endCameraMove, tabState, setTabState, topCoordRef }) =>
   (e) => {
     const { onHandling } = tabState;
     if (onHandling) {
@@ -62,7 +62,7 @@ export const handleTouchEnd: (props: HandleEventEndProps) => TouchEventHandler<H
       } else {
         endPointTabState.top = popUpHeights[PopUpHeightsType.bottom];
         endPointTabState.popUpState = 'thumbNail';
-        setCameraState({ ...cameraState, markerClicked: false });
+        endCameraMove();
       }
 
       target.style.setProperty('padding', '0px');

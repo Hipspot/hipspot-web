@@ -23,7 +23,6 @@ export const updatePointMarkers = ({
   pointFeaturesOnScreen.forEach((feature) => {
     const { id } = feature.properties;
     if (Object.hasOwn(pointMarkerList, id)) return;
-
     try {
       const marker = renderEmotionElementToHtml({
         elem: PointMarker({
@@ -35,7 +34,9 @@ export const updatePointMarkers = ({
         }),
         cssDataKey: 'marker',
       });
-      pointMarkerList[id] = new mapboxgl.Marker(marker).setLngLat(feature.geometry.coordinates).addTo(map);
+      pointMarkerList[id] = new mapboxgl.Marker(marker, { anchor: 'bottom' })
+        .setLngLat(feature.geometry.coordinates)
+        .addTo(map);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
