@@ -1,4 +1,5 @@
 import PointMarker from '@components/Marker/pointMarker';
+import { S3_URL } from '@constants/s3Url';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 import { renderEmotionElementToHtml } from '@libs/utils/renderEmotionElementToHtml';
 import mapboxgl, { Map, Marker } from 'mapbox-gl';
@@ -21,7 +22,7 @@ export const updatePointMarkers = ({
   uniquePointIds,
 }: UpdatePointMarkersParam) => {
   pointFeaturesOnScreen.forEach((feature) => {
-    const { cafeId } = feature.properties;
+    const { cafeId, thumbNail } = feature.properties;
     if (Object.hasOwn(pointMarkerList, cafeId)) return;
     try {
       const marker = renderEmotionElementToHtml({
@@ -29,7 +30,7 @@ export const updatePointMarkers = ({
           handleClickPointMarker,
           feature,
           activeFilterId: filterId,
-          image: 'https://hipspot.s3.ap-northeast-2.amazonaws.com/store/0.jpg',
+          image: `${S3_URL}/${cafeId}/store/${thumbNail}`,
           id: cafeId,
         }),
         cssDataKey: 'marker',
