@@ -6,17 +6,20 @@ import InfoWindow from '@components/InfoWindow';
 import { useEffect } from 'react';
 import useFlutterMessageHandler from '@libs/webview/useFlutterMessageHandler';
 import { Toaster } from 'react-hot-toast';
+import FindMyLocationButton from '@components/Button/FindMyLocationButton';
+import { FLUTTER_CHANNEL } from '@constants/jsChannelName';
 
 function App() {
   const flutterMessageHandler = useFlutterMessageHandler();
   useEffect(() => {
-    window.flutterChannel = flutterMessageHandler;
+    window[FLUTTER_CHANNEL] = flutterMessageHandler;
   });
 
   return (
     <Wrapper>
       <MapCompContainer />
       <Filtering />
+      <FindMyLocationButton />
       <ClusterList />
       <InfoWindow />
       <Toaster
