@@ -20,7 +20,6 @@ export const handleMouseDown: (eventStartProps: HandleEventStartProps) => MouseE
     target.style.setProperty('transform', 'translateY(-50%)');
 
     setTabState((prev: TabState) => ({ ...prev, onHandling: true }));
-
     const infoWindowElem = target.parentElement as HTMLDivElement;
     const pointedTop = infoWindowElem.getBoundingClientRect().top - e.clientY;
     reactRefUpdate({ ref: modifyRef, update: pointedTop });
@@ -45,7 +44,7 @@ export const handleMouseMove: (eventMoveProps: HandleEventMoveProps) => MouseEve
   };
 
 export const handleMouseUp: (eventEndProps: HandleEventEndProps) => MouseEventHandler<HTMLDivElement> =
-  ({ setTabState, setCameraState, tabState, cameraState, topCoordRef }) =>
+  ({ endCameraMove, setTabState, tabState, topCoordRef }) =>
   (e) => {
     const { onHandling } = tabState;
     if (onHandling) {
@@ -65,7 +64,7 @@ export const handleMouseUp: (eventEndProps: HandleEventEndProps) => MouseEventHa
       } else {
         endPointTabState.top = popUpHeights[PopUpHeightsType.bottom];
         endPointTabState.popUpState = 'thumbNail';
-        setCameraState({ ...cameraState, markerClicked: false });
+        endCameraMove();
       }
 
       target.style.setProperty('padding', '0px');

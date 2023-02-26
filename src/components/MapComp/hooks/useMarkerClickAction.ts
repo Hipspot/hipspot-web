@@ -1,14 +1,15 @@
-import MapComp from '@components/MapComp';
-import { Suspense } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { activatedCafeIdAtom, tabStateAtom } from '@states/infoWindow';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import { clusterListAtom, openClusterListAtom } from '@states/clusterList';
-import useCameraMove from '@components/MapComp/hooks/useCameraMove';
-import useMapRef from '@components/MapComp/hooks/useMap';
-import getFeatureById from '@components/MapComp/utils/getFeatureById';
+import { activatedCafeIdAtom, tabStateAtom } from '@states/infoWindow';
+import { useSetRecoilState } from 'recoil';
+import getFeatureById from '../utils/getFeatureById';
+import useCameraMove from './useCameraMove';
+import useMapRef from './useMap';
 
-function MapCompContainer() {
+/**
+ * 마커 클릭 액션 코드 hooks
+ */
+function useMarkerClickAction() {
   const setActivatedCafeId = useSetRecoilState(activatedCafeIdAtom);
   const setTabState = useSetRecoilState(tabStateAtom);
   const setOpenClusterList = useSetRecoilState(openClusterListAtom);
@@ -26,7 +27,7 @@ function MapCompContainer() {
     const map = mapRef.current;
     if (!map) return;
     const feature = getFeatureById({ map, sourceId: `cafeList/${filterId}`, id });
-    if (feature) tiltFlyTo(feature?.geometry.coordinates);
+    if (feature) tiltFlyTo(feature?.geometry.coordinates, { markerClicked: true });
   };
 
   const clusterMarkerClickAction = (clusterList: any) => {
@@ -35,11 +36,6 @@ function MapCompContainer() {
     setClusterList(clusterList);
   };
 
-  return (
-    <Suspense fallback={<div> loading </div>}>
-      <MapComp pointMarkerClickAction={pointMarkerClickAction} clusterMarkerClickAction={clusterMarkerClickAction} />
-    </Suspense>
-  );
+  return { pointMarkerClickAction, clusterMarkerClickAction };
 }
-
-export default MapCompContainer;
+export default useMarkerClickAction;
