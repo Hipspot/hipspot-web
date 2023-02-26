@@ -54,7 +54,7 @@ export default function InfoWindow() {
               <ImageSlider imageList={contents.imageList} wrapperId={DOMID_IMAGE_SLIDER} />
             </MakeLodableSuspense>
           </ImageSliderWrapper>
-          <TabBar isSelected />
+          <TabBar isSelected isBookmarked={state === 'hasValue' ? contents.isBookmarked : null} />
         </TopSection>
         <Section>
           <MakeLodableSuspense lodableState={state} loading={<InformationSkeleton />}>

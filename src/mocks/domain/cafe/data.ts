@@ -16,5 +16,6 @@ export const cafeData: CafeInfo[] = [
     instaId: 'honor_cafe',
     kakaoMapUrl: 'https://map.kakao.com/link/map/카페 힙스팟,37.5446694,127.051352',
     naverMapUrl: 'https://map.naver.com/v5/search/%EC%B9%B4%ED%8E%98%ED%9E%99%EC%8A%A4%ED%8C%9F/place/1234567890',
+    isBookmarked: null,
   },
 ];

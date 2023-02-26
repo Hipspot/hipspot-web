@@ -1,25 +1,21 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
 import { BookmarkFilledIcon, BookmarkIcon } from '@assets/index';
+import { CafeInfo } from '@libs/types/cafe';
 
 interface TabBarProps {
   isSelected: boolean;
+  isBookmarked: CafeInfo['isBookmarked'];
 }
 
-function TabBar({ isSelected }: TabBarProps) {
-  const [isBookmarked, setIsBookmarked] = useState(false);
+function TabBar({ isSelected, isBookmarked }: TabBarProps) {
+  const icon = isBookmarked === true ? <BookmarkFilledIcon /> : isBookmarked === false ? <BookmarkIcon /> : null;
+
   return (
     <Wrapper>
       <Tab isSelected={isSelected}>업체제공사진</Tab>
       <Tab>메뉴</Tab>
       <Tab>인스타그램</Tab>
-      <Icon
-        onClick={() => {
-          setIsBookmarked(!isBookmarked);
-        }}
-      >
-        {isBookmarked ? <BookmarkFilledIcon /> : <BookmarkIcon />}
-      </Icon>
+      <IconButton>{icon}</IconButton>
     </Wrapper>
   );
 }
@@ -27,7 +23,7 @@ function TabBar({ isSelected }: TabBarProps) {
 export default TabBar;
 
 const Wrapper = styled.div`
-  padding: 0px 20px;
+  padding: 0px 10px 0px 20px;
   width: 100%;
   height: 60px;
   display: flex;
@@ -59,6 +55,6 @@ const Tab = styled.div<{ isSelected?: boolean }>`
   `}
 `;
 
-const Icon = styled.div<{ isClicked?: boolean }>`
+const IconButton = styled.div`
   margin-left: auto;
 `;

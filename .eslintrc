@@ -27,6 +27,7 @@
     "@typescript-eslint/no-use-before-define": "off",
     "react-hooks/exhaustive-deps": "off",
     "react/react-in-jsx-scope": "off",
+    "no-nested-ternary": "off",
     "consistent-return": "off",
     "react/no-unknown-property": [
       "error",
