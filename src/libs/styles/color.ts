@@ -18,7 +18,7 @@ export const colors = {
   error: '#D32F2F',
   success: '#4CAF50',
   warning: '#F9A825',
-  tintColor: {
+  filterColor: {
     pink: '#C55CC7',
     green: '#43BE84',
     yellow: '#F2BE19',
@@ -30,15 +30,15 @@ export const colors = {
 
 export const filterColor = {
   /** 힙스팟 #C55CC7 */
-  [FilterId.Hipspot]: colors.tintColor.pink,
+  [FilterId.Hipspot]: colors.filterColor.pink,
   /** 스터디 #43BE84 */
-  [FilterId.Study]: colors.tintColor.green,
+  [FilterId.Study]: colors.filterColor.green,
   /** 가성비 #F2BE19 */
-  [FilterId.Reasonable]: colors.tintColor.yellow,
+  [FilterId.Reasonable]: colors.filterColor.yellow,
   /** 디저트 #BF8D69 */
-  [FilterId.Dessert]: colors.tintColor.brown,
+  [FilterId.Dessert]: colors.filterColor.brown,
   /** 프렌차이즈 #418DFF */
-  [FilterId.Franchise]: colors.tintColor.blue,
+  [FilterId.Franchise]: colors.filterColor.blue,
   /** 개인카페 #B46FEA */
-  [FilterId.Personal]: colors.tintColor.violet,
+  [FilterId.Personal]: colors.filterColor.violet,
 };

@@ -1,5 +1,5 @@
-import { colors as pureColors } from './color';
+import { colors as lightColors } from './color';
 
 export const light = {
-  colors: pureColors,
+  colors: lightColors,
 };

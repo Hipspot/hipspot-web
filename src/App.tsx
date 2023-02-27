@@ -9,8 +9,6 @@ import { Toaster } from 'react-hot-toast';
 import FindMyLocationButton from '@components/Button/FindMyLocationButton';
 import { FLUTTER_CHANNEL } from '@constants/jsChannelName';
 import { Global, ThemeProvider } from '@emotion/react';
-import { useRecoilValue } from 'recoil';
-import { themeModeAtom } from '@states/ui';
 import { light } from '@libs/styles/theme';
 import { globalStyle } from '@libs/styles/GlobalStyle';
 
@@ -20,8 +18,7 @@ function App() {
     window[FLUTTER_CHANNEL] = flutterMessageHandler;
   });
 
-  const themeMode = useRecoilValue(themeModeAtom);
-  const theme = themeMode === 'light' && light;
+  const theme = light;
 
   return (
     <ThemeProvider theme={theme}>
@@ -43,7 +40,7 @@ function App() {
                 opacity: '0.9',
                 backdropFilter: 'blur(30px)',
                 fontWeight: '600',
-                color: '#FFFFFF',
+                color: theme.colors.white,
               },
             },
           }}

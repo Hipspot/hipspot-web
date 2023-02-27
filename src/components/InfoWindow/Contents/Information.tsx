@@ -1,5 +1,7 @@
 import { ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets/index';
 import styled from '@emotion/styled';
+import { copyToClipboard } from '@libs/utils/cafeInfo';
+import { toast } from 'react-hot-toast';
 import Skeleton from 'react-loading-skeleton';
 
 interface InformationProps {
@@ -19,6 +21,11 @@ function Information({ businessDay, businessTime, address, contactNum }: Informa
     { title: address, icon: <MarkerIcon /> },
     { title: contactNum, icon: <PhoneIcon /> },
   ];
+
+  const handleCopyText = (message: string, text: string) => {
+    toast.success(message);
+    copyToClipboard(text);
+  };
   return (
     <>
       {InfoList.map(({ title, icon, description }, i) => (
@@ -29,7 +36,7 @@ function Information({ businessDay, businessTime, address, contactNum }: Informa
 
             {description && <Description>{description}</Description>}
           </Contents>
-          {title === address && <CopyIcon />}
+          {title === address && <CopyIcon onClick={() => handleCopyText('주소가 복사되었습니다.', address)} />}
         </Wrapper>
       ))}
     </>
