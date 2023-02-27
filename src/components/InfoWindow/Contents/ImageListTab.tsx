@@ -1,7 +1,9 @@
 import { S3_URL } from '@constants/s3Url';
 import styled from '@emotion/styled';
 import { ImageList, ImageTabBarState, ImageTabKey } from '@libs/types/imageTabList';
-import { useState } from 'react';
+import { activatedCafeIdAtom } from '@states/infoWindow';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import ImageSlider from './ImageSlider';
 
 const imageTabName = { store: '업체제공사진', menu: '메뉴' };
@@ -32,6 +34,7 @@ interface ImageListTabProps {
 function ImageListTab({ cafeId, imageList, wrapperId }: ImageListTabProps) {
   const [currentImageList, setCurrenImageList] = useState<string[]>(S3ImageUrl(cafeId, 'store', imageList.store));
   const [imageTabBarState, setImageTabBarState] = useState<ImageTabBarState>(initTabBar(imageList));
+  const activeCafeId = useRecoilValue(activatedCafeIdAtom);
 
   const handleTabChange = (currentTab: ImageTabKey) => {
     const nextUrlList = imageList[currentTab] ? S3ImageUrl(cafeId, currentTab, imageList[currentTab]) : [];
@@ -42,6 +45,12 @@ function ImageListTab({ cafeId, imageList, wrapperId }: ImageListTabProps) {
       )
     );
   };
+
+  useEffect(() => {
+    if (!activeCafeId) return;
+    setImageTabBarState(() => initTabBar(imageList));
+    setCurrenImageList(() => S3ImageUrl(activeCafeId, 'store', imageList.store));
+  }, [activeCafeId]);
 
   return (
     <Wrapper>
