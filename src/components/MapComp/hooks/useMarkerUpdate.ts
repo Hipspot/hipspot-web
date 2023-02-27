@@ -1,5 +1,6 @@
 import ClusterMarker from '@components/Marker/clusterMarker';
 import PointMarker from '@components/Marker/pointMarker';
+import ReasonableMarker from '@components/Marker/ReasonableMarker';
 import { MarkerList } from '@libs/types/map';
 import { renderEmotionElementToHtml } from '@libs/utils/renderEmotionElementToHtml';
 import { activeFilterIdAtom } from '@states/clusterList';
@@ -33,11 +34,28 @@ function useMarkerUpdate() {
       const { id } = feature.properties;
       if (Object.hasOwn(pointMarkerList, id)) return;
       try {
+        if (filterId === 2) {
+          // 가성비 아아 가격 임시 데이터. 이후 properties 값으로 수정해야 함
+          const reasonablePrice = 2345;
+          const marker = renderEmotionElementToHtml({
+            elem: ReasonableMarker({
+              handleClickPointMarker: pointMarkerClickAction(filterId),
+              feature,
+              id,
+              reasonablePrice,
+            }),
+            cssDataKey: 'marker',
+          });
+          pointMarkerList[id] = new mapboxgl.Marker(marker, { anchor: 'bottom' }).setLngLat(
+            feature.geometry.coordinates
+          );
+
+          return;
+        }
         const marker = renderEmotionElementToHtml({
           elem: PointMarker({
             handleClickPointMarker: pointMarkerClickAction(filterId),
             feature,
-            activeFilterId: filterId,
             image: 'https://hipspotimage.s3.ap-northeast-2.amazonaws.com/bluemilescoffee/store/0.jpg',
             id,
           }),
