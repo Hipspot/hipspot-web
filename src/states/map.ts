@@ -1,10 +1,6 @@
 import getGeoJson from '@libs/apis/getGeoJson';
+import { CustomGeoJSONFeatures } from '@libs/types/map';
 import { atom, selector } from 'recoil';
-
-export const geoJsonAtom = atom({
-  key: 'atom/geoJoson',
-  default: {},
-});
 
 export const geoJsonSelector = selector({
   key: 'selector/geoJSon',
@@ -12,5 +8,9 @@ export const geoJsonSelector = selector({
     const result = await getGeoJson();
     return result;
   },
-  set: async () => {},
+});
+
+export const geoJsonAtom = atom<CustomGeoJSONFeatures[]>({
+  key: 'atom/geoJoson',
+  default: geoJsonSelector,
 });

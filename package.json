@@ -6,11 +6,12 @@
     "start": "react-app-rewired start",
     "build": "CI=false react-app-rewired build",
     "test": "react-app-rewired test --watchAll=false --transformIgnorePatterns \"node_modules/(?!axios)/\"",
-    "test:watch": "react-app-rewired test --watch",
+    "test:watch": "react-app-rewired test --watch --silent=false --transformIgnorePatterns \"node_modules/(?!axios)/\"",
     "eject": "react-scripts eject",
     "lint": "eslint './src/**/*.{ts,tsx,js,jsx}'",
     "lint:fix": "eslint --fix './src/**/*.{ts,tsx,js,jsx}'",
-    "prettier": "prettier --write --config ./.prettierrc './src/**/*.{ts,tsx}'"
+    "prettier": "prettier --write --config ./.prettierrc './src/**/*.{ts,tsx}'",
+    "deploy": "npm run build && netlify deploy --prod"
   },
   "dependencies": {
     "@emotion/cache": "^11.10.5",
@@ -25,7 +26,10 @@
     "msw": "^0.49.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.0",
     "react-icons": "^4.7.1",
+    "react-loading": "^2.0.3",
+    "react-loading-skeleton": "^3.1.0",
     "react-responsive-carousel": "^3.2.23",
     "react-scripts": "5.0.1",
     "recoil": "^0.7.6",
@@ -92,7 +96,9 @@
       "^@libs$": "<rootDir>/src/libs",
       "^@libs/(.*)$": "<rootDir>/src/libs/$1",
       "^@states$": "<rootDir>/src/states",
-      "^@states/(.*)$": "<rootDir>/src/states/$1"
+      "^@states/(.*)$": "<rootDir>/src/states/$1",
+      "^@mocks$": "<rootDir>/src/mocks",
+      "^@mocks/(.*)$": "<rootDir>/src/mocks/$1"
     },
     "setupFilesAfterEnv": [
       "<rootDir>/jest.setup.js"

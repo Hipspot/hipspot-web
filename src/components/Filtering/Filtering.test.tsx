@@ -1,13 +1,8 @@
-import { render } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
+import { render } from '@libs/utils/testUtils';
 import Filtering from '.';
 
 test('Render Filtering without crash', () => {
-  const component = render(
-    <RecoilRoot>
-      <Filtering />
-    </RecoilRoot>
-  );
+  const component = render(<Filtering />);
 
   expect(component).toBeTruthy();
 });

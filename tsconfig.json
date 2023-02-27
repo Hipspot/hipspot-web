@@ -61,6 +61,12 @@
       "@states": [
         "states"
       ],
+      "@mocks/*": [
+        "mocks/*"
+      ],
+      "@mocks": [
+        "mocks"
+      ],
     }
   },
   "include": [

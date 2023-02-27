@@ -1,13 +1,54 @@
+import { CancelIcon } from '@assets/index';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import { useSetRecoilState } from 'recoil';
+import { tabStateAtom } from '@states/infoWindow';
+import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 
-export const Wrapper = styled.div`
+interface TitleProps {
+  placeName: string;
+}
+function Title({ placeName }: TitleProps) {
+  const setTabState = useSetRecoilState(tabStateAtom);
+
+  return (
+    <>
+      <Name>{placeName}</Name>
+      <Icon
+        data-testid="close_button"
+        onClick={(e) => {
+          e.stopPropagation();
+          setTabState({ top: popUpHeights[PopUpHeightsType.bottom], onHandling: true, popUpState: 'thumbNail' });
+        }}
+      >
+        <CancelIcon />
+      </Icon>
+    </>
+  );
+}
+
+export default Title;
+
+export function TitleSkeleton() {
+  return (
+    <TitleSkeletonWrapper>
+      <Skeleton
+        baseColor="lightgray"
+        css={css`
+          height: 40px;
+        `}
+      />
+    </TitleSkeletonWrapper>
+  );
+}
+
+export const TitleSkeletonWrapper = styled.div`
   width: 100%;
   height: 56px;
-  padding: 0px 16px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  z-index: 1;
+  padding: 8px 0px;
 `;
 
 export const Name = styled.h1`
@@ -16,7 +57,7 @@ export const Name = styled.h1`
   color: #0d0d0d;
 `;
 
-export const Icon = styled.div`
+const Icon = styled.div`
   svg {
     width: 24px;
     height: 24px;
