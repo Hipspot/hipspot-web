@@ -57,7 +57,7 @@ function ImageListTab({ cafeId, imageList, wrapperId }: ImageListTabProps) {
       <ImageSlider imageList={currentImageList} wrapperId={wrapperId} />
       <TabBarWrapper>
         {imageTabBarState.map(({ isSelected, key, name }) => (
-          <Tab isSelected={isSelected} onClick={() => handleTabChange(key)}>
+          <Tab key={`imageTabBar_${key}`} isSelected={isSelected} onClick={() => handleTabChange(key)}>
             {name}
           </Tab>
         ))}
