@@ -3,20 +3,20 @@ import { FilterId } from '@libs/types/filter';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 
 export type PointMarkerProps = {
-  id: number;
+  cafeId: number;
   image: string;
   feature: CustomGeoJSONFeatures;
   handleClickPointMarker: (id: number) => void;
 };
 
-export default function PointMarker({ handleClickPointMarker, feature, image, id }: PointMarkerProps) {
-  const { placeName, filterList } = feature.properties;
+export default function PointMarker({ handleClickPointMarker, feature, image, cafeId }: PointMarkerProps) {
+  const { cafeName, filterList } = feature.properties;
 
   return (
-    <Wrapper className="mapgl-marker-animation" id={`${id}`} onClick={() => handleClickPointMarker(id)}>
+    <Wrapper className="mapgl-marker-animation" id={`${cafeId}`} onClick={() => handleClickPointMarker(cafeId)}>
       {/* filterList에 맞게 랜더링해주는지 테스트하기 위한 tag 추후 삭제해주세요 */}
       <div>{filterList.map((filter) => FilterId[filter]).join(', ')}</div>
-      <CafeName>{placeName}</CafeName>
+      <CafeName>{cafeName}</CafeName>
       <MarkerWrapper>
         <svg width="98" height="111" viewBox="0 0 98 111" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d={backgroundPath} fill="#D9D9D9" stroke="white" />

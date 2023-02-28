@@ -30,6 +30,7 @@ const getFeaturesOnScreen: (props: GetFeaturesOnScreenParams) => GetFeaturesOnSc
   const clusterFeaturesOnScreen: MapboxGeoJSONFeature[] = [];
   const uniqueClusterIds = new Set<number>();
   const uniquePointIds = new Set<number>();
+
   mapboxFeaturesOnScreen.forEach((feature) => {
     if (uniqueClusterIds.has(feature.properties?.cluster_id)) return;
 
@@ -38,12 +39,12 @@ const getFeaturesOnScreen: (props: GetFeaturesOnScreenParams) => GetFeaturesOnSc
       uniqueClusterIds.add(feature.properties.cluster_id);
     }
 
-    if (feature.properties?.id) {
-      uniquePointIds.add(Number(feature.properties.id));
+    if (feature.properties?.cafeId) {
+      uniquePointIds.add(Number(feature.properties.cafeId));
     }
   });
   const pointFeaturesOnScreen = allFeatures.filter((feature: CustomGeoJSONFeatures) =>
-    uniquePointIds.has(Number(feature.properties.id))
+    uniquePointIds.has(Number(feature.properties.cafeId))
   );
 
   return { pointFeaturesOnScreen, clusterFeaturesOnScreen, uniquePointIds, uniqueClusterIds };

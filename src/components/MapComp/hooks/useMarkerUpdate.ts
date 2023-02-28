@@ -1,6 +1,7 @@
 import ClusterMarker from '@components/Marker/clusterMarker';
 import PointMarker from '@components/Marker/pointMarker';
 import ReasonableMarker from '@components/Marker/ReasonableMarker';
+import { S3_URL } from '@constants/s3Url';
 import { MarkerList } from '@libs/types/map';
 import { renderEmotionElementToHtml } from '@libs/utils/renderEmotionElementToHtml';
 import { activeFilterIdAtom } from '@states/clusterList';
@@ -31,8 +32,8 @@ function useMarkerUpdate() {
 
     // point markers
     pointFeaturesOnScreen.forEach((feature) => {
-      const { id } = feature.properties;
-      if (Object.hasOwn(pointMarkerList, id)) return;
+      const { cafeId, thumbNail } = feature.properties;
+      if (Object.hasOwn(pointMarkerList, cafeId)) return;
       try {
         if (filterId === 2) {
           // 가성비 아아 가격 임시 데이터. 이후 properties 값으로 수정해야 함
@@ -41,12 +42,12 @@ function useMarkerUpdate() {
             elem: ReasonableMarker({
               handleClickPointMarker: pointMarkerClickAction(filterId),
               feature,
-              id,
+              cafeId,
               reasonablePrice,
             }),
             cssDataKey: 'marker',
           });
-          pointMarkerList[id] = new mapboxgl.Marker(marker, { anchor: 'bottom' }).setLngLat(
+          pointMarkerList[cafeId] = new mapboxgl.Marker(marker, { anchor: 'bottom' }).setLngLat(
             feature.geometry.coordinates
           );
 
@@ -56,12 +57,14 @@ function useMarkerUpdate() {
           elem: PointMarker({
             handleClickPointMarker: pointMarkerClickAction(filterId),
             feature,
-            image: 'https://hipspotimage.s3.ap-northeast-2.amazonaws.com/bluemilescoffee/store/0.jpg',
-            id,
+            image: `${S3_URL}/${cafeId}/store/${thumbNail}`,
+            cafeId,
           }),
           cssDataKey: 'marker',
         });
-        pointMarkerList[id] = new mapboxgl.Marker(marker, { anchor: 'bottom' }).setLngLat(feature.geometry.coordinates);
+        pointMarkerList[cafeId] = new mapboxgl.Marker(marker, { anchor: 'bottom' }).setLngLat(
+          feature.geometry.coordinates
+        );
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
