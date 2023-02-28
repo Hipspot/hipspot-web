@@ -36,14 +36,10 @@ function useMarkerUpdate() {
       if (Object.hasOwn(pointMarkerList, cafeId)) return;
       try {
         if (filterId === 2) {
-          // 가성비 아아 가격 임시 데이터. 이후 properties 값으로 수정해야 함
-          const reasonablePrice = 2345;
           const marker = renderEmotionElementToHtml({
             elem: ReasonableMarker({
               handleClickPointMarker: pointMarkerClickAction(filterId),
               feature,
-              cafeId,
-              reasonablePrice,
             }),
             cssDataKey: 'marker',
           });
@@ -58,7 +54,6 @@ function useMarkerUpdate() {
             handleClickPointMarker: pointMarkerClickAction(filterId),
             feature,
             image: `${S3_URL}/${cafeId}/store/${thumbNail}`,
-            cafeId,
           }),
           cssDataKey: 'marker',
         });

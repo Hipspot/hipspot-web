@@ -3,14 +3,13 @@ import { FilterId } from '@libs/types/filter';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 
 export type PointMarkerProps = {
-  cafeId: number;
   image: string;
   feature: CustomGeoJSONFeatures;
   handleClickPointMarker: (id: number) => void;
 };
 
-export default function PointMarker({ handleClickPointMarker, feature, image, cafeId }: PointMarkerProps) {
-  const { cafeName, filterList } = feature.properties;
+export default function PointMarker({ handleClickPointMarker, feature, image }: PointMarkerProps) {
+  const { cafeId, cafeName, filterList } = feature.properties;
 
   return (
     <Wrapper className="mapgl-marker-animation" id={`${cafeId}`} onClick={() => handleClickPointMarker(cafeId)}>

@@ -3,14 +3,12 @@ import { FilterId } from '@libs/types/filter';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 
 export type PointMarkerProps = {
-  cafeId: number;
   feature: CustomGeoJSONFeatures;
-  reasonablePrice: number;
   handleClickPointMarker: (id: number) => void;
 };
 
-export default function PointMarker({ handleClickPointMarker, feature, cafeId, reasonablePrice }: PointMarkerProps) {
-  const { cafeName, filterList } = feature.properties;
+export default function PointMarker({ handleClickPointMarker, feature }: PointMarkerProps) {
+  const { cafeId, cafeName, filterList, reasonablePrice } = feature.properties;
 
   return (
     <Wrapper className="mapgl-marker-animation" id={`${cafeId}`} onClick={() => handleClickPointMarker(cafeId)}>
@@ -22,7 +20,7 @@ export default function PointMarker({ handleClickPointMarker, feature, cafeId, r
           <path d={reasonablePath} fill="white" stroke="#F2BE19" strokeWidth="1.4" />
         </svg>
 
-        <ReasonablePrice>{`${reasonablePrice.toLocaleString('ko-KR')}~`}</ReasonablePrice>
+        <ReasonablePrice>{`${reasonablePrice ? reasonablePrice.toLocaleString('ko-KR') : '...'}~`}</ReasonablePrice>
       </MarkerWrapper>
     </Wrapper>
   );

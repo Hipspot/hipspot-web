@@ -3,7 +3,7 @@ import { CafeInfo } from './cafe';
 
 export interface CustomGeoJSONProperties extends Pick<CafeInfo, 'cafeId' | 'cafeName'> {
   filterList: number[];
-  resonablePrice: number;
+  reasonablePrice: number;
   thumbNail: string;
 }
 
