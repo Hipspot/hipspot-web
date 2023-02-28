@@ -6,6 +6,9 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import ImageSlider from './ImageSlider';
 
+/**
+ * @descripton ImageTabKey로 Tab Name을 얻을 수 있는 객체
+ */
 const imageTabName = { store: '업체제공사진', menu: '메뉴' };
 // uitls
 /**
@@ -22,8 +25,9 @@ const initTabBar: (imageList: ImageList) => ImageTabBarState = (imageList: Image
     key: key as ImageTabKey,
     name: imageTabName[key as ImageTabKey],
   }));
+
 const S3ImageUrl = (cafeId: number, key: string, strList: string[]) =>
-  strList.map((str) => `${S3_URL}/${cafeId}/${key}/${str}`);
+  strList ? strList.map((str) => `${S3_URL}/${cafeId}/${key}/${str}`) : [];
 
 interface ImageListTabProps {
   cafeId: number;
@@ -37,7 +41,7 @@ function ImageListTab({ cafeId, imageList, wrapperId }: ImageListTabProps) {
   const activeCafeId = useRecoilValue(activatedCafeIdAtom);
 
   const handleTabChange = (currentTab: ImageTabKey) => {
-    const nextUrlList = imageList[currentTab] ? S3ImageUrl(cafeId, currentTab, imageList[currentTab]) : [];
+    const nextUrlList = S3ImageUrl(cafeId, currentTab, imageList[currentTab]);
     setCurrenImageList(nextUrlList);
     setImageTabBarState((prev) =>
       prev.map((imageTab) =>
