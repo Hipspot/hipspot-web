@@ -31,6 +31,7 @@ function MapComp({ pointMarkerClickAction, clusterMarkerClickAction }: MapCompPr
   const mapRef = useMap();
 
   const { flyTo, savePrevPostion } = useCameraMove();
+
   const onMapLoad = ({ target: targetMap }: MapboxEvent) => addFeatureLayerByFilterId({ map: targetMap, allFeatures });
   const onRender = ({ target: targetMap }: MapboxEvent) => {
     const filterId = activeFilterIdRef.current;

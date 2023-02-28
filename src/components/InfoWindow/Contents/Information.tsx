@@ -1,20 +1,25 @@
 import { ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets/index';
 import styled from '@emotion/styled';
+import { OpeningHours } from '@libs/types/cafe';
 import Skeleton from 'react-loading-skeleton';
 
 interface InformationProps {
-  businessDay: string[];
-  businessTime: string | null;
+  openingHours: OpeningHours;
   address: string;
   contactNum: string;
 }
 
-function Information({ businessDay, businessTime, address, contactNum }: InformationProps) {
+function Information({ openingHours, address, contactNum }: InformationProps) {
+  const timeBlockList = [
+    ...openingHours.timeBlock.map(({ day, time }) => `${day.join(`, `)} ${time}`),
+    openingHours.annotation,
+  ];
+
   const InfoList = [
     {
       title: '영업시간',
       icon: <ClockIcon />,
-      description: `${businessDay.join(', ')} ${businessTime || ''}`,
+      description: timeBlockList,
     },
     { title: address, icon: <MarkerIcon /> },
     { title: contactNum, icon: <PhoneIcon /> },
@@ -27,7 +32,7 @@ function Information({ businessDay, businessTime, address, contactNum }: Informa
           <Contents>
             <Title>{title}</Title>
 
-            {description && <Description>{description}</Description>}
+            {description && description.map((str, j) => <Description key={`time_${+j}`}>{str}</Description>)}
           </Contents>
           {title === address && <CopyIcon />}
         </Wrapper>

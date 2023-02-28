@@ -1,4 +1,5 @@
 import PointMarker from '@components/Marker/pointMarker';
+import { S3_URL } from '@constants/s3Url';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 import { renderEmotionElementToHtml } from '@libs/utils/renderEmotionElementToHtml';
 import mapboxgl, { Map, Marker } from 'mapbox-gl';
@@ -21,20 +22,20 @@ export const updatePointMarkers = ({
   uniquePointIds,
 }: UpdatePointMarkersParam) => {
   pointFeaturesOnScreen.forEach((feature) => {
-    const { id } = feature.properties;
-    if (Object.hasOwn(pointMarkerList, id)) return;
+    const { cafeId, thumbNail } = feature.properties;
+    if (Object.hasOwn(pointMarkerList, cafeId)) return;
     try {
       const marker = renderEmotionElementToHtml({
         elem: PointMarker({
           handleClickPointMarker,
           feature,
           activeFilterId: filterId,
-          image: 'https://hipspot.s3.ap-northeast-2.amazonaws.com/store/0.jpg',
-          id,
+          image: `${S3_URL}/${cafeId}/store/${thumbNail}`,
+          id: cafeId,
         }),
         cssDataKey: 'marker',
       });
-      pointMarkerList[id] = new mapboxgl.Marker(marker, { anchor: 'bottom' })
+      pointMarkerList[cafeId] = new mapboxgl.Marker(marker, { anchor: 'bottom' })
         .setLngLat(feature.geometry.coordinates)
         .addTo(map);
     } catch (e) {
@@ -46,7 +47,6 @@ export const updatePointMarkers = ({
   // remove points markers
   Object.entries(pointMarkerList).forEach((markerEntry) => {
     const [id, marker] = markerEntry as [string, Marker];
-
     if (uniquePointIds.has(Number(id))) return;
     marker.remove();
     delete pointMarkerList[id];
