@@ -2,12 +2,12 @@ import styled from '@emotion/styled';
 import { FilterId } from '@libs/types/filter';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 
-export type PointMarkerProps = {
+export type ReasonableMarkerProps = {
   feature: CustomGeoJSONFeatures;
   handleClickPointMarker: (id: number) => void;
 };
 
-export default function PointMarker({ handleClickPointMarker, feature }: PointMarkerProps) {
+export default function PointMarker({ handleClickPointMarker, feature }: ReasonableMarkerProps) {
   const { cafeId, cafeName, filterList, reasonablePrice } = feature.properties;
 
   return (
