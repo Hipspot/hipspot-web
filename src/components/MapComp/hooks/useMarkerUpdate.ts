@@ -40,7 +40,7 @@ function useMarkerUpdate() {
         if (filterId === 2) {
           const marker = renderEmotionElementToHtml({
             elem: ReasonableMarker({
-              handleClickPointMarker: pointMarkerClickAction(filterId),
+              handleClickPointMarker: pointMarkerClickAction,
               feature,
             }),
             cssDataKey: 'marker',
@@ -56,7 +56,7 @@ function useMarkerUpdate() {
         if (franchise === undefined) {
           const marker = renderEmotionElementToHtml({
             elem: PointMarker({
-              handleClickPointMarker: pointMarkerClickAction(filterId),
+              handleClickPointMarker: pointMarkerClickAction,
               feature,
               image: `${S3_URL}/${cafeId}/store/${thumbNail}`,
             }),
@@ -71,7 +71,7 @@ function useMarkerUpdate() {
 
         const marker = renderEmotionElementToHtml({
           elem: FranchiseMarker({
-            handleClickPointMarker: pointMarkerClickAction(filterId),
+            handleClickPointMarker: pointMarkerClickAction,
             feature,
             franchise,
           }),
