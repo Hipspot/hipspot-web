@@ -1,3 +1,4 @@
+import { S3_URL } from '@constants/s3Url';
 import styled from '@emotion/styled';
 import { clusterListAtom, openClusterListAtom } from '@states/clusterList';
 import { useCallback, useEffect, useRef } from 'react';
@@ -29,9 +30,9 @@ export default function ClusterList() {
       <ShadowFrame>
         <ItemList.Wrapper>
           {clusterList.map((cluster) => (
-            <ItemList.Item key={cluster.id}>
-              <ItemList.ItemImg src={cluster.image} alt={cluster.placeName} />
-              <ItemList.ItemName>{cluster.placeName}</ItemList.ItemName>
+            <ItemList.Item key={cluster.cafeId}>
+              <ItemList.ItemImg src={`${S3_URL}/${cluster.cafeId}/store/${cluster.thumbNail}`} alt={cluster.cafeName} />
+              <ItemList.ItemName>{cluster.cafeName}</ItemList.ItemName>
             </ItemList.Item>
           ))}
         </ItemList.Wrapper>

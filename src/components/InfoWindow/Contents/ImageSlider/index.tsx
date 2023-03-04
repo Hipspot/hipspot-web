@@ -43,6 +43,7 @@ function ImageSlider({ wrapperId, imageList }: SlideProps) {
     index: 0,
     imageListLength: imageList.length,
   });
+
   const { max, min } = imageSliderWidthTween;
 
   const onMouseDownCapture = handleMouseDown({ imageSliderRef });

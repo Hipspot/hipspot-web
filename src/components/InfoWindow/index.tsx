@@ -12,18 +12,21 @@ import {
   CSSVAR_IMAGE_SLIDER_WIDTH,
   CSSVAR_IMAGE_TRANSLATE,
 } from '@constants/cssVar';
+import { CafeInfo } from '@libs/types/cafe';
 import * as MapButtonList from './Contents/MapButtonList';
-import TabBar from './Contents/TabBar';
 import Title, { TitleSkeleton } from './Contents/Title';
 import Information, { InformationSkeleton } from './Contents/Information';
 import PopUpWindow from './Contents/PopUpWindow';
 import BlurFrame from './Contents/BlurFrame';
-import ImageSlider, { CustomImageSliderSkeleton } from './Contents/ImageSlider';
+import { CustomImageSliderSkeleton } from './Contents/ImageSlider';
+import ImageListTab from './Contents/ImageListTab';
 
 export default function InfoWindow() {
   const tabState = useRecoilValue(tabStateAtom);
   const activatedCafeId = useRecoilValue(activatedCafeIdAtom);
-  const { state, contents } = useRecoilValueLoadable(cafeInfoQuery(activatedCafeId));
+  const lodable = useRecoilValueLoadable(cafeInfoQuery(activatedCafeId));
+  const { state } = lodable;
+  const contents = lodable.contents as CafeInfo;
 
   useEffect(() => {
     window.addEventListener('resize', (e) => {
@@ -46,21 +49,19 @@ export default function InfoWindow() {
         <TopSection>
           <TitleWrapper>
             <MakeLodableSuspense lodableState={state} loading={<TitleSkeleton />}>
-              <Title placeName={contents.placeName} />
+              <Title placeName={contents.cafeName} />
             </MakeLodableSuspense>
           </TitleWrapper>
           <ImageSliderWrapper id={DOMID_IMAGE_SLIDER}>
             <MakeLodableSuspense lodableState={state} loading={<CustomImageSliderSkeleton />}>
-              <ImageSlider imageList={contents.imageList} wrapperId={DOMID_IMAGE_SLIDER} />
+              <ImageListTab cafeId={contents.cafeId} imageList={contents.imageList} wrapperId={DOMID_IMAGE_SLIDER} />
             </MakeLodableSuspense>
           </ImageSliderWrapper>
-          <TabBar isSelected isBookmarked={state === 'hasValue' ? contents.isBookmarked : null} />
         </TopSection>
         <Section>
           <MakeLodableSuspense lodableState={state} loading={<InformationSkeleton />}>
             <Information
-              businessDay={contents.businessDay}
-              businessTime={contents.businessTime}
+              openingHours={contents.openingHours}
               contactNum={contents.contactNum}
               address={contents.address}
             />

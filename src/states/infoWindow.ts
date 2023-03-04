@@ -17,6 +17,11 @@ export const activatedCafeIdAtom = atom<number | null>({
   default: null,
 });
 
+export const selectedImageTabAtom = atom({
+  key: 'atom / selectedImage',
+  default: null,
+});
+
 export const cafeInfoQuery = selectorFamily({
   key: 'selector / infoWindowQuery',
   get: (id: number | null) => () => id ? getCafeInfo(id) : null,
