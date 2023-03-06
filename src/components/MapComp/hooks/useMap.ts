@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 export const mapConfig: MapboxOptions = {
   container: 'map',
   style: 'mapbox://styles/mapbox/streets-v11',
-  center: [127.0582071, 37.5447481],
+  center: [127.0770389, 37.6257614],
   zoom: 17,
   maxZoom: 18,
   minZoom: 13,
   maxBounds: [
-    [127.03, 37.53],
-    [127.07, 37.56],
+    [127.05, 37.59],
+    [127.09, 37.65],
   ],
   projection: {
     name: 'lambertConformalConic',

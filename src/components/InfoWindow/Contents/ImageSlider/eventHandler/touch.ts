@@ -22,7 +22,6 @@ export const handleTouchStart: (props: HandleImageSliderStartProps) => TouchEven
 export const handleTouchMove: (props: HandleImageSlideMoveProps) => TouchEventHandler<HTMLElement> =
   ({ imageSliderRef }) =>
   (e) => {
-    e.preventDefault();
     if (imageSliderRef.current && imageSliderRef.current.onHandling) {
       const { left: prevLeft, x } = imageSliderRef.current;
       const move = e.touches[0].clientX - x;

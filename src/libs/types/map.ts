@@ -1,11 +1,13 @@
 import { LngLatLike, Marker } from 'mapbox-gl';
 import { CafeInfo } from './cafe';
 
-interface CustomGeoJSONProperties extends Pick<CafeInfo, 'id' | 'placeName' | 'instaId'> {
+export interface CustomGeoJSONProperties extends Pick<CafeInfo, 'cafeId' | 'cafeName'> {
   filterList: number[];
+  resonablePrice: number;
+  thumbNail: string;
 }
 
-interface GeoJSONPointType {
+export interface GeoJSONPointType {
   type: 'Point';
   coordinates: LngLatLike;
 }
@@ -16,10 +18,11 @@ interface GeoJSONPointType {
  * @example
  * {
   properties: {
-    instaId: "@cafeknotted",
-    id: 10,
-    placeName: "카페 노티드 성수",
+    thumbNail:`https://hipspot.s3.ap-northeast-2.amazonaws.com/1/store/0.jpg`
+    resonablePrice:1600,
     filterList: [4, 3]
+    cafeId:1,
+    cafeName:'상상과자점';
   },
   geometry: {
     type: "Point",

@@ -1,5 +1,5 @@
 import { FilterId } from '@libs/types/filter';
-import { MarkerRenderProps } from '@libs/types/marker';
+import { CustomGeoJSONProperties } from '@libs/types/map';
 import { atom } from 'recoil';
 
 export const openClusterListAtom = atom<boolean>({
@@ -7,7 +7,7 @@ export const openClusterListAtom = atom<boolean>({
   default: false,
 });
 
-export const clusterListAtom = atom<MarkerRenderProps[]>({
+export const clusterListAtom = atom<CustomGeoJSONProperties[]>({
   key: 'clusterList',
   default: [],
 });

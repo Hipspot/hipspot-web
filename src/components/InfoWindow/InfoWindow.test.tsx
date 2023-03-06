@@ -1,10 +1,14 @@
 import { DOMID_POP_UP_WINDOW } from '@constants/DOM';
+import axios from 'axios';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import { TabState } from '@libs/types/infowindow';
 import { fireEvent, RecoilObserver, render, screen, waitFor } from '@libs/utils/testUtils';
 import { activatedCafeIdAtom, tabStateAtom } from '@states/infoWindow';
 import { RecoilRoot, SetRecoilState } from 'recoil';
+import { cafeData } from '../../mocks/domain/cafe/data';
 import InfoWindow from '.';
+
+jest.mock('axios');
 
 describe('인포 윈도우는', () => {
   const initializeState = ({ set }: { set: SetRecoilState }) => {
@@ -20,6 +24,10 @@ describe('인포 윈도우는', () => {
 
   it('X 아이콘을 누르면 썸네일 상태가 된다.', async () => {
     const onChange = jest.fn();
+    const mockedAxios = axios as jest.Mocked<typeof axios>;
+    axios.get = jest.fn();
+    mockedAxios.get.mockResolvedValue({ data: cafeData[0] });
+
     render(
       <RecoilRoot initializeState={initializeState}>
         <RecoilObserver node={tabStateAtom} onChange={onChange} />
