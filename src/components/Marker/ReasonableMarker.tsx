@@ -7,7 +7,7 @@ export type ReasonableMarkerProps = {
   handleClickPointMarker: (id: number) => void;
 };
 
-export default function PointMarker({ handleClickPointMarker, feature }: ReasonableMarkerProps) {
+export default function ReasonableMarker({ handleClickPointMarker, feature }: ReasonableMarkerProps) {
   const { cafeId, cafeName, filterList, reasonablePrice } = feature.properties;
 
   return (
