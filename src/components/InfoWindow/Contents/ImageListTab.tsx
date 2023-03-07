@@ -1,10 +1,13 @@
 import { S3_URL } from '@constants/s3Url';
 import styled from '@emotion/styled';
+import { CafeInfo } from '@libs/types/cafe';
 import { ImageList, ImageTabBarState, ImageTabKey } from '@libs/types/imageTabList';
 import { activatedCafeIdAtom } from '@states/infoWindow';
 import { useEffect, useState } from 'react';
+import { BookmarkFilledIcon, BookmarkIcon } from '@assets/index';
 import { useRecoilValue } from 'recoil';
 import ImageSlider from './ImageSlider';
+import { toast } from 'react-hot-toast';
 
 /**
  * @descripton ImageTabKey로 Tab Name을 얻을 수 있는 객체
@@ -33,9 +36,10 @@ interface ImageListTabProps {
   cafeId: number;
   imageList: ImageList;
   wrapperId: string;
+  isBookmarked: CafeInfo['isBookmarked'];
 }
 
-function ImageListTab({ cafeId, imageList, wrapperId }: ImageListTabProps) {
+function ImageListTab({ cafeId, imageList, wrapperId, isBookmarked }: ImageListTabProps) {
   const [currentImageList, setCurrenImageList] = useState<string[]>(S3ImageUrl(cafeId, 'store', imageList.store));
   const [imageTabBarState, setImageTabBarState] = useState<ImageTabBarState>(initTabBar(imageList));
   const activeCafeId = useRecoilValue(activatedCafeIdAtom);
@@ -49,6 +53,17 @@ function ImageListTab({ cafeId, imageList, wrapperId }: ImageListTabProps) {
       )
     );
   };
+
+  const onBookmarkClick = () => {
+    toast.success(isBookmarked === true ? '북마크가 해제되었습니다.' : '북마크가 추가되었습니다.');
+  };
+
+  const icon =
+    isBookmarked === true ? (
+      <BookmarkFilledIcon onClick={onBookmarkClick} />
+    ) : isBookmarked === false ? (
+      <BookmarkIcon onClick={onBookmarkClick} />
+    ) : null;
 
   useEffect(() => {
     if (!activeCafeId) return;
@@ -65,6 +80,7 @@ function ImageListTab({ cafeId, imageList, wrapperId }: ImageListTabProps) {
             {name}
           </Tab>
         ))}
+        <IconButton>{icon}</IconButton>
       </TabBarWrapper>
     </Wrapper>
   );
@@ -103,4 +119,8 @@ const Tab = styled.div<{ isSelected?: boolean }>`
     color: black;
     filter: none;
   `}
+`;
+
+const IconButton = styled.div`
+  margin-left: auto;
 `;

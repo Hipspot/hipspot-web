@@ -29,6 +29,7 @@
     "react/react-in-jsx-scope": "off",
     "no-nested-ternary": "off",
     "consistent-return": "off",
+    "import/order": "off",
     "react/no-unknown-property": [
       "error",
       {
