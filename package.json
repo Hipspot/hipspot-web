@@ -99,7 +99,8 @@
       "^@states$": "<rootDir>/src/states",
       "^@states/(.*)$": "<rootDir>/src/states/$1",
       "^@mocks$": "<rootDir>/src/mocks",
-      "^@mocks/(.*)$": "<rootDir>/src/mocks/$1"
+      "^@mocks/(.*)$": "<rootDir>/src/mocks/$1",
+      "^worker-loader!": "<rootDir>/src/mocks/workerMock.ts"
     },
     "setupFilesAfterEnv": [
       "<rootDir>/jest.setup.js"
