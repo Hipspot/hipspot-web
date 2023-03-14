@@ -1,6 +1,11 @@
 import mapboxgl, { Map, MapboxOptions } from 'mapbox-gl';
 import { useEffect, useState } from 'react';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires
+mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
+
 export const mapConfig: MapboxOptions = {
   container: 'map',
   style: 'mapbox://styles/mapbox/streets-v11',
