@@ -88,11 +88,7 @@ const CafeName = styled.div`
   position: absolute;
   color: #181818;
 
-  font-family: 'Pretendard';
-  font-style: normal;
   font-weight: 600;
-  font-size: 16px;
-  line-height: 24px;
 
   white-space: nowrap;
   text-shadow: 0 0.5px white, 0.5px 0px white, -0.5px 0px white, 0px -0.5px white, 1px 1px 1px 77;

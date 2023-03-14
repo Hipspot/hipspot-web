@@ -1,5 +1,7 @@
 import { ClockIcon, CopyIcon, MarkerIcon, PhoneIcon } from '@assets/index';
 import styled from '@emotion/styled';
+import { copyToClipboard } from '@libs/utils/cafeInfo';
+import { toast } from 'react-hot-toast';
 import { OpeningHours } from '@libs/types/cafe';
 import Skeleton from 'react-loading-skeleton';
 
@@ -24,6 +26,11 @@ function Information({ openingHours, address, contactNum }: InformationProps) {
     { title: address, icon: <MarkerIcon /> },
     { title: contactNum, icon: <PhoneIcon /> },
   ];
+
+  const handleCopyText = (message: string, text: string) => {
+    toast.success(message);
+    copyToClipboard(text);
+  };
   return (
     <>
       {InfoList.map(({ title, icon, description }, i) => (
@@ -34,7 +41,7 @@ function Information({ openingHours, address, contactNum }: InformationProps) {
 
             {description && description.map((str, j) => <Description key={`time_${+j}`}>{str}</Description>)}
           </Contents>
-          {title === address && <CopyIcon />}
+          {title === address && <CopyIcon onClick={() => handleCopyText('주소가 복사되었습니다.', address)} />}
         </Wrapper>
       ))}
     </>
@@ -85,7 +92,10 @@ export const Wrapper = styled.div`
   border-bottom: solid #efefef 1px;
 `;
 
-const Icon = styled.div``;
+export const Icon = styled.div`
+  width: 24px;
+  height: 24px;
+`;
 
 const Contents = styled.div`
   flex: 1;
@@ -93,16 +103,13 @@ const Contents = styled.div`
   flex-direction: column;
   gap: 8px;
 `;
-const Title = styled.h2`
-  font-family: 'Pretendard';
-  font-weight: 600;
+
+export const Title = styled.h2`
   font-size: 16px;
-  line-height: 24px;
+  font-weight: 600;
   color: #181818;
 `;
 
-const Description = styled.div`
-  font-family: 'Pretendard';
-  line-height: 24px;
+export const Description = styled.div`
   color: #868686;
 `;

@@ -8,6 +8,9 @@ import useFlutterMessageHandler from '@libs/webview/useFlutterMessageHandler';
 import { Toaster } from 'react-hot-toast';
 import FindMyLocationButton from '@components/Button/FindMyLocationButton';
 import { FLUTTER_CHANNEL } from '@constants/jsChannelName';
+import { Global, ThemeProvider } from '@emotion/react';
+import { light } from '@libs/styles/theme';
+import { globalStyle } from '@libs/styles/GlobalStyle';
 
 function App() {
   const flutterMessageHandler = useFlutterMessageHandler();
@@ -15,30 +18,35 @@ function App() {
     window[FLUTTER_CHANNEL] = flutterMessageHandler;
   });
 
+  const theme = light;
+
   return (
-    <Wrapper>
-      <MapCompContainer />
-      <Filtering />
-      <FindMyLocationButton />
-      <ClusterList />
-      <InfoWindow />
-      <Toaster
-        position="bottom-center"
-        containerClassName="toaster"
-        toastOptions={{
-          success: {
-            style: {
-              width: '100%',
-              background: 'rgba(64, 64, 64, 0.9)',
-              opacity: '0.9',
-              backdropFilter: 'blur(30px)',
-              fontWeight: '600',
-              color: '#FFFFFF',
+    <ThemeProvider theme={theme}>
+      <Global styles={globalStyle} />
+      <Wrapper>
+        <MapCompContainer />
+        <Filtering />
+        <FindMyLocationButton />
+        <ClusterList />
+        <InfoWindow />
+        <Toaster
+          position="bottom-center"
+          containerClassName="toaster"
+          toastOptions={{
+            success: {
+              style: {
+                width: '100%',
+                background: 'rgba(64, 64, 64, 0.9)',
+                opacity: '0.9',
+                backdropFilter: 'blur(30px)',
+                fontWeight: '600',
+                color: theme.colors.white,
+              },
             },
-          },
-        }}
-      />
-    </Wrapper>
+          }}
+        />
+      </Wrapper>
+    </ThemeProvider>
   );
 }
 
