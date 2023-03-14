@@ -1,8 +1,8 @@
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
-import { activeFilterIdAtom, clusterListAtom, openClusterListAtom } from '@states/clusterList';
+import { clusterListAtom, openClusterListAtom } from '@states/clusterList';
 import { activatedCafeIdAtom, tabStateAtom } from '@states/infoWindow';
+import { geoJsonAtom } from '@states/map';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import getFeatureById from '../utils/getFeatureById';
 import useCameraMove from './useCameraMove';
 import useMapRef from './useMap';
 
@@ -10,7 +10,7 @@ import useMapRef from './useMap';
  * 마커 클릭 액션 코드 hooks
  */
 function useMarkerClickAction() {
-  const filterId = useRecoilValue(activeFilterIdAtom);
+  const allFeatures = useRecoilValue(geoJsonAtom);
   const setActivatedCafeId = useSetRecoilState(activatedCafeIdAtom);
   const setTabState = useSetRecoilState(tabStateAtom);
   const setOpenClusterList = useSetRecoilState(openClusterListAtom);
@@ -27,7 +27,7 @@ function useMarkerClickAction() {
 
     const map = mapRef.current;
     if (!map) return;
-    const feature = getFeatureById({ map, sourceId: `cafeList/${filterId}`, cafeId });
+    const feature = allFeatures.find((aFeature) => aFeature.properties?.cafeId === cafeId);
     if (feature) tiltFlyTo(feature?.geometry.coordinates, { markerClicked: true });
   };
 

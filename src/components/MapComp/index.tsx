@@ -30,6 +30,7 @@ function MapComp() {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+    if (!allFeatures) return;
 
     removeAllMarkers();
     updateMarkers();
@@ -47,6 +48,7 @@ function MapComp() {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+    if (!allFeatures) return;
     DOMTargetList[DOMID_MAP_COMPONENT] = document.getElementById(DOMID_MAP_COMPONENT);
     const mapElem = DOMTargetList[DOMID_MAP_COMPONENT];
     mapElem?.addEventListener(EVENT_FIND_MY_LOCATION, (e: FindMyLocationEvent) => {
