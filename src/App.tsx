@@ -8,6 +8,7 @@ import useFlutterMessageHandler from '@libs/webview/useFlutterMessageHandler';
 import { Toaster } from 'react-hot-toast';
 import FindMyLocationButton from '@components/Button/FindMyLocationButton';
 import { FLUTTER_CHANNEL } from '@constants/jsChannelName';
+import RandomButton from '@components/Button/RandomButton';
 
 function App() {
   const flutterMessageHandler = useFlutterMessageHandler();
@@ -20,6 +21,7 @@ function App() {
       <MapCompContainer />
       <Filtering />
       <FindMyLocationButton />
+      <RandomButton/>
       <ClusterList />
       <InfoWindow />
       <Toaster
