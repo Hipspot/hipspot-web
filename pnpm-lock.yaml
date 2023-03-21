@@ -49,6 +49,7 @@ specifiers:
   react-scripts: 5.0.1
   recoil: ^0.7.6
   typescript: ^4.9.4
+  worker-loader: ^3.0.8
 
 dependencies:
   '@emotion/cache': 11.10.5
@@ -71,6 +72,7 @@ dependencies:
   react-scripts: 5.0.1_cl6c6lk46klsk2subiyfxwnfya
   recoil: 0.7.6_biqbaboplfbrettd7655fr4n2y
   typescript: 4.9.4
+  worker-loader: 3.0.8
 
 devDependencies:
   '@babel/preset-env': 7.20.2
@@ -10854,6 +10856,16 @@ packages:
     dependencies:
       '@types/trusted-types': 2.0.2
       workbox-core: 6.5.4
+
+  /worker-loader/3.0.8:
+    resolution: {integrity: sha512-XQyQkIFeRVC7f7uRhFdNMe/iJOdO6zxAaR3EWbDp45v3mDhrTi+++oswKNxShUNjPC/1xUp5DB29YKLhFo129g==}
+    engines: {node: '>= 10.13.0'}
+    peerDependencies:
+      webpack: ^4.0.0 || ^5.0.0
+    dependencies:
+      loader-utils: 2.0.4
+      schema-utils: 3.1.1
+    dev: false
 
   /wrap-ansi/7.0.0:
     resolution: {integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==}

@@ -33,9 +33,7 @@ const ItemImg = styled.img`
 `;
 
 const ItemName = styled.p`
-  font-family: 'Pretendard';
   font-weight: 600;
-  line-height: 24px;
   text-align: center;
   color: #181818;
 `;

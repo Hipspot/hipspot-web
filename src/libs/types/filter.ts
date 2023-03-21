@@ -1,5 +1,3 @@
-import { TintColor } from './style';
-
 /** 지도에서 마커 정보를 필터링 하는 기준 */
 export enum FilterId {
   /** 힙 스팟 ⭐️ */
@@ -31,9 +29,9 @@ export type FilterData = {
    */
   iconDisabled: string;
   /** 필터의 색상
-   * @example TintColor.pink
+   * @example colors.tintColor.pink
    */
-  color: TintColor;
+  color: string;
 };
 
 /** 필터 정보의 리스트 */

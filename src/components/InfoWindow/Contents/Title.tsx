@@ -51,9 +51,7 @@ export const TitleSkeletonWrapper = styled.div`
   padding: 8px 0px;
 `;
 
-const Name = styled.h1`
-  font-family: 'Pretendard';
-  font-style: normal;
+export const Name = styled.h1`
   font-weight: 600;
   font-size: 20px;
   color: #0d0d0d;
