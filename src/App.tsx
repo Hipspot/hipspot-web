@@ -28,6 +28,7 @@ function App() {
         <MapCompContainer />
         <Filtering />
         <FindMyLocationButton />
+        <RandomButton />
         <ClusterList />
         <InfoWindow />
         <Toaster
