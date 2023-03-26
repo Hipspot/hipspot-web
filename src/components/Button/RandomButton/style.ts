@@ -7,7 +7,7 @@ export const RandomButton = styled.div`
   justify-content: center;
 `;
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ top: number }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,8 +18,9 @@ export const Wrapper = styled.div`
   border: 2px solid #fafafa;
   border-radius: 100%;
   position: fixed;
-  right: 10px;
-  bottom: 10px;
+  top: ${(props) => props.top - 50}px;
+  right: 16px;
+  z-index: 1001;
 
   background: #fafafa;
   box-shadow: inset 0px 0px 16px rgba(0, 0, 0, 0.2);

@@ -13,6 +13,9 @@ export const Layout = styled.div<{ tabState: TabState }>`
   top: calc(100%);
   width: 100vw;
   z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 `;
 
 export const Wrapper = styled.div`
