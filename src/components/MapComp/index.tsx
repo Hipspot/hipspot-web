@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import { geoJsonAtom } from '@states/map';
@@ -19,21 +19,11 @@ function MapComp() {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const allFeatures = useRecoilValue(geoJsonAtom);
   const mapRef = useMap();
-  const throttle = useRef(false);
-
   const { flyTo, savePrevPostion } = useCameraMove();
   const { updateMarkers, removeAllMarkers } = useMarkerUpdate();
-  const onMapLoad = ({ target: targetMap }: MapboxEvent) => addFeatureLayerByFilterId({ map: targetMap, allFeatures });
-  // 마커업데이트에 쓰로틀링 걸어도 마커여러개 삭제되거나 생성되면 렉걸림
-  const onRender = () => {
-    if (throttle.current) return;
-    setTimeout(async () => {
-      updateMarkers();
-      throttle.current = false;
-      console.log('j');
-    }, 200);
-    throttle.current = true;
-  };
+  const onMapLoad = ({ target: targetMap }: MapboxEvent) =>
+    addFeatureLayerByFilterId({ map: targetMap, allFeatures, activeFilterId });
+  const onRender = () => updateMarkers();
   const onMoveEnd = ({ target: targetMap }: MapboxEvent) =>
     savePrevPostion(targetMap.getCenter(), { zoom: targetMap.getZoom() });
 
@@ -44,6 +34,13 @@ function MapComp() {
 
     removeAllMarkers();
     updateMarkers();
+
+    if (map.getLayer('cafeList')) {
+      map.removeLayer('cafeList');
+      map.removeSource('cafeList');
+      addFeatureLayerByFilterId({ map, allFeatures, activeFilterId });
+    }
+
     map.on('load', onMapLoad);
     map.on('render', onRender);
     map.on('moveend', onMoveEnd);
