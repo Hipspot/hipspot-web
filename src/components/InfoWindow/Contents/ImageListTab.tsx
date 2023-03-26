@@ -2,7 +2,7 @@ import { S3_URL } from '@constants/s3Url';
 import styled from '@emotion/styled';
 import { CafeInfo } from '@libs/types/cafe';
 import { ImageList, ImageTabBarState, ImageTabKey } from '@libs/types/imageTabList';
-import { activatedCafeIdAtom } from '@states/infoWindow';
+import { activatedCafeIdAtom, tabStateAtom } from '@states/infoWindow';
 import { useEffect, useState } from 'react';
 import { BookmarkFilledIcon, BookmarkIcon } from '@assets/index';
 import { useRecoilValue } from 'recoil';
@@ -43,6 +43,7 @@ function ImageListTab({ cafeId, imageList, wrapperId, isBookmarked }: ImageListT
   const [currentImageList, setCurrenImageList] = useState<string[]>(S3ImageUrl(cafeId, 'store', imageList.store));
   const [imageTabBarState, setImageTabBarState] = useState<ImageTabBarState>(initTabBar(imageList));
   const activeCafeId = useRecoilValue(activatedCafeIdAtom);
+  const tabState = useRecoilValue(tabStateAtom);
 
   const handleTabChange = (currentTab: ImageTabKey) => {
     const nextUrlList = S3ImageUrl(cafeId, currentTab, imageList[currentTab]);
@@ -73,7 +74,15 @@ function ImageListTab({ cafeId, imageList, wrapperId, isBookmarked }: ImageListT
 
   return (
     <Wrapper>
-      <ImageSlider imageList={currentImageList} wrapperId={wrapperId} />
+      {currentImageList.length !== 0 ? (
+        <ImageSlider imageList={currentImageList} wrapperId={wrapperId} />
+      ) : (
+        <BlankImage
+          src="https://user-images.githubusercontent.com/108210492/227778028-c17e8414-01f8-4156-a25b-fc9e99b65d79.png"
+          alt="이미지가 없어요"
+          isFull={tabState.popUpState === 'full'}
+        />
+      )}
       <TabBarWrapper>
         {imageTabBarState.map(({ isSelected, key, name }) => (
           <Tab key={`imageTabBar_${key}`} isSelected={isSelected} onClick={() => handleTabChange(key)}>
@@ -123,4 +132,10 @@ const Tab = styled.div<{ isSelected?: boolean }>`
 
 const IconButton = styled.div`
   margin-left: auto;
+`;
+
+const BlankImage = styled.img<{ isFull: boolean }>`
+  height: ${(props) => (props.isFull ? '100%' : '166px')};
+  width: 100%;
+  object-fit: cover;
 `;
