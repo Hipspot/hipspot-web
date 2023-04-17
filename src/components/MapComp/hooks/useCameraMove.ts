@@ -71,7 +71,7 @@ export default useCameraMove;
 
 const tiltNextState = ({ coordinate }: { coordinate: LngLatLike }): FlyToOptions => {
   const RAD = 15;
-  const DURATION = 1000;
+  const DURATION = 500;
   const PITCH = 50;
 
   return {
