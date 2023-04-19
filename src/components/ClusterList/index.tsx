@@ -1,3 +1,4 @@
+import useMarkerClickAction from '@components/MapComp/hooks/useMarkerClickAction';
 import { S3_URL } from '@constants/s3Url';
 import styled from '@emotion/styled';
 import { clusterListAtom, openClusterListAtom } from '@states/clusterList';
@@ -10,6 +11,8 @@ export default function ClusterList() {
 
   const [open, setOpen] = useRecoilState(openClusterListAtom);
   const clusterList = useRecoilValue(clusterListAtom);
+
+  const { pointMarkerClickAction } = useMarkerClickAction();
 
   const handleCloseModal: EventListener = useCallback(
     (e) => {
@@ -30,7 +33,7 @@ export default function ClusterList() {
       <ShadowFrame>
         <ItemList.Wrapper>
           {clusterList.map((cluster) => (
-            <ItemList.Item key={cluster.cafeId}>
+            <ItemList.Item key={cluster.cafeId} onClick={() => pointMarkerClickAction(cluster.cafeId)}>
               <ItemList.ItemImg src={`${S3_URL}/${cluster.cafeId}/store/${cluster.thumbNail}`} alt={cluster.cafeName} />
               <ItemList.ItemName>{cluster.cafeName}</ItemList.ItemName>
             </ItemList.Item>

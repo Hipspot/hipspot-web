@@ -16,9 +16,8 @@ interface GetFeaturesOnScreenReturns {
 const getFeaturesOnScreen: (props: GetFeaturesOnScreenParams) => GetFeaturesOnScreenReturns = ({
   map,
   allFeatures,
-  filterId,
 }) => {
-  if (!map)
+  if (!map || !map.getSource('cafeList'))
     return {
       pointFeaturesOnScreen: [],
       clusterFeaturesOnScreen: [],
@@ -26,7 +25,7 @@ const getFeaturesOnScreen: (props: GetFeaturesOnScreenParams) => GetFeaturesOnSc
       uniqueClusterIds: new Set<number>(),
     };
 
-  const mapboxFeaturesOnScreen = map.querySourceFeatures(`cafeList/${filterId}`);
+  const mapboxFeaturesOnScreen = map.querySourceFeatures('cafeList');
   const clusterFeaturesOnScreen: MapboxGeoJSONFeature[] = [];
   const uniqueClusterIds = new Set<number>();
   const uniquePointIds = new Set<number>();

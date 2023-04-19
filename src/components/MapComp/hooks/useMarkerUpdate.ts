@@ -110,7 +110,7 @@ function useMarkerUpdate() {
           count,
           filterId,
           handleClickClusterMarker: (id: number) => {
-            const source = map.getSource(`cafeList/${filterId}`) as GeoJSONSource;
+            const source = map.getSource('cafeList') as GeoJSONSource;
 
             source.getClusterLeaves(id, 200, 0, (err, leaves) => {
               const properties = leaves.map((leaf) => ({
