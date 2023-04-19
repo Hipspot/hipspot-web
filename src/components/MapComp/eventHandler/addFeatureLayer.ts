@@ -7,7 +7,7 @@ interface HandleMapLoadProps {
   activeFilterId: number;
 }
 
-function addFeatureLayerByFilterId({ map, allFeatures, activeFilterId }: HandleMapLoadProps) {
+function addFeatureLayer({ map, allFeatures, activeFilterId }: HandleMapLoadProps) {
   const filteredFeatures: CustomGeoJSONFeatures[] = [];
 
   allFeatures.forEach((feature: CustomGeoJSONFeatures) => {
@@ -36,4 +36,4 @@ function addFeatureLayerByFilterId({ map, allFeatures, activeFilterId }: HandleM
     },
   });
 }
-export default addFeatureLayerByFilterId;
+export default addFeatureLayer;
