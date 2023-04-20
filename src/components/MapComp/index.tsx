@@ -8,7 +8,7 @@ import { FindMyLocationEvent } from '@libs/types/customEvents';
 import { EVENT_FIND_MY_LOCATION } from '@constants/event';
 import { DOMID_MAP_COMPONENT } from '@constants/DOM';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import addFeatureLayerByFilterId from './eventHandler/addFeatureLayerByFilterId';
+import addFeatureLayer from './eventHandler/addFeatureLayer';
 import drawPulsingDotMarker from './eventHandler/drawPulsingDotMarker';
 import { DOMTargetList } from '../../constants/DOM';
 import useCameraMove from './hooks/useCameraMove';
@@ -19,10 +19,10 @@ function MapComp() {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const allFeatures = useRecoilValue(geoJsonAtom);
   const mapRef = useMap();
-
   const { flyTo, savePrevPostion } = useCameraMove();
   const { updateMarkers, removeAllMarkers } = useMarkerUpdate();
-  const onMapLoad = ({ target: targetMap }: MapboxEvent) => addFeatureLayerByFilterId({ map: targetMap, allFeatures });
+  const onMapLoad = ({ target: targetMap }: MapboxEvent) =>
+    addFeatureLayer({ map: targetMap, allFeatures, activeFilterId });
   const onRender = () => updateMarkers();
   const onMoveEnd = ({ target: targetMap }: MapboxEvent) =>
     savePrevPostion(targetMap.getCenter(), { zoom: targetMap.getZoom() });
@@ -34,6 +34,13 @@ function MapComp() {
 
     removeAllMarkers();
     updateMarkers();
+
+    if (map.getLayer('cafeList')) {
+      map.removeLayer('cafeList');
+      map.removeSource('cafeList');
+      addFeatureLayer({ map, allFeatures, activeFilterId });
+    }
+
     map.on('load', onMapLoad);
     map.on('render', onRender);
     map.on('moveend', onMoveEnd);
