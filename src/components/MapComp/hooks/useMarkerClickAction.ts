@@ -19,7 +19,7 @@ function useMarkerClickAction() {
   const mapRef = useMapRef();
   const pointMarkerClickAction = (cafeId: number) => {
     if (allFeaturesLoadable.state === 'loading') return;
-    if (allFeaturesLoadable.state === 'hasError') throw allFeaturesLoadable.contents;
+    if (allFeaturesLoadable.state === 'hasError') return console.error('allFeaturesLoadable error');
     setActivatedCafeId(cafeId);
     setTabState((prev) => ({
       ...prev,
