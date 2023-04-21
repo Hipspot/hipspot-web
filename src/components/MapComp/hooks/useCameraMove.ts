@@ -14,7 +14,7 @@ export type CameraMoveFunctionType = (coordinate: LngLatLike, option?: CameraMov
 export type CameraMoveOptions = Omit<C, 'center'>; // 옵션에서는 좌표값 받아오지 않게 처리
 
 const defaultCameraState: CameraStateType = {
-  center: [127.0582071, 37.5447481],
+  center: [127.0770389, 37.6257614],
   pitch: 0,
   bearing: 0,
   markerClicked: false,
