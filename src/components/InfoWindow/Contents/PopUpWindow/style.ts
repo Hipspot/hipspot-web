@@ -21,7 +21,6 @@ export const Wrapper = styled.div`
   background-color: transparent;
   width: 100%;
   height: 100%;
-  /* padding: 40px 0px 120px 0px; */
   box-sizing: border-box;
   border-radius: 4px 4px 0px 0px;
   border: 1px solid;
