@@ -100,7 +100,7 @@ function CloseButton() {
       data-testid="close_button"
       onClick={(e) => {
         e.stopPropagation();
-        setTabState({ top: popUpHeights[PopUpHeightsType.bottom], onHandling: false, popUpState: 'thumbNail' });
+        setTabState({ top: popUpHeights[PopUpHeightsType.bottom], onHandling: false, popUpState: 'invisible' });
         flyToPrev();
       }}
     >

@@ -77,7 +77,7 @@ export default function InfoWindow() {
           </MapButtonList.List>
         </Section>
       </BlurFrame>
-      <PopUpWindow.CloseButton />
+      <PopUpWindow.CloseButton data-testid="close_button" />
     </PopUpWindow.Layout>
   ) : (
     <Loading data-testid="loading" />

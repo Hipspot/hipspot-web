@@ -1,6 +1,6 @@
 import { SetterOrUpdater } from 'recoil';
 
-export type PopUpWindowState = 'thumbNail' | 'half' | 'full';
+export type PopUpWindowState = 'invisible' | 'half' | 'full';
 
 export interface TabState {
   onHandling: boolean;

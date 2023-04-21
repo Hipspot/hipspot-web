@@ -61,7 +61,7 @@ export const handleMouseUp: (eventEndProps: HandleEventEndProps) => MouseEventHa
         endPointTabState.popUpState = 'half';
       } else {
         endPointTabState.top = popUpHeights[PopUpHeightsType.bottom];
-        endPointTabState.popUpState = 'thumbNail';
+        endPointTabState.popUpState = 'invisible';
         endCameraMove();
       }
 

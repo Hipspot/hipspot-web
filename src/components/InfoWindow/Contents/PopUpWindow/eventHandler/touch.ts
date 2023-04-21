@@ -60,7 +60,7 @@ export const handleTouchEnd: (props: HandleEventEndProps) => TouchEventHandler<H
         endPointTabState.popUpState = 'half';
       } else {
         endPointTabState.top = popUpHeights[PopUpHeightsType.bottom];
-        endPointTabState.popUpState = 'thumbNail';
+        endPointTabState.popUpState = 'invisible';
         endCameraMove();
       }
 
