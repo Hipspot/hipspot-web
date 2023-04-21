@@ -16,10 +16,10 @@ import { CafeInfo } from '@libs/types/cafe';
 import * as MapButtonList from './Contents/MapButtonList';
 import Title, { TitleSkeleton } from './Contents/Title';
 import Information, { InformationSkeleton } from './Contents/Information';
-import PopUpWindow from './Contents/PopUpWindow';
 import BlurFrame from './Contents/BlurFrame';
 import { CustomImageSliderSkeleton } from './Contents/ImageSlider';
 import ImageListTab from './Contents/ImageListTab';
+import PopUpWindow from './Contents/PopUpWindow';
 
 export default function InfoWindow() {
   const tabState = useRecoilValue(tabStateAtom);
@@ -44,7 +44,8 @@ export default function InfoWindow() {
   }, [contents]);
 
   return contents ? (
-    <PopUpWindow data-testid={DOMID_POP_UP_WINDOW} id={DOMID_POP_UP_WINDOW} available={!!contents} tabState={tabState}>
+    <PopUpWindow.Layout data-testid={DOMID_POP_UP_WINDOW} id={DOMID_POP_UP_WINDOW} tabState={tabState}>
+      <PopUpWindow.Handler available={!!contents} tabState={tabState} />
       <BlurFrame id={DOMID_BLURFRAME} tabState={tabState}>
         <TopSection>
           <TitleWrapper>
@@ -76,7 +77,8 @@ export default function InfoWindow() {
           </MapButtonList.List>
         </Section>
       </BlurFrame>
-    </PopUpWindow>
+      <PopUpWindow.CloseButton data-testid="close_button" />
+    </PopUpWindow.Layout>
   ) : (
     <Loading data-testid="loading" />
   );

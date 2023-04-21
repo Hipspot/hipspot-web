@@ -70,7 +70,7 @@ function ImageSlider({ wrapperId, imageList }: SlideProps) {
     const carousel = document.getElementById(DOMID_IMAGE_SLIDER) as HTMLDivElement;
     carousel.dispatchEvent(slideEvent);
 
-    if (tabState.popUpState === 'half' || tabState.popUpState === 'thumbNail') {
+    if (tabState.popUpState === 'half' || tabState.popUpState === 'invisible') {
       modifyImageSliderHeight({ height: imageSliderHeightTween.min });
       modifyImageSliderWidth({ width: imageSliderWidthTween.min });
     }
