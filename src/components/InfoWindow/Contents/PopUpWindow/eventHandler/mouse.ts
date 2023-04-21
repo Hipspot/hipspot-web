@@ -14,10 +14,10 @@ export const handleMouseDown: (eventStartProps: HandleEventStartProps) => MouseE
     if (!available) return;
 
     cancelAnimation(smoothLoopId);
-
     const target = e.target as HTMLDivElement;
     target.style.setProperty('padding', 'calc(var(--vh,1vh) * 100) 0');
     target.style.setProperty('transform', 'translateY(-50%)');
+    target.style.setProperty('z-index', '2');
 
     setTabState((prev: TabState) => ({ ...prev, onHandling: true }));
     const infoWindowElem = target.parentElement as HTMLDivElement;
@@ -29,7 +29,6 @@ export const handleMouseMove: (eventMoveProps: HandleEventMoveProps) => MouseEve
   ({ topCoordRef, tabState, modifyRef, available }) =>
   (e) => {
     const { onHandling } = tabState;
-
     if (onHandling && available) {
       const currentTop = e.clientY + modifyRef.current;
 
@@ -69,6 +68,7 @@ export const handleMouseUp: (eventEndProps: HandleEventEndProps) => MouseEventHa
 
       target.style.setProperty('padding', '0px');
       target.style.removeProperty('transform');
+      target.style.setProperty('z-index', '0');
 
       setTabState(endPointTabState);
     }

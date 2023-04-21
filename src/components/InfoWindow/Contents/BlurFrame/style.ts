@@ -5,7 +5,6 @@ import { PopUpWindowState } from '@libs/types/infowindow';
 export const Wrapper = styled.div<{ popUpState: PopUpWindowState }>`
   width: 100%;
   height: 100%;
-  padding-top: 30px;
 
   display: flex;
   flex-direction: column;

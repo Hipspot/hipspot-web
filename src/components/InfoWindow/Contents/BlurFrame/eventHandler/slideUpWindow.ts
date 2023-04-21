@@ -18,4 +18,9 @@ export const handleSlideUpWindowForBlurFrame =
     });
 
     interpolateBlur({ ratio });
+
+    if (e.currentTop === middleHeight) {
+      const target = e.target as HTMLDivElement;
+      target.style.removeProperty('backdrop-filter');
+    }
   };
