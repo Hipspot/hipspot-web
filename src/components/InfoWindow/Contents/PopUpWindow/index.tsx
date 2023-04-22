@@ -5,7 +5,9 @@ import { tabStateAtom } from '@states/infoWindow';
 import { HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps, TabState } from '@libs/types/infowindow';
 import useCameraMove from '@components/MapComp/hooks/useCameraMove';
 import { CancelIcon } from '@assets/index';
+import { CSSVAR_POP_UP_WINDOW_TOP } from '@constants/cssVar';
 import { PopUpHeightsType, popUpHeights } from '@constants/popUpHeights';
+import { DOMID_IMAGE_SLIDER, DOMTargetList, DOMID_BLURFRAME } from '@constants/DOM';
 import { handleMouseDown, handleMouseMove, handleMouseUp } from './eventHandler/mouse';
 import { handleTouchEnd, handleTouchMove, handleTouchStart } from './eventHandler/touch';
 import * as S from './style';
@@ -42,6 +44,13 @@ function Layout({ id, children, tabState }: PopUpWindowProps) {
     });
   }, [tabState]);
 
+  useEffect(() => {
+    const elem = document.getElementById(id);
+    if (elem !== null) {
+      elem.style.setProperty(CSSVAR_POP_UP_WINDOW_TOP, `${popUpHeights[PopUpHeightsType.bottom]}px`);
+    }
+  }, []);
+
   return (
     <S.Layout id={id} tabState={tabState}>
       <S.Wrapper>
@@ -60,6 +69,10 @@ function Handler({ available, tabState }: PopUpWindowHandlerProps) {
   const { flyToPrev } = useCameraMove();
   const modifyRef = useRef<number>(0);
   const topCoordRef = useRef<number>(window.innerHeight - 30);
+  const target = {
+    [DOMID_IMAGE_SLIDER]: DOMTargetList[DOMID_IMAGE_SLIDER]!,
+    [DOMID_BLURFRAME]: DOMTargetList[DOMID_BLURFRAME]!,
+  };
 
   const eventStartProp: HandleEventStartProps = {
     smoothLoopId,
@@ -67,7 +80,8 @@ function Handler({ available, tabState }: PopUpWindowHandlerProps) {
     available,
     setTabState,
   };
-  const eventMoveProp: HandleEventMoveProps = { tabState, modifyRef, topCoordRef, available };
+
+  const eventMoveProp: HandleEventMoveProps = { tabState, modifyRef, topCoordRef, available, target, smoothLoopId };
   const eventEndProp: HandleEventEndProps = { endCameraMove: flyToPrev, setTabState, tabState, topCoordRef };
 
   const onMouseDown = handleMouseDown(eventStartProp);
