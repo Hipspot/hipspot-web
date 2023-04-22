@@ -8,6 +8,7 @@ export const Layout = styled.div<{ tabState: TabState }>`
   :root {
     ${CSSVAR_POP_UP_WINDOW_TOP}:${popUpHeights[PopUpHeightsType.bottom]}
   }
+  top: 0;
   height: calc(100vh + 30px);
   position: fixed;
   min-width: 300px;
