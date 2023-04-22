@@ -10,6 +10,7 @@ const modifyBlurFrameBackground = ({ blurPixels, opacity }: ModifyBlurAndOpacity
 
   if (!dom) return;
   dom.style.setProperty('backdrop-filter', `blur(${blurPixels}px)`);
+  dom.style.setProperty('-webkit-backdrop-filter', `blur(${blurPixels}px)`);
   dom.style.setProperty('background', `rgba(255, 255, 255, ${opacity})`);
 };
 
