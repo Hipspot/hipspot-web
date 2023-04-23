@@ -64,8 +64,8 @@ const InnerCircle = styled.div<{
   innerCircleBoxShadowColorY: string;
 }>`
   position: relative;
-  width: 54px;
-  height: 54px;
+  width: 53px;
+  height: 53px;
   background-color: ${(props) => props.innerCircleColor};
   border-radius: 50%;
   box-shadow: 1px -1px 2px ${(props) => props.innerCircleBoxShadowColorX},
