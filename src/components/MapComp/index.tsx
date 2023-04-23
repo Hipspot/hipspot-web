@@ -3,11 +3,12 @@ import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import { geoJsonAtom } from '@states/map';
 import { activeFilterIdAtom } from '@states/clusterList';
-import { MapboxEvent } from 'mapbox-gl';
+import { GeoJSONSourceOptions, MapboxEvent } from 'mapbox-gl';
 import { FindMyLocationEvent } from '@libs/types/customEvents';
 import { EVENT_FIND_MY_LOCATION } from '@constants/event';
 import { DOMID_MAP_COMPONENT } from '@constants/DOM';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { tabStateAtom } from '@states/infoWindow';
 import addFeatureLayer from './eventHandler/addFeatureLayer';
 import drawPulsingDotMarker from './eventHandler/drawPulsingDotMarker';
 import { DOMTargetList } from '../../constants/DOM';
@@ -18,6 +19,7 @@ import useMarkerUpdate from './hooks/useMarkerUpdate';
 function MapComp() {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const allFeatures = useRecoilValue(geoJsonAtom);
+  const tabState = useRecoilValue(tabStateAtom);
   const mapRef = useMap();
   const { flyTo, savePrevPostion } = useCameraMove();
   const { updateMarkers, removeAllMarkers } = useMarkerUpdate();
@@ -51,6 +53,23 @@ function MapComp() {
       map.off('moveend', onMoveEnd);
     };
   }, [activeFilterId]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !map.isStyleLoaded()) return;
+
+    const style = map.getStyle();
+    const source = style.sources.cafeList as GeoJSONSourceOptions;
+    const { popUpState } = tabState;
+
+    if (popUpState === 'thumbNail') {
+      source.cluster = true;
+      map.setStyle(style);
+    } else {
+      source.cluster = false;
+      map.setStyle(style);
+    }
+  }, [tabState]);
 
   useEffect(() => {
     const map = mapRef.current;
