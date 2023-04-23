@@ -1,5 +1,4 @@
 import { DOMID_POP_UP_WINDOW, DOMTargetList } from '@constants/DOM';
-import { CSSVAR_POP_UP_WINDOW_TOP } from '@constants/cssVar';
 
 interface ModifyInfoWindowTopProps {
   currentTop: number;
@@ -8,7 +7,7 @@ interface ModifyInfoWindowTopProps {
 const modifyInfoWindowTop = async ({ currentTop }: ModifyInfoWindowTopProps) => {
   const dom = DOMTargetList[DOMID_POP_UP_WINDOW];
   if (!dom) return;
-  dom.style.setProperty(CSSVAR_POP_UP_WINDOW_TOP, `${currentTop}px`);
+  dom.style.setProperty('transform', `translate(calc(50vw - 50%), ${currentTop}px)`);
 };
 
 export default modifyInfoWindowTop;

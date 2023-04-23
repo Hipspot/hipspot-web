@@ -5,7 +5,6 @@ import { tabStateAtom } from '@states/infoWindow';
 import { HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps, TabState } from '@libs/types/infowindow';
 import useCameraMove from '@components/MapComp/hooks/useCameraMove';
 import { CancelIcon } from '@assets/index';
-import { CSSVAR_POP_UP_WINDOW_TOP } from '@constants/cssVar';
 import { PopUpHeightsType, popUpHeights } from '@constants/popUpHeights';
 import { DOMID_IMAGE_SLIDER, DOMTargetList, DOMID_BLURFRAME } from '@constants/DOM';
 import { handleMouseDown, handleMouseMove, handleMouseUp } from './eventHandler/mouse';
@@ -47,7 +46,7 @@ function Layout({ id, children, tabState }: PopUpWindowProps) {
   useEffect(() => {
     const elem = document.getElementById(id);
     if (elem !== null) {
-      elem.style.setProperty(CSSVAR_POP_UP_WINDOW_TOP, `${popUpHeights[PopUpHeightsType.bottom]}px`);
+      elem.style.setProperty('transform', `translate(calc(50vw - 50%), 100%)`);
     }
   }, []);
 
