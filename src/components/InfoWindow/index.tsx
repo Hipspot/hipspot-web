@@ -54,12 +54,7 @@ export default function InfoWindow() {
           </TitleWrapper>
           <ImageSliderWrapper id={DOMID_IMAGE_SLIDER}>
             <MakeLodableSuspense lodableState={state} loading={<CustomImageSliderSkeleton />}>
-              <ImageListTab
-                cafeId={contents.cafeId}
-                imageList={contents.imageList}
-                wrapperId={DOMID_IMAGE_SLIDER}
-                isBookmarked
-              />
+              <ImageListTab cafeId={contents.cafeId} imageList={contents.imageList} wrapperId={DOMID_IMAGE_SLIDER} />
             </MakeLodableSuspense>
           </ImageSliderWrapper>
         </TopSection>

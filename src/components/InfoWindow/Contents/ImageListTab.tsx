@@ -1,13 +1,11 @@
 import { S3_URL } from '@constants/s3Url';
 import styled from '@emotion/styled';
-import { CafeInfo } from '@libs/types/cafe';
 import { ImageList, ImageTabBarState, ImageTabKey } from '@libs/types/imageTabList';
 import { activatedCafeIdAtom } from '@states/infoWindow';
 import { useEffect, useState } from 'react';
-import { BookmarkFilledIcon, BookmarkIcon } from '@assets/index';
 import { useRecoilValue } from 'recoil';
 import ImageSlider from './ImageSlider';
-import { toast } from 'react-hot-toast';
+import BookMark from './BookMark';
 
 /**
  * @descripton ImageTabKey로 Tab Name을 얻을 수 있는 객체
@@ -36,10 +34,9 @@ interface ImageListTabProps {
   cafeId: number;
   imageList: ImageList;
   wrapperId: string;
-  isBookmarked: CafeInfo['isBookmarked'];
 }
 
-function ImageListTab({ cafeId, imageList, wrapperId, isBookmarked }: ImageListTabProps) {
+function ImageListTab({ cafeId, imageList, wrapperId }: ImageListTabProps) {
   const [currentImageList, setCurrenImageList] = useState<string[]>(S3ImageUrl(cafeId, 'store', imageList.store));
   const [imageTabBarState, setImageTabBarState] = useState<ImageTabBarState>(initTabBar(imageList));
   const activeCafeId = useRecoilValue(activatedCafeIdAtom);
@@ -53,17 +50,6 @@ function ImageListTab({ cafeId, imageList, wrapperId, isBookmarked }: ImageListT
       )
     );
   };
-
-  const onBookmarkClick = () => {
-    toast.success(isBookmarked === true ? '북마크가 해제되었습니다.' : '북마크가 추가되었습니다.');
-  };
-
-  const icon =
-    isBookmarked === true ? (
-      <BookmarkFilledIcon onClick={onBookmarkClick} />
-    ) : isBookmarked === false ? (
-      <BookmarkIcon onClick={onBookmarkClick} />
-    ) : null;
 
   useEffect(() => {
     if (!activeCafeId) return;
@@ -80,7 +66,7 @@ function ImageListTab({ cafeId, imageList, wrapperId, isBookmarked }: ImageListT
             {name}
           </Tab>
         ))}
-        <IconButton>{icon}</IconButton>
+        <BookMark isBookmarked />
       </TabBarWrapper>
     </Wrapper>
   );
@@ -97,6 +83,8 @@ const TabBarWrapper = styled.div`
   display: flex;
   gap: 32px;
   flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
 `;
 
 const Tab = styled.div<{ isSelected?: boolean }>`
@@ -119,8 +107,4 @@ const Tab = styled.div<{ isSelected?: boolean }>`
     color: black;
     filter: none;
   `}
-`;
-
-const IconButton = styled.div`
-  margin-left: auto;
 `;
