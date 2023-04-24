@@ -43,52 +43,44 @@ export default function InfoWindow() {
     DOMTargetList[DOMID_POP_UP_WINDOW] = document.getElementById(DOMID_POP_UP_WINDOW);
   }, [contents]);
 
-  return (
+  return contents ? (
     <PopUpWindow.Layout data-testid={DOMID_POP_UP_WINDOW} id={DOMID_POP_UP_WINDOW} tabState={tabState}>
-      {contents ? (
-        <>
-          <PopUpWindow.Handler available={!!contents} tabState={tabState} />
-          <BlurFrame id={DOMID_BLURFRAME} tabState={tabState}>
-            <TopSection>
-              <TitleWrapper>
-                <MakeLodableSuspense lodableState={state} loading={<TitleSkeleton />}>
-                  <Title placeName={contents.cafeName} />
-                </MakeLodableSuspense>
-              </TitleWrapper>
-              <ImageSliderWrapper id={DOMID_IMAGE_SLIDER}>
-                <MakeLodableSuspense lodableState={state} loading={<CustomImageSliderSkeleton />}>
-                  <ImageListTab
-                    cafeId={contents.cafeId}
-                    imageList={contents.imageList}
-                    wrapperId={DOMID_IMAGE_SLIDER}
-                  />
-                </MakeLodableSuspense>
-              </ImageSliderWrapper>
-            </TopSection>
-            <Section>
-              <MakeLodableSuspense lodableState={state} loading={<InformationSkeleton />}>
-                <Information
-                  openingHours={contents.openingHours}
-                  contactNum={contents.contactNum}
-                  address={contents.address}
-                />
-              </MakeLodableSuspense>
-              <MapButtonList.List>
-                <MapButtonList.Button onClick={() => contents.naverMapUrl && window.open(contents.naverMapUrl)}>
-                  네이버지도 길찾기
-                </MapButtonList.Button>
-                <MapButtonList.Button onClick={() => contents.kakaoMapUrl && window.open(contents.kakaoMapUrl)}>
-                  카카오맵 길찾기
-                </MapButtonList.Button>
-              </MapButtonList.List>
-            </Section>
-          </BlurFrame>
-          <PopUpWindow.CloseButton data-testid="close_button" />
-        </>
-      ) : (
-        <Loading />
-      )}
+      <PopUpWindow.Handler available={!!contents} tabState={tabState} />
+      <BlurFrame id={DOMID_BLURFRAME} tabState={tabState}>
+        <TopSection>
+          <TitleWrapper>
+            <MakeLodableSuspense lodableState={state} loading={<TitleSkeleton />}>
+              <Title placeName={contents.cafeName} />
+            </MakeLodableSuspense>
+          </TitleWrapper>
+          <ImageSliderWrapper id={DOMID_IMAGE_SLIDER}>
+            <MakeLodableSuspense lodableState={state} loading={<CustomImageSliderSkeleton />}>
+              <ImageListTab cafeId={contents.cafeId} imageList={contents.imageList} wrapperId={DOMID_IMAGE_SLIDER} />
+            </MakeLodableSuspense>
+          </ImageSliderWrapper>
+        </TopSection>
+        <Section>
+          <MakeLodableSuspense lodableState={state} loading={<InformationSkeleton />}>
+            <Information
+              openingHours={contents.openingHours}
+              contactNum={contents.contactNum}
+              address={contents.address}
+            />
+          </MakeLodableSuspense>
+          <MapButtonList.List>
+            <MapButtonList.Button onClick={() => contents.naverMapUrl && window.open(contents.naverMapUrl)}>
+              네이버지도 길찾기
+            </MapButtonList.Button>
+            <MapButtonList.Button onClick={() => contents.kakaoMapUrl && window.open(contents.kakaoMapUrl)}>
+              카카오맵 길찾기
+            </MapButtonList.Button>
+          </MapButtonList.List>
+        </Section>
+      </BlurFrame>
+      <PopUpWindow.CloseButton data-testid="close_button" />
     </PopUpWindow.Layout>
+  ) : (
+    <Loading data-testid="loading" />
   );
 }
 

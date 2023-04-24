@@ -16,8 +16,8 @@ export const handleMouseDown: (eventStartProps: HandleEventStartProps) => MouseE
 
     cancelAnimation(smoothLoopId);
     const target = e.target as HTMLDivElement;
-    setTabState((prev: TabState) => ({ ...prev, onHandling: true }));
 
+    setTabState((prev: TabState) => ({ ...prev, onHandling: true }));
     domUpdater.touchMouseStart(target);
     const infoWindowElem = target.parentElement as HTMLDivElement;
     const pointedTop = infoWindowElem.getBoundingClientRect().top - e.clientY;
