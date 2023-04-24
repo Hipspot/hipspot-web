@@ -86,7 +86,7 @@ export default function InfoWindow() {
           <PopUpWindow.CloseButton data-testid="close_button" />
         </>
       ) : (
-        <Loading data-testId="loading" />
+        <Loading data-testid="loading" />
       )}
     </PopUpWindow.Layout>
   );

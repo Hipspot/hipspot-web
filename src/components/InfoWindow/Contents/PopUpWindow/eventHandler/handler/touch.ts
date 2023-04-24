@@ -5,9 +5,9 @@ import { TabState, HandleEventEndProps, HandleEventMoveProps, HandleEventStartPr
 import { DOMID_BLURFRAME, DOMID_IMAGE_SLIDER } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import { SlideUpWindowEvent } from '@libs/types/customEvents';
-import { reactRefUpdate } from '../utils/reactRefUpdate';
-import { cancelAnimation } from '../utils/cancelAnimation';
-import domUpdater from '../utils/domUpdater';
+import { cancelAnimation } from '../../utils/cancelAnimation';
+import domUpdater from '../../utils/domUpdater';
+import { reactRefUpdate } from '../../utils/reactRefUpdate';
 
 export const handleTouchStart: (props: HandleEventStartProps) => TouchEventHandler<HTMLDivElement> =
   ({ smoothLoopId, modifyRef, setTabState, available }) =>

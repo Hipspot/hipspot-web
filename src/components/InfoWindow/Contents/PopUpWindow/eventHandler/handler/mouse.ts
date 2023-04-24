@@ -5,15 +5,14 @@ import { DOMID_BLURFRAME, DOMID_IMAGE_SLIDER } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import modifyInfoWindowTop from '@components/InfoWindow/view/modifyInfoWindowTop';
 import { SlideUpWindowEvent } from '@libs/types/customEvents';
-import { cancelAnimation } from '../utils/cancelAnimation';
-import { reactRefUpdate } from '../utils/reactRefUpdate';
-import domUpdater from '../utils/domUpdater';
+import { cancelAnimation } from '../../utils/cancelAnimation';
+import { reactRefUpdate } from '../../utils/reactRefUpdate';
+import domUpdater from '../../utils/domUpdater';
 
 export const handleMouseDown: (eventStartProps: HandleEventStartProps) => MouseEventHandler<HTMLDivElement> =
   ({ setTabState, smoothLoopId, modifyRef, available }) =>
   (e) => {
     if (!available) return;
-
     cancelAnimation(smoothLoopId);
     const target = e.target as HTMLDivElement;
     setTabState((prev: TabState) => ({ ...prev, onHandling: true }));
@@ -36,7 +35,6 @@ export const handleMouseMove: (eventMoveProps: HandleEventMoveProps) => MouseEve
       const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), { currentTop });
       target[DOMID_IMAGE_SLIDER].dispatchEvent(slideEvent);
       target[DOMID_BLURFRAME].dispatchEvent(slideEvent);
-
       reactRefUpdate({ ref: topCoordRef, update: e.clientY });
     }
   };

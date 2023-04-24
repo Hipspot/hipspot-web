@@ -1,6 +1,9 @@
 import { SetterOrUpdater } from 'recoil';
 
 export type PopUpWindowState = 'invisible' | 'half' | 'full';
+export type PopUpWindowScopeProps = {
+  smoothLoopId: { id: number };
+};
 
 export interface TabState {
   onHandling: boolean;
@@ -34,4 +37,19 @@ export interface HandleEventMoveProps {
   topCoordRef: React.MutableRefObject<number>;
   target: { [id in string]: HTMLDivElement | HTMLElement };
   smoothLoopId: { id: number };
+}
+
+export interface HandleEventStartCaptureProps {
+  pointRef: React.MutableRefObject<{ clientX: number; clientY: number }>;
+  layoutStateRef: React.MutableRefObject<{ onHandling: boolean; timeStamp: number }>;
+}
+export interface HandleEventMoveCaptureProps {
+  pointRef: React.MutableRefObject<{ clientX: number; clientY: number }>;
+  layoutStateRef: React.MutableRefObject<{ onHandling: boolean; timeStamp: number }>;
+  setTabState: SetterOrUpdater<TabState>;
+  tabState: TabState;
+}
+export interface HandleEventEndCaptureProps {
+  pointRef: React.MutableRefObject<{ clientX: number; clientY: number }>;
+  layoutStateRef: React.MutableRefObject<{ onHandling: boolean; timeStamp: number }>;
 }
