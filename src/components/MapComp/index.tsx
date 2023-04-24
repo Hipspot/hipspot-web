@@ -81,7 +81,7 @@ function MapComp() {
 
     const elem = marker.getElement();
 
-    elem.style.zIndex = '10';
+    elem.style.zIndex = '9';
 
     return () => {
       elem.style.zIndex = '0';
