@@ -8,7 +8,7 @@ import { FindMyLocationEvent } from '@libs/types/customEvents';
 import { EVENT_FIND_MY_LOCATION } from '@constants/event';
 import { DOMID_MAP_COMPONENT } from '@constants/DOM';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { tabStateAtom } from '@states/infoWindow';
+import { activatedCafeIdAtom, tabStateAtom } from '@states/infoWindow';
 import addFeatureLayer from './eventHandler/addFeatureLayer';
 import drawPulsingDotMarker from './eventHandler/drawPulsingDotMarker';
 import { DOMTargetList } from '../../constants/DOM';
@@ -20,9 +20,10 @@ function MapComp() {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const allFeatures = useRecoilValue(geoJsonAtom);
   const tabState = useRecoilValue(tabStateAtom);
+  const activatedCafeId = useRecoilValue(activatedCafeIdAtom);
   const mapRef = useMap();
   const { flyTo, savePrevPostion } = useCameraMove();
-  const { updateMarkers, removeAllMarkers } = useMarkerUpdate();
+  const { updateMarkers, removeAllMarkers, getPointMarkerById } = useMarkerUpdate();
   const onMapLoad = ({ target: targetMap }: MapboxEvent) =>
     addFeatureLayer({ map: targetMap, allFeatures, activeFilterId });
   const onRender = () => updateMarkers();
@@ -70,6 +71,22 @@ function MapComp() {
       map.setStyle(style);
     }
   }, [tabState]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const marker = getPointMarkerById(activatedCafeId);
+    if (!marker) return;
+
+    const elem = marker.getElement();
+
+    elem.style.zIndex = '10';
+
+    return () => {
+      elem.style.zIndex = '0';
+    };
+  }, [activatedCafeId]);
 
   useEffect(() => {
     const map = mapRef.current;

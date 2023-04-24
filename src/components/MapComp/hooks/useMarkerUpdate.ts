@@ -154,7 +154,9 @@ function useMarkerUpdate() {
     });
   };
 
-  return { updateMarkers, removeAllMarkers };
+  const getPointMarkerById = (id: number | null) => (id === null ? null : pointMarkerList[id]);
+
+  return { updateMarkers, removeAllMarkers, getPointMarkerById };
 }
 
 export default useMarkerUpdate;
