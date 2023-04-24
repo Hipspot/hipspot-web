@@ -35,7 +35,7 @@ function useMarkerClickAction() {
 
   const clusterMarkerClickAction = (clusterList: any) => {
     setOpenClusterList(true);
-    setTabState((prev) => ({ ...prev, popUpState: 'thumbNail', top: popUpHeights[PopUpHeightsType.bottom] }));
+    setTabState((prev) => ({ ...prev, popUpState: 'invisible', top: popUpHeights[PopUpHeightsType.bottom] }));
     setClusterList(clusterList);
   };
 

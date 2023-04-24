@@ -7,6 +7,7 @@ import modifyInfoWindowTop from '@components/InfoWindow/view/modifyInfoWindowTop
 import { SlideUpWindowEvent } from '@libs/types/customEvents';
 import { cancelAnimation } from '../utils/cancelAnimation';
 import { reactRefUpdate } from '../utils/reactRefUpdate';
+import domUpdater from '../utils/domUpdater';
 
 export const handleMouseDown: (eventStartProps: HandleEventStartProps) => MouseEventHandler<HTMLDivElement> =
   ({ setTabState, smoothLoopId, modifyRef, available }) =>
@@ -14,12 +15,10 @@ export const handleMouseDown: (eventStartProps: HandleEventStartProps) => MouseE
     if (!available) return;
 
     cancelAnimation(smoothLoopId);
-
     const target = e.target as HTMLDivElement;
-    target.style.setProperty('padding', 'calc(var(--vh,1vh) * 100) 0');
-    target.style.setProperty('transform', 'translateY(-50%)');
 
     setTabState((prev: TabState) => ({ ...prev, onHandling: true }));
+    domUpdater.touchMouseStart(target);
     const infoWindowElem = target.parentElement as HTMLDivElement;
     const pointedTop = infoWindowElem.getBoundingClientRect().top - e.clientY;
     reactRefUpdate({ ref: modifyRef, update: pointedTop });
@@ -29,7 +28,6 @@ export const handleMouseMove: (eventMoveProps: HandleEventMoveProps) => MouseEve
   ({ topCoordRef, tabState, modifyRef, available }) =>
   (e) => {
     const { onHandling } = tabState;
-
     if (onHandling && available) {
       const currentTop = e.clientY + modifyRef.current;
 
@@ -63,12 +61,11 @@ export const handleMouseUp: (eventEndProps: HandleEventEndProps) => MouseEventHa
         endPointTabState.popUpState = 'half';
       } else {
         endPointTabState.top = popUpHeights[PopUpHeightsType.bottom];
-        endPointTabState.popUpState = 'thumbNail';
+        endPointTabState.popUpState = 'invisible';
         endCameraMove();
       }
 
-      target.style.setProperty('padding', '0px');
-      target.style.removeProperty('transform');
+      domUpdater.touchMouseEnd(target);
 
       setTabState(endPointTabState);
     }

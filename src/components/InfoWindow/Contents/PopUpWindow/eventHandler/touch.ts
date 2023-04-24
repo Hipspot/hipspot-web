@@ -7,18 +7,17 @@ import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import { SlideUpWindowEvent } from '@libs/types/customEvents';
 import { reactRefUpdate } from '../utils/reactRefUpdate';
 import { cancelAnimation } from '../utils/cancelAnimation';
+import domUpdater from '../utils/domUpdater';
 
 export const handleTouchStart: (props: HandleEventStartProps) => TouchEventHandler<HTMLDivElement> =
   ({ smoothLoopId, modifyRef, setTabState, available }) =>
   (e) => {
     if (!available) return;
     cancelAnimation(smoothLoopId);
-
     const target = e.target as HTMLDivElement;
-    setTabState((prev: TabState) => ({ ...prev, onHandling: true }));
-    target.style.setProperty('padding', 'calc(var(--vh,1vh) * 100) 0');
-    target.style.setProperty('transform', 'translateY(-50%)');
 
+    setTabState((prev: TabState) => ({ ...prev, onHandling: true }));
+    domUpdater.touchMouseStart(target);
     const infoWindowElem = target.parentElement as HTMLDivElement;
     const pointedTop = infoWindowElem.getBoundingClientRect().top - e.touches[0].clientY;
     reactRefUpdate({ ref: modifyRef, update: pointedTop });
@@ -61,12 +60,11 @@ export const handleTouchEnd: (props: HandleEventEndProps) => TouchEventHandler<H
         endPointTabState.popUpState = 'half';
       } else {
         endPointTabState.top = popUpHeights[PopUpHeightsType.bottom];
-        endPointTabState.popUpState = 'thumbNail';
+        endPointTabState.popUpState = 'invisible';
         endCameraMove();
       }
 
-      target.style.setProperty('padding', '0px');
-      target.style.removeProperty('transform');
+      domUpdater.touchMouseEnd(target);
       setTabState(endPointTabState);
     }
   };

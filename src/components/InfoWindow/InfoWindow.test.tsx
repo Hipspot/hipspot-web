@@ -38,11 +38,12 @@ describe('인포 윈도우는', () => {
     await waitFor(() => {
       fireEvent.click(screen.getByTestId('close_button'));
     });
+
     expect(onChange).toBeCalledTimes(2);
     expect(onChange).lastCalledWith({
       top: popUpHeights[PopUpHeightsType.bottom],
-      onHandling: true,
-      popUpState: 'thumbNail',
+      onHandling: false,
+      popUpState: 'invisible',
     });
   });
 });
