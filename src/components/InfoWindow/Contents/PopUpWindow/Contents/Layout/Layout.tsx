@@ -9,15 +9,15 @@ import {
 import { VscGrabber } from 'react-icons/vsc';
 import { useSetRecoilState } from 'recoil';
 import { tabStateAtom } from '@states/infoWindow';
-import * as S from './style';
-import smoothMove from './utils/smoothMove';
+import * as S from '../../style';
+import smoothMove from '../../utils/smoothMove';
 import {
   handleMouseDownCapture,
   handleMouseMoveCapture,
   handleMouseOutCapture,
   handleMouseUpCapture,
-} from './eventHandler/layout/mouse';
-import { handleTouchMoveCapture, handleTouchStartCapture } from './eventHandler/layout/touch';
+} from './eventHandler/mouse';
+import { handleTouchMoveCapture, handleTouchStartCapture } from './eventHandler/touch';
 
 export interface PopUpWindowLayoutProps {
   id: string;

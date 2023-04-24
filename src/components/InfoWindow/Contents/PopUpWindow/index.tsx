@@ -1,7 +1,7 @@
 import { PopUpWindowScopeProps } from '@libs/types/infowindow';
-import Layout, { PopUpWindowLayoutProps } from './Layout';
-import Handler, { PopUpWindowHandlerProps } from './Handler';
-import CloseButton from './CloseButton';
+import Layout, { PopUpWindowLayoutProps } from './Contents/Layout/Layout';
+import Handler, { PopUpWindowHandlerProps } from './Contents/Handler/Handler';
+import CloseButton from './Contents/CloseButton/CloseButton';
 
 /**
  * PopUpWindow 컴포넌트에서만 사용되는 변수들을 모아둔 객체

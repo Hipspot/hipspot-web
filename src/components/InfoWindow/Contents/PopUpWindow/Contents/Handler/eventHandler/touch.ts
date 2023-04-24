@@ -1,46 +1,49 @@
-import { MouseEventHandler } from 'react';
-import { HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps, TabState } from '@libs/types/infowindow';
+import { TouchEventHandler } from 'react';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
+import modifyInfoWindowTop from '@components/InfoWindow/view/modifyInfoWindowTop';
+import { TabState, HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps } from '@libs/types/infowindow';
 import { DOMID_BLURFRAME, DOMID_IMAGE_SLIDER } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
-import modifyInfoWindowTop from '@components/InfoWindow/view/modifyInfoWindowTop';
 import { SlideUpWindowEvent } from '@libs/types/customEvents';
-import { cancelAnimation } from '../../utils/cancelAnimation';
-import { reactRefUpdate } from '../../utils/reactRefUpdate';
-import domUpdater from '../../utils/domUpdater';
+import { cancelAnimation } from '../../../utils/cancelAnimation';
+import domUpdater from '../utils/domUpdater';
+import { reactRefUpdate } from '../../../utils/reactRefUpdate';
 
-export const handleMouseDown: (eventStartProps: HandleEventStartProps) => MouseEventHandler<HTMLDivElement> =
-  ({ setTabState, smoothLoopId, modifyRef, available }) =>
+export const handleTouchStart: (props: HandleEventStartProps) => TouchEventHandler<HTMLDivElement> =
+  ({ smoothLoopId, modifyRef, setTabState, available }) =>
   (e) => {
     if (!available) return;
     cancelAnimation(smoothLoopId);
     const target = e.target as HTMLDivElement;
-    setTabState((prev: TabState) => ({ ...prev, onHandling: true }));
 
+    setTabState((prev: TabState) => ({ ...prev, onHandling: true }));
     domUpdater.touchMouseStart(target);
     const infoWindowElem = target.parentElement as HTMLDivElement;
-    const pointedTop = infoWindowElem.getBoundingClientRect().top - e.clientY;
+    const pointedTop = infoWindowElem.getBoundingClientRect().top - e.touches[0].clientY;
     reactRefUpdate({ ref: modifyRef, update: pointedTop });
   };
 
-export const handleMouseMove: (eventMoveProps: HandleEventMoveProps) => MouseEventHandler<HTMLDivElement> =
-  ({ topCoordRef, tabState, modifyRef, available, target, smoothLoopId }) =>
+export const handleTouchMove: (props: HandleEventMoveProps) => TouchEventHandler<HTMLDivElement> =
+  ({ tabState, modifyRef, topCoordRef, available, target, smoothLoopId }) =>
   (e) => {
     const { onHandling } = tabState;
     if (onHandling && available) {
-      const currentTop = e.clientY + modifyRef.current;
+      const currentTop = e.touches[0].clientY + modifyRef.current;
+
       cancelAnimation(smoothLoopId);
       modifyInfoWindowTop({ currentTop });
 
       const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), { currentTop });
+
       target[DOMID_IMAGE_SLIDER].dispatchEvent(slideEvent);
       target[DOMID_BLURFRAME].dispatchEvent(slideEvent);
-      reactRefUpdate({ ref: topCoordRef, update: e.clientY });
+
+      reactRefUpdate({ ref: topCoordRef, update: e.touches[0].clientY });
     }
   };
 
-export const handleMouseUp: (eventEndProps: HandleEventEndProps) => MouseEventHandler<HTMLDivElement> =
-  ({ endCameraMove, setTabState, tabState, topCoordRef }) =>
+export const handleTouchEnd: (props: HandleEventEndProps) => TouchEventHandler<HTMLDivElement> =
+  ({ endCameraMove, tabState, setTabState, topCoordRef }) =>
   (e) => {
     const { onHandling } = tabState;
     if (onHandling) {
@@ -64,7 +67,6 @@ export const handleMouseUp: (eventEndProps: HandleEventEndProps) => MouseEventHa
       }
 
       domUpdater.touchMouseEnd(target);
-
       setTabState(endPointTabState);
     }
   };

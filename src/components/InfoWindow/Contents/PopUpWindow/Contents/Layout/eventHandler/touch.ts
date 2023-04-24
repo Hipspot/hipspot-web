@@ -2,7 +2,7 @@ import { TouchEventHandler } from 'react';
 import { DOMID_POP_UP_WINDOW_HANDLER } from '@constants/DOM';
 import { HandleEventMoveCaptureProps, HandleEventStartCaptureProps } from '@libs/types/infowindow';
 import { PopUpHeightsType, popUpHeights } from '@constants/popUpHeights';
-import { reactRefUpdate } from '../../utils/reactRefUpdate';
+import { reactRefUpdate } from '../../../utils/reactRefUpdate';
 
 export const handleTouchStartCapture: (props: HandleEventStartCaptureProps) => TouchEventHandler<HTMLDivElement> =
   ({ pointRef, layoutStateRef }) =>

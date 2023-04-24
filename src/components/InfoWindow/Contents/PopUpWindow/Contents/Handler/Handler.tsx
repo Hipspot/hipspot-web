@@ -10,9 +10,9 @@ import {
 import { tabStateAtom } from '@states/infoWindow';
 import { useRef } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { handleMouseDown, handleMouseMove, handleMouseUp } from './eventHandler/handler/mouse';
-import { handleTouchEnd, handleTouchMove, handleTouchStart } from './eventHandler/handler/touch';
-import * as S from './style';
+import { handleMouseDown, handleMouseMove, handleMouseUp } from './eventHandler/mouse';
+import { handleTouchEnd, handleTouchMove, handleTouchStart } from './eventHandler/touch';
+import * as S from '../../style';
 
 export interface PopUpWindowHandlerProps {
   tabState: TabState;

@@ -6,7 +6,7 @@ import {
   HandleEventStartCaptureProps,
 } from '@libs/types/infowindow';
 import { PopUpHeightsType, popUpHeights } from '@constants/popUpHeights';
-import { reactRefUpdate } from '../../utils/reactRefUpdate';
+import { reactRefUpdate } from '../../../utils/reactRefUpdate';
 
 export const handleMouseDownCapture: (props: HandleEventStartCaptureProps) => MouseEventHandler<HTMLDivElement> =
   ({ pointRef, layoutStateRef }) =>

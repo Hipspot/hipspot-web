@@ -3,7 +3,7 @@ import useCameraMove from '@components/MapComp/hooks/useCameraMove';
 import { PopUpHeightsType, popUpHeights } from '@constants/popUpHeights';
 import { tabStateAtom } from '@states/infoWindow';
 import { useSetRecoilState } from 'recoil';
-import * as S from './style';
+import * as S from '../../style';
 
 function CloseButton() {
   const setTabState = useSetRecoilState(tabStateAtom);
