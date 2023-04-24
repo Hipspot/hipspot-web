@@ -32,4 +32,6 @@ export interface HandleEventMoveProps {
   tabState: TabState;
   modifyRef: React.MutableRefObject<number>;
   topCoordRef: React.MutableRefObject<number>;
+  target: { [id in string]: HTMLDivElement | HTMLElement };
+  smoothLoopId: { id: number };
 }

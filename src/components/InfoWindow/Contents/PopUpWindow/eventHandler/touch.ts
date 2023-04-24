@@ -24,17 +24,19 @@ export const handleTouchStart: (props: HandleEventStartProps) => TouchEventHandl
   };
 
 export const handleTouchMove: (props: HandleEventMoveProps) => TouchEventHandler<HTMLDivElement> =
-  ({ tabState, modifyRef, topCoordRef, available }) =>
+  ({ tabState, modifyRef, topCoordRef, available, target, smoothLoopId }) =>
   (e) => {
     const { onHandling } = tabState;
     if (onHandling && available) {
       const currentTop = e.touches[0].clientY + modifyRef.current;
 
+      cancelAnimation(smoothLoopId);
       modifyInfoWindowTop({ currentTop });
 
       const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), { currentTop });
-      document.getElementById(DOMID_IMAGE_SLIDER)!.dispatchEvent(slideEvent);
-      document.getElementById(DOMID_BLURFRAME)!.dispatchEvent(slideEvent);
+
+      target[DOMID_IMAGE_SLIDER].dispatchEvent(slideEvent);
+      target[DOMID_BLURFRAME].dispatchEvent(slideEvent);
 
       reactRefUpdate({ ref: topCoordRef, update: e.touches[0].clientY });
     }

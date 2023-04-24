@@ -3,16 +3,17 @@ import { BarSizes, BarSizeType } from '@constants/barSizes';
 import { TabState } from '@libs/types/infowindow';
 
 export const Layout = styled.div<{ tabState: TabState }>`
+  top: 0;
   height: calc(100vh + 30px);
   position: fixed;
   min-width: 300px;
   max-width: 600px;
   height: ${(props) => props.tabState.popUpState === 'full' && `calc(100% + ${BarSizes[BarSizeType.BOTTOM]})`};
   box-sizing: border-box;
-  transform: translateX(calc(50vw - 50%));
-  top: calc(100%);
+  transform: translate(calc(50vw - 50%), 100%);
   width: 100vw;
   z-index: 11;
+  will-change: transform;
 `;
 
 export const Wrapper = styled.div`

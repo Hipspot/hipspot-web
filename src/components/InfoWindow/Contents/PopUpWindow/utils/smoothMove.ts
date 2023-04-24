@@ -17,7 +17,6 @@ export default function smoothMove({ parentElement, endPointTabState, smoothLoop
     curY += (endY - curY) * acc;
 
     modifyInfoWindowTop({ currentTop: curY });
-
     if (Math.abs(curY - endY) > 1) {
       smoothLoopId.id = requestAnimationFrame(loop);
     } else {

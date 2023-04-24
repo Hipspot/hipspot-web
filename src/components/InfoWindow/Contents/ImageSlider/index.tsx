@@ -12,7 +12,7 @@ import {
 } from '@constants/cssVar';
 import { DOMID_IMAGE_SLIDER } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
-import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
+import { popUpHeights } from '@constants/popUpHeights';
 import { imageSliderHeightTween, imageSliderWidthTween } from '@constants/Tween';
 import styled from '@emotion/styled';
 import { SlideUpWindowEvent } from '@libs/types/customEvents';
@@ -34,7 +34,7 @@ interface SlideProps {
 
 function ImageSlider({ wrapperId, imageList }: SlideProps) {
   const [imageIndex, setImageIndex] = useState(0);
-  const [tabState, setTabState] = useRecoilState(tabStateAtom);
+  const [tabState] = useRecoilState(tabStateAtom);
   const imageSliderRef = useRef<ImageSliderRef>({
     x: 0,
     startX: 0,
@@ -119,9 +119,6 @@ function ImageSlider({ wrapperId, imageList }: SlideProps) {
                 ? { height: imageSliderHeightTween.max, width: imageSliderWidthTween.max }
                 : { height: imageSliderWidthTween.min, width: imageSliderWidthTween.min }
             }
-            onDoubleClick={() => {
-              setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.top], popUpState: 'full' }));
-            }}
           />
         ))}
       </SlideContainer>
