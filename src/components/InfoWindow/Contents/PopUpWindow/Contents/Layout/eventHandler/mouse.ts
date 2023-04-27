@@ -5,68 +5,60 @@ import {
   HandleEventMoveCaptureProps,
   HandleEventStartCaptureProps,
 } from '@libs/types/infowindow';
-import { PopUpHeightsType, popUpHeights } from '@constants/popUpHeights';
-import { reactRefUpdate } from '../../../utils/reactRefUpdate';
 
 export const handleMouseDownCapture: (props: HandleEventStartCaptureProps) => MouseEventHandler<HTMLDivElement> =
-  ({ pointRef, layoutStateRef }) =>
+  ({ setUp }) =>
   (e) => {
     const target = e.target as HTMLElement;
     if (target.id === DOMID_POP_UP_WINDOW_HANDLER) return;
     const timeStamp: number = performance.now();
-    reactRefUpdate({ ref: pointRef, update: { clientX: e.clientX, clientY: e.clientY } });
-    reactRefUpdate({ ref: layoutStateRef, update: { timeStamp, onHandling: true } });
+
+    setUp.start({ clientX: e.clientX, clientY: e.clientY, timeStamp });
   };
 
 export const handleMouseMoveCapture: (props: HandleEventMoveCaptureProps) => MouseEventHandler<HTMLDivElement> =
-  ({ pointRef, layoutStateRef, setTabState, tabState }) =>
+  ({ state, action, setUp, check }) =>
   (e) => {
-    if (layoutStateRef.current.onHandling) {
+    if (check.isOnHandling()) {
+      const { pointRef, layoutStateRef } = state;
       const { clientX: baseX, clientY: baseY } = pointRef.current;
       const { clientX: curX, clientY: curY } = e;
 
       const timeGap = performance.now() - layoutStateRef.current.timeStamp;
       const moveY = curY - baseY;
       const moveX = curX - baseX;
-      if (moveX < -20 || moveX > 20) {
-        reactRefUpdate({ ref: pointRef, update: { clientX: 0, clientY: 0 } });
-        reactRefUpdate({ ref: layoutStateRef, update: { onHandling: false, timeStamp: 0 } });
+
+      if (check.isHorizontalMove(moveX) || check.isLongPress(timeGap)) setUp.end();
+
+      const isFlicking = check.isFlicking({ moveY, timeGap });
+
+      if (isFlicking === 'moveUp') {
+        if (state.tabState.popUpState === 'half') action({ from: 'half', to: 'full' });
+        if (state.tabState.popUpState === 'invisible') action({ from: 'invisible', to: 'half' });
       }
-      if (timeGap > 500) {
-        reactRefUpdate({ ref: pointRef, update: { clientX: 0, clientY: 0 } });
-        reactRefUpdate({ ref: layoutStateRef, update: { onHandling: false, timeStamp: 0 } });
-      }
-      if (tabState.popUpState === 'half' && moveY < -50 && timeGap < 150) {
-        setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.top], popUpState: 'full' }));
-        e.target.dispatchEvent(new MouseEvent('mouseup'));
-      }
-      if (tabState.popUpState === 'full' && moveY > 50 && timeGap < 150) {
-        setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.middle], popUpState: 'half' }));
-        e.target.dispatchEvent(new MouseEvent('mouseup'));
+
+      if (isFlicking === 'moveDown') {
+        if (state.tabState.popUpState === 'full') action({ from: 'full', to: 'half' });
+        if (state.tabState.popUpState === 'half') action({ from: 'half', to: 'invisible' });
       }
     }
   };
 
 export const handleMouseUpCapture: (props: HandleEventEndCaptureProps) => MouseEventHandler<HTMLDivElement> =
-  ({ pointRef, layoutStateRef }) =>
+  ({ setUp, check }) =>
   () => {
-    if (layoutStateRef.current.onHandling) {
-      reactRefUpdate({ ref: pointRef, update: { clientX: 0, clientY: 0 } });
-      reactRefUpdate({ ref: layoutStateRef, update: { onHandling: false, timeStamp: 0 } });
-    }
+    if (check.isOnHandling()) setUp.end();
   };
 
 export const handleMouseOutCapture: (props: HandleEventEndCaptureProps) => MouseEventHandler<HTMLDivElement> =
-  ({ pointRef, layoutStateRef }) =>
+  ({ setUp, check }) =>
   (e) => {
-    if (!layoutStateRef.current.onHandling) return;
+    if (!check.isOnHandling()) return;
+
     const target = e.target as HTMLDivElement;
     const relatedTarget = e.relatedTarget as HTMLDivElement;
-    const check = target.closest(`#${DOMID_POP_UP_WINDOW}`);
-    const check2 = relatedTarget.closest(`#${DOMID_POP_UP_WINDOW}`);
+    const outCheck1 = target.closest(`#${DOMID_POP_UP_WINDOW}`);
+    const outCheck2 = relatedTarget.closest(`#${DOMID_POP_UP_WINDOW}`);
 
-    if (check && !check2) {
-      reactRefUpdate({ ref: pointRef, update: { clientX: 0, clientY: 0 } });
-      reactRefUpdate({ ref: layoutStateRef, update: { onHandling: false, timeStamp: 0 } });
-    }
+    if (outCheck1 && !outCheck2) setUp.end();
   };

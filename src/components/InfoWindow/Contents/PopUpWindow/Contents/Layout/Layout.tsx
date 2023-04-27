@@ -1,4 +1,4 @@
-import { useEffect, ReactNode, useRef } from 'react';
+import { useEffect, ReactNode } from 'react';
 import {
   HandleEventEndCaptureProps,
   HandleEventMoveCaptureProps,
@@ -7,8 +7,7 @@ import {
   TabState,
 } from '@libs/types/infowindow';
 import { VscGrabber } from 'react-icons/vsc';
-import { useSetRecoilState } from 'recoil';
-import { tabStateAtom } from '@states/infoWindow';
+import { DOMID_POP_UP_WINDOW, DOMTargetList } from '@constants/DOM';
 import * as S from '../../style';
 import smoothMove from '../../utils/smoothMove';
 import {
@@ -17,7 +16,8 @@ import {
   handleMouseOutCapture,
   handleMouseUpCapture,
 } from './eventHandler/mouse';
-import { handleTouchMoveCapture, handleTouchStartCapture } from './eventHandler/touch';
+import { handleTouchEndCapture, handleTouchMoveCapture, handleTouchStartCapture } from './eventHandler/touch';
+import usePopUpWindowLayoutControll from './usePopUpWindowLayoutStates';
 
 export interface PopUpWindowLayoutProps {
   id: string;
@@ -26,24 +26,22 @@ export interface PopUpWindowLayoutProps {
 }
 
 function Layout({ id, children, tabState, smoothLoopId }: PopUpWindowLayoutProps & PopUpWindowScopeProps) {
-  const setTabState = useSetRecoilState(tabStateAtom);
-  const layoutStateRef = useRef<{ onHandling: boolean; timeStamp: number }>({ onHandling: false, timeStamp: 0 });
-  const pointRef = useRef<{ clientX: number; clientY: number }>({ clientX: 0, clientY: 0 });
+  const { state, action, setUp, check } = usePopUpWindowLayoutControll();
 
   const eventStartProp: HandleEventStartCaptureProps = {
-    pointRef,
-    layoutStateRef,
+    setUp,
   };
 
-  const eventMoveProp: HandleEventMoveCaptureProps = { pointRef, layoutStateRef, setTabState, tabState };
-  const eventEndProp: HandleEventEndCaptureProps = { pointRef, layoutStateRef };
+  const eventMoveProp: HandleEventMoveCaptureProps = { state, setUp, action, check };
+  const eventEndProp: HandleEventEndCaptureProps = { setUp, check };
 
   const onMouseDownCapture = handleMouseDownCapture(eventStartProp);
-  const onTouchStartCapture = handleTouchStartCapture(eventStartProp);
   const onMouseMoveCapture = handleMouseMoveCapture(eventMoveProp);
-  const onTouchMoveCapture = handleTouchMoveCapture(eventMoveProp);
   const onMouseUpCapture = handleMouseUpCapture(eventEndProp);
   const onMouseOutCapture = handleMouseOutCapture(eventEndProp);
+  const onTouchMoveCapture = handleTouchMoveCapture(eventMoveProp);
+  const onTouchStartCapture = handleTouchStartCapture(eventStartProp);
+  const onTouchEndCapture = handleTouchEndCapture(eventEndProp);
 
   useEffect(() => {
     smoothMove({
@@ -56,6 +54,7 @@ function Layout({ id, children, tabState, smoothLoopId }: PopUpWindowLayoutProps
   useEffect(() => {
     const elem = document.getElementById(id);
     if (elem !== null) {
+      DOMTargetList[DOMID_POP_UP_WINDOW] = document.getElementById(DOMID_POP_UP_WINDOW);
       elem.style.setProperty('transform', `translate(calc(50vw - 50%), 100%)`);
     }
   }, []);
@@ -65,12 +64,12 @@ function Layout({ id, children, tabState, smoothLoopId }: PopUpWindowLayoutProps
       id={id}
       tabState={tabState}
       onMouseDownCapture={onMouseDownCapture}
-      onTouchStartCapture={onTouchStartCapture}
       onMouseMoveCapture={onMouseMoveCapture}
-      onTouchMoveCapture={onTouchMoveCapture}
       onMouseUpCapture={onMouseUpCapture}
-      // onTouchEndCapture={onTouchEndCapture}
       onMouseOutCapture={onMouseOutCapture}
+      onTouchStartCapture={onTouchStartCapture}
+      onTouchMoveCapture={onTouchMoveCapture}
+      onTouchEndCapture={onTouchEndCapture}
     >
       <S.Wrapper>
         <S.ResizeSideStyle>

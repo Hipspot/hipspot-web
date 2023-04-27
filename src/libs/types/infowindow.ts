@@ -1,3 +1,4 @@
+import { MutableRefObject } from 'react';
 import { SetterOrUpdater } from 'recoil';
 
 export type PopUpWindowState = 'invisible' | 'half' | 'full';
@@ -40,16 +41,41 @@ export interface HandleEventMoveProps {
 }
 
 export interface HandleEventStartCaptureProps {
-  pointRef: React.MutableRefObject<{ clientX: number; clientY: number }>;
-  layoutStateRef: React.MutableRefObject<{ onHandling: boolean; timeStamp: number }>;
+  setUp: PopUpWindowLayOutSetUpMethod;
 }
 export interface HandleEventMoveCaptureProps {
-  pointRef: React.MutableRefObject<{ clientX: number; clientY: number }>;
-  layoutStateRef: React.MutableRefObject<{ onHandling: boolean; timeStamp: number }>;
-  setTabState: SetterOrUpdater<TabState>;
-  tabState: TabState;
+  setUp: PopUpWindowLayOutSetUpMethod;
+  action: PopUpWindowLayOutActionMethod;
+  state: PopUpWindowLayOutStates;
+  check: PopUpWindowLayOutCheckMethod;
 }
 export interface HandleEventEndCaptureProps {
-  pointRef: React.MutableRefObject<{ clientX: number; clientY: number }>;
-  layoutStateRef: React.MutableRefObject<{ onHandling: boolean; timeStamp: number }>;
+  setUp: PopUpWindowLayOutSetUpMethod;
+  check: PopUpWindowLayOutCheckMethod;
 }
+
+export type PopUpWindowLayOutStates = {
+  layoutStateRef: MutableRefObject<{ onHandling: boolean; timeStamp: number }>;
+  pointRef: MutableRefObject<{ clientX: number; clientY: number }>;
+  tabState: TabState;
+};
+
+export type PopUpWindowLayOutSetUpMethod = {
+  start: ({ clientX, clientY, timeStamp }: { clientX: number; clientY: number; timeStamp: number }) => void;
+  end: () => void;
+};
+export type PopUpWindowLayOutActionMethod = ({ from, to }: { from: PopUpWindowState; to: PopUpWindowState }) => void;
+
+export type PopUpWindowLayOutCheckMethod = {
+  isHorizontalMove: (moveX: number) => boolean;
+  isLongPress: (timeGap: number) => boolean;
+  isFlicking: ({ moveY, timeGap }: { moveY: number; timeGap: number }) => 'moveUp' | 'moveDown' | false;
+  isOnHandling: () => boolean;
+};
+
+export type UsePopUpWindowLayoutControllResult = {
+  state: PopUpWindowLayOutStates;
+  check: PopUpWindowLayOutCheckMethod;
+  action: PopUpWindowLayOutActionMethod;
+  setUp: PopUpWindowLayOutSetUpMethod;
+};
