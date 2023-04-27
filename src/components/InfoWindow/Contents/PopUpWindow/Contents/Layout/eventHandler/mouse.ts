@@ -12,15 +12,14 @@ export const handleMouseDownCapture: (props: HandleEventStartCaptureProps) => Mo
     const target = e.target as HTMLElement;
     if (target.id === DOMID_POP_UP_WINDOW_HANDLER) return;
     const timeStamp: number = performance.now();
-
     setUp.start({ clientX: e.clientX, clientY: e.clientY, timeStamp });
   };
 
 export const handleMouseMoveCapture: (props: HandleEventMoveCaptureProps) => MouseEventHandler<HTMLDivElement> =
-  ({ state, action, setUp, check }) =>
+  ({ refs, action, setUp, check, tabState }) =>
   (e) => {
     if (check.isOnHandling()) {
-      const { pointRef, layoutStateRef } = state;
+      const { pointRef, layoutStateRef } = refs;
       const { clientX: baseX, clientY: baseY } = pointRef.current;
       const { clientX: curX, clientY: curY } = e;
 
@@ -33,13 +32,13 @@ export const handleMouseMoveCapture: (props: HandleEventMoveCaptureProps) => Mou
       const isFlicking = check.isFlicking({ moveY, timeGap });
 
       if (isFlicking === 'moveUp') {
-        if (state.tabState.popUpState === 'half') action({ from: 'half', to: 'full' });
-        if (state.tabState.popUpState === 'invisible') action({ from: 'invisible', to: 'half' });
+        if (tabState.popUpState === 'half') action({ from: 'half', to: 'full' });
+        if (tabState.popUpState === 'invisible') action({ from: 'invisible', to: 'half' });
       }
 
       if (isFlicking === 'moveDown') {
-        if (state.tabState.popUpState === 'full') action({ from: 'full', to: 'half' });
-        if (state.tabState.popUpState === 'half') action({ from: 'half', to: 'invisible' });
+        if (tabState.popUpState === 'full') action({ from: 'full', to: 'half' });
+        if (tabState.popUpState === 'half') action({ from: 'half', to: 'invisible' });
       }
     }
   };

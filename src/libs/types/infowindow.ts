@@ -46,18 +46,19 @@ export interface HandleEventStartCaptureProps {
 export interface HandleEventMoveCaptureProps {
   setUp: PopUpWindowLayOutSetUpMethod;
   action: PopUpWindowLayOutActionMethod;
-  state: PopUpWindowLayOutStates;
+  refs: PopUpWindowLayOutRefs;
   check: PopUpWindowLayOutCheckMethod;
+  tabState: TabState;
 }
 export interface HandleEventEndCaptureProps {
   setUp: PopUpWindowLayOutSetUpMethod;
   check: PopUpWindowLayOutCheckMethod;
+  tabState: TabState;
 }
 
-export type PopUpWindowLayOutStates = {
+export type PopUpWindowLayOutRefs = {
   layoutStateRef: MutableRefObject<{ onHandling: boolean; timeStamp: number }>;
   pointRef: MutableRefObject<{ clientX: number; clientY: number }>;
-  tabState: TabState;
 };
 
 export type PopUpWindowLayOutSetUpMethod = {
@@ -74,7 +75,7 @@ export type PopUpWindowLayOutCheckMethod = {
 };
 
 export type UsePopUpWindowLayoutControllResult = {
-  state: PopUpWindowLayOutStates;
+  refs: PopUpWindowLayOutRefs;
   check: PopUpWindowLayOutCheckMethod;
   action: PopUpWindowLayOutActionMethod;
   setUp: PopUpWindowLayOutSetUpMethod;

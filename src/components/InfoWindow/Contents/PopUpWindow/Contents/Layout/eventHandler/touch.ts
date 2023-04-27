@@ -16,35 +16,33 @@ export const handleTouchStartCapture: (props: HandleEventStartCaptureProps) => T
   };
 
 export const handleTouchMoveCapture: (props: HandleEventMoveCaptureProps) => TouchEventHandler<HTMLDivElement> =
-  ({ state, action, setUp, check }) =>
+  ({ refs, action, setUp, check, tabState }) =>
   (e) => {
     if (check.isOnHandling()) {
-      const { pointRef, layoutStateRef } = state;
+      const { pointRef, layoutStateRef } = refs;
       const { clientX: baseX, clientY: baseY } = pointRef.current;
       const { clientX: curX, clientY: curY } = e.touches[0];
 
       const timeGap = performance.now() - layoutStateRef.current.timeStamp;
       const moveY = curY - baseY;
       const moveX = curX - baseX;
+      const isFlicking = check.isFlicking({ moveY, timeGap });
 
       if (check.isHorizontalMove(moveX) || check.isLongPress(timeGap)) setUp.end();
 
-      const isFlicking = check.isFlicking({ moveY, timeGap });
-
       if (isFlicking === 'moveUp') {
-        if (state.tabState.popUpState === 'half') action({ from: 'half', to: 'full' });
-        if (state.tabState.popUpState === 'invisible') action({ from: 'invisible', to: 'half' });
+        if (tabState.popUpState === 'half') action({ from: 'half', to: 'full' });
+        if (tabState.popUpState === 'invisible') action({ from: 'invisible', to: 'half' });
       }
 
       if (isFlicking === 'moveDown') {
-        if (state.tabState.popUpState === 'full') action({ from: 'full', to: 'half' });
-        if (state.tabState.popUpState === 'half') action({ from: 'half', to: 'invisible' });
+        if (tabState.popUpState === 'full') action({ from: 'full', to: 'half' });
+        if (tabState.popUpState === 'half') action({ from: 'half', to: 'invisible' });
       }
     }
   };
-
 export const handleTouchEndCapture: (props: HandleEventEndCaptureProps) => TouchEventHandler<HTMLDivElement> =
-  ({ setUp, check }) =>
+  ({ setUp }) =>
   () => {
-    if (check.isOnHandling()) setUp.end();
+    setUp.end();
   };

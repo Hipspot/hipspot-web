@@ -1,18 +1,11 @@
 import { useEffect } from 'react';
-import styled from '@emotion/styled';
 import { activatedCafeIdAtom, cafeInfoQuery, tabStateAtom } from '@states/infoWindow';
 import { useRecoilValue, useRecoilValueLoadable } from 'recoil';
 import MakeLodableSuspense from '@components/MakeLodableSuspense';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import { DOMID_BLURFRAME, DOMID_IMAGE_SLIDER, DOMID_POP_UP_WINDOW, DOMTargetList } from '@constants/DOM';
-import {
-  CSSVAR_IMAGE_CONCEAL,
-  CSSVAR_IMAGE_SLIDER_HEIGHT,
-  CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION,
-  CSSVAR_IMAGE_SLIDER_WIDTH,
-  CSSVAR_IMAGE_TRANSLATE,
-} from '@constants/cssVar';
 import { CafeInfo } from '@libs/types/cafe';
+import * as S from './style';
 import * as MapButtonList from './Contents/MapButtonList';
 import Title, { TitleSkeleton } from './Contents/Title';
 import Information, { InformationSkeleton } from './Contents/Information';
@@ -48,19 +41,19 @@ export default function InfoWindow() {
       <PopUpWindow.Handler available={!!contents} tabState={tabState} />
       {contents ? (
         <BlurFrame id={DOMID_BLURFRAME} tabState={tabState}>
-          <TopSection>
-            <TitleWrapper>
+          <S.TopSection>
+            <S.TitleWrapper>
               <MakeLodableSuspense lodableState={state} loading={<TitleSkeleton />}>
                 <Title placeName={contents.cafeName} />
               </MakeLodableSuspense>
-            </TitleWrapper>
-            <ImageSliderWrapper id={DOMID_IMAGE_SLIDER}>
+            </S.TitleWrapper>
+            <S.ImageSliderWrapper id={DOMID_IMAGE_SLIDER}>
               <MakeLodableSuspense lodableState={state} loading={<CustomImageSliderSkeleton />}>
                 <ImageListTab cafeId={contents.cafeId} imageList={contents.imageList} wrapperId={DOMID_IMAGE_SLIDER} />
               </MakeLodableSuspense>
-            </ImageSliderWrapper>
-          </TopSection>
-          <Section>
+            </S.ImageSliderWrapper>
+          </S.TopSection>
+          <S.Section tabState={tabState}>
             <MakeLodableSuspense lodableState={state} loading={<InformationSkeleton />}>
               <Information
                 openingHours={contents.openingHours}
@@ -76,47 +69,12 @@ export default function InfoWindow() {
                 카카오맵 길찾기
               </MapButtonList.Button>
             </MapButtonList.List>
-          </Section>
+          </S.Section>
         </BlurFrame>
       ) : (
-        <Loading data-testid="loading" />
+        <S.Loading data-testid="loading" />
       )}
       <PopUpWindow.CloseButton data-testid="close_button" />
     </PopUpWindow.Layout>
   );
 }
-
-const TopSection = styled.section``;
-const Section = styled.section`
-  background-color: white;
-  padding: 16px;
-  flex: 1;
-`;
-
-const TitleWrapper = styled.div`
-  width: 100%;
-  height: 56px;
-  padding: 0px 16px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-const ImageSliderWrapper = styled.div`
-  :root {
-    ${CSSVAR_IMAGE_TRANSLATE}: translateX(0px);
-    ${CSSVAR_IMAGE_SLIDER_HEIGHT} : 0px;
-    ${CSSVAR_IMAGE_SLIDER_WIDTH} : 0px;
-    ${CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION} : 0s;
-    ${CSSVAR_IMAGE_CONCEAL} : block;
-  }
-`;
-
-const Loading = styled.div`
-  width: 100%;
-  height: 100%;
-  padding-top: 60px;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-`;

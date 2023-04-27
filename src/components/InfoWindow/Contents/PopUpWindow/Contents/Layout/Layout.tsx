@@ -17,7 +17,7 @@ import {
   handleMouseUpCapture,
 } from './eventHandler/mouse';
 import { handleTouchEndCapture, handleTouchMoveCapture, handleTouchStartCapture } from './eventHandler/touch';
-import usePopUpWindowLayoutControll from './usePopUpWindowLayoutStates';
+import usePopUpWindowLayoutControll from './usePopUpWindowLayoutControll';
 
 export interface PopUpWindowLayoutProps {
   id: string;
@@ -26,14 +26,14 @@ export interface PopUpWindowLayoutProps {
 }
 
 function Layout({ id, children, tabState, smoothLoopId }: PopUpWindowLayoutProps & PopUpWindowScopeProps) {
-  const { state, action, setUp, check } = usePopUpWindowLayoutControll();
+  const { refs, action, setUp, check } = usePopUpWindowLayoutControll();
 
   const eventStartProp: HandleEventStartCaptureProps = {
     setUp,
   };
 
-  const eventMoveProp: HandleEventMoveCaptureProps = { state, setUp, action, check };
-  const eventEndProp: HandleEventEndCaptureProps = { setUp, check };
+  const eventMoveProp: HandleEventMoveCaptureProps = { refs, setUp, action, check, tabState };
+  const eventEndProp: HandleEventEndCaptureProps = { setUp, check, tabState };
 
   const onMouseDownCapture = handleMouseDownCapture(eventStartProp);
   const onMouseMoveCapture = handleMouseMoveCapture(eventMoveProp);

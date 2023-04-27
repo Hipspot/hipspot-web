@@ -1,23 +1,27 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import { tabStateAtom } from '@states/infoWindow';
+import useCameraMove from '@components/MapComp/hooks/useCameraMove';
 import { PopUpWindowState, UsePopUpWindowLayoutControllResult } from '@libs/types/infowindow';
 import { PopUpHeightsType, popUpHeights } from '@constants/popUpHeights';
 import { reactRefUpdate } from '../../utils/reactRefUpdate';
 
 const usePopUpWindowLayoutControll: () => UsePopUpWindowLayoutControllResult = () => {
   const [tabState, setTabState] = useRecoilState(tabStateAtom);
+  const { flyToPrev } = useCameraMove();
   const layoutStateRef = useRef<{ onHandling: boolean; timeStamp: number }>({ onHandling: false, timeStamp: 0 });
   const pointRef = useRef<{ clientX: number; clientY: number }>({ clientX: 0, clientY: 0 });
 
   /**
-   *
+   * popUpWindow LayOut에 필요한 Ref들을 모아둔 객체
    */
-  const state = {
-    layoutStateRef,
-    pointRef,
-    tabState,
-  };
+  const refs = useMemo(
+    () => ({
+      layoutStateRef,
+      pointRef,
+    }),
+    []
+  );
 
   /**
    * Layout 컨트롤을 위해 필요한 값을 저장하기 위해 사용하는 메서드
@@ -40,23 +44,27 @@ const usePopUpWindowLayoutControll: () => UsePopUpWindowLayoutControllResult = (
 
   /**
    * Layout을 움직이는 함수
-   *
+   * @param from :
    */
-  const action = useCallback(({ from, to }: { from: PopUpWindowState; to: PopUpWindowState }) => {
-    if (from === 'full' && to === 'half')
-      setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.middle], popUpState: to }));
-    if (from === 'invisible' && to === 'half')
-      setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.middle], popUpState: to }));
-    if (from === 'half' && to === 'full')
-      setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.top], popUpState: to }));
-    if (from === 'half' && to === 'invisible')
-      setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.bottom], popUpState: to }));
-
-    setUp.end();
-  }, []);
+  const action = useCallback(
+    ({ from, to }: { from: PopUpWindowState; to: PopUpWindowState }) => {
+      setUp.end();
+      if (from === 'full' && to === 'half')
+        setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.middle], popUpState: to }));
+      if (from === 'invisible' && to === 'half')
+        setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.middle], popUpState: to }));
+      if (from === 'half' && to === 'full')
+        setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.top], popUpState: to }));
+      if (from === 'half' && to === 'invisible') {
+        setTabState((prev) => ({ ...prev, top: popUpHeights[PopUpHeightsType.bottom], popUpState: to }));
+        flyToPrev();
+      }
+    },
+    [tabState]
+  );
 
   /**
-   * 각 이벤트를 확인하는 함수
+   * 이벤트를 확인하는 함수
    *
    */
   const check = useMemo(
@@ -74,7 +82,7 @@ const usePopUpWindowLayoutControll: () => UsePopUpWindowLayoutControllResult = (
   );
 
   return {
-    state,
+    refs,
     setUp,
     action,
     check,
