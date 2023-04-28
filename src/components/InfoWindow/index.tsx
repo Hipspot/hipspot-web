@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { activatedCafeIdAtom, cafeInfoQuery, tabStateAtom } from '@states/infoWindow';
+import { activatedCafeIdAtom, cafeInfoQuery } from '@states/infoWindow';
 import { useRecoilValue, useRecoilValueLoadable } from 'recoil';
 import MakeLodableSuspense from '@components/MakeLodableSuspense';
 import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
@@ -13,9 +13,10 @@ import BlurFrame from './Contents/BlurFrame';
 import { CustomImageSliderSkeleton } from './Contents/ImageSlider';
 import ImageListTab from './Contents/ImageListTab';
 import PopUpWindow from './Contents/PopUpWindow';
+import usePopUpWindowLayoutControll from './Contents/PopUpWindow/Contents/Layout/usePopUpWindowLayoutControll';
 
 export default function InfoWindow() {
-  const tabState = useRecoilValue(tabStateAtom);
+  const { tabState } = usePopUpWindowLayoutControll();
   const activatedCafeId = useRecoilValue(activatedCafeIdAtom);
   const lodable = useRecoilValueLoadable(cafeInfoQuery(activatedCafeId));
   const { state } = lodable;

@@ -26,7 +26,6 @@ export const handleTouchMove: (props: HandleImageSlideMoveProps) => TouchEventHa
       const { left: prevLeft, x } = imageSliderRef.current;
       const move = e.touches[0].clientX - x;
       const left = prevLeft + move;
-
       moveImageSlider({ left });
       reactRefUpdate({
         ref: imageSliderRef,

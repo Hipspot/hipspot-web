@@ -26,14 +26,14 @@ export interface PopUpWindowLayoutProps {
 }
 
 function Layout({ id, children, tabState, smoothLoopId }: PopUpWindowLayoutProps & PopUpWindowScopeProps) {
-  const { refs, action, setUp, check } = usePopUpWindowLayoutControll();
+  const { refs, setPopUpWindowPosition, setUp, check } = usePopUpWindowLayoutControll();
 
   const eventStartProp: HandleEventStartCaptureProps = {
     setUp,
   };
 
-  const eventMoveProp: HandleEventMoveCaptureProps = { refs, setUp, action, check, tabState };
-  const eventEndProp: HandleEventEndCaptureProps = { setUp, check, tabState };
+  const eventMoveProp: HandleEventMoveCaptureProps = { refs, setUp, setPopUpWindowPosition, check, tabState };
+  const eventEndProp: HandleEventEndCaptureProps = { setUp, check };
 
   const onMouseDownCapture = handleMouseDownCapture(eventStartProp);
   const onMouseMoveCapture = handleMouseMoveCapture(eventMoveProp);

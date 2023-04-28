@@ -16,7 +16,7 @@ export const handleTouchStartCapture: (props: HandleEventStartCaptureProps) => T
   };
 
 export const handleTouchMoveCapture: (props: HandleEventMoveCaptureProps) => TouchEventHandler<HTMLDivElement> =
-  ({ refs, action, setUp, check, tabState }) =>
+  ({ refs, setPopUpWindowPosition, setUp, check, tabState }) =>
   (e) => {
     if (check.isOnHandling()) {
       const { pointRef, layoutStateRef } = refs;
@@ -31,13 +31,13 @@ export const handleTouchMoveCapture: (props: HandleEventMoveCaptureProps) => Tou
       if (check.isHorizontalMove(moveX) || check.isLongPress(timeGap)) setUp.end();
 
       if (isFlicking === 'moveUp') {
-        if (tabState.popUpState === 'half') action({ from: 'half', to: 'full' });
-        if (tabState.popUpState === 'invisible') action({ from: 'invisible', to: 'half' });
+        if (tabState.popUpState === 'half') setPopUpWindowPosition({ to: 'full' });
+        if (tabState.popUpState === 'invisible') setPopUpWindowPosition({ to: 'half' });
       }
 
       if (isFlicking === 'moveDown') {
-        if (tabState.popUpState === 'full') action({ from: 'full', to: 'half' });
-        if (tabState.popUpState === 'half') action({ from: 'half', to: 'invisible' });
+        if (tabState.popUpState === 'full') setPopUpWindowPosition({ to: 'half' });
+        if (tabState.popUpState === 'half') setPopUpWindowPosition({ to: 'invisible' });
       }
     }
   };

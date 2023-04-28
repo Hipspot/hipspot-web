@@ -2,6 +2,7 @@ import { MutableRefObject } from 'react';
 import { SetterOrUpdater } from 'recoil';
 
 export type PopUpWindowState = 'invisible' | 'half' | 'full';
+
 export type PopUpWindowScopeProps = {
   smoothLoopId: { id: number };
 };
@@ -41,33 +42,33 @@ export interface HandleEventMoveProps {
 }
 
 export interface HandleEventStartCaptureProps {
-  setUp: PopUpWindowLayOutSetUpMethod;
+  setUp: PopUpWindowLayoutSetUpMethod;
 }
 export interface HandleEventMoveCaptureProps {
-  setUp: PopUpWindowLayOutSetUpMethod;
-  action: PopUpWindowLayOutActionMethod;
-  refs: PopUpWindowLayOutRefs;
-  check: PopUpWindowLayOutCheckMethod;
+  setUp: PopUpWindowLayoutSetUpMethod;
+  setPopUpWindowPosition: PopUpWindowLayoutPositionMethod;
+  refs: PopUpWindowLayoutRefs;
+  check: PopUpWindowLayoutCheckMethod;
   tabState: TabState;
 }
 export interface HandleEventEndCaptureProps {
-  setUp: PopUpWindowLayOutSetUpMethod;
-  check: PopUpWindowLayOutCheckMethod;
-  tabState: TabState;
+  setUp: PopUpWindowLayoutSetUpMethod;
+  check: PopUpWindowLayoutCheckMethod;
 }
 
-export type PopUpWindowLayOutRefs = {
+export type PopUpWindowLayoutRefs = {
   layoutStateRef: MutableRefObject<{ onHandling: boolean; timeStamp: number }>;
   pointRef: MutableRefObject<{ clientX: number; clientY: number }>;
+  positionRef: MutableRefObject<{ top: number }>;
 };
 
-export type PopUpWindowLayOutSetUpMethod = {
+export type PopUpWindowLayoutSetUpMethod = {
   start: ({ clientX, clientY, timeStamp }: { clientX: number; clientY: number; timeStamp: number }) => void;
   end: () => void;
 };
-export type PopUpWindowLayOutActionMethod = ({ from, to }: { from: PopUpWindowState; to: PopUpWindowState }) => void;
+export type PopUpWindowLayoutPositionMethod = ({ to }: { to: PopUpWindowState }) => void;
 
-export type PopUpWindowLayOutCheckMethod = {
+export type PopUpWindowLayoutCheckMethod = {
   isHorizontalMove: (moveX: number) => boolean;
   isLongPress: (timeGap: number) => boolean;
   isFlicking: ({ moveY, timeGap }: { moveY: number; timeGap: number }) => 'moveUp' | 'moveDown' | false;
@@ -75,8 +76,9 @@ export type PopUpWindowLayOutCheckMethod = {
 };
 
 export type UsePopUpWindowLayoutControllResult = {
-  refs: PopUpWindowLayOutRefs;
-  check: PopUpWindowLayOutCheckMethod;
-  action: PopUpWindowLayOutActionMethod;
-  setUp: PopUpWindowLayOutSetUpMethod;
+  refs: PopUpWindowLayoutRefs;
+  check: PopUpWindowLayoutCheckMethod;
+  setPopUpWindowPosition: PopUpWindowLayoutPositionMethod;
+  setUp: PopUpWindowLayoutSetUpMethod;
+  tabState: TabState;
 };
