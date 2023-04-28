@@ -4,6 +4,12 @@ import { tabStateAtom } from '@states/infoWindow';
 import useCameraMove from '@components/MapComp/hooks/useCameraMove';
 import { PopUpWindowState, UsePopUpWindowLayoutControllResult } from '@libs/types/infowindow';
 import { PopUpHeightsType, popUpHeights } from '@constants/popUpHeights';
+import {
+  FLICKING_DISTANCE,
+  FLICKING_TIMEGAP,
+  HORIZONTAL_MOVE_DISTANCE,
+  LONGPRESS_TIMEGAP,
+} from '@constants/interaction';
 import { reactRefUpdate } from '../../utils/reactRefUpdate';
 
 const usePopUpWindowLayoutControll: () => UsePopUpWindowLayoutControllResult = () => {
@@ -69,11 +75,11 @@ const usePopUpWindowLayoutControll: () => UsePopUpWindowLayoutControllResult = (
    */
   const check = useMemo(
     () => ({
-      isHorizontalMove: (moveX: number) => moveX < -20 || moveX > 20,
-      isLongPress: (timeGap: number) => timeGap > 150,
+      isHorizontalMove: (moveX: number) => moveX < -HORIZONTAL_MOVE_DISTANCE || moveX > HORIZONTAL_MOVE_DISTANCE,
+      isLongPress: (timeGap: number) => timeGap > LONGPRESS_TIMEGAP,
       isFlicking: ({ moveY, timeGap }: { moveY: number; timeGap: number }) => {
-        if (moveY < -50 && timeGap < 150) return 'moveUp';
-        if (moveY > 50 && timeGap < 150) return 'moveDown';
+        if (moveY < -FLICKING_DISTANCE && timeGap < FLICKING_TIMEGAP) return 'moveUp';
+        if (moveY > FLICKING_DISTANCE && timeGap < FLICKING_TIMEGAP) return 'moveDown';
         return false;
       },
       isOnHandling: () => layoutStateRef.current.onHandling,
