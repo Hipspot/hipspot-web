@@ -4,7 +4,7 @@ import modifyInfoWindowTop from '@components/InfoWindow/view/modifyInfoWindowTop
 import { TabState, HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps } from '@libs/types/infowindow';
 import { DOMID_BLURFRAME, DOMID_IMAGE_SLIDER } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
-import { SlideUpWindowEvent } from '@libs/types/customEvents';
+import { createCustomEvent } from '@libs/utils/customEvent';
 import { cancelAnimation } from '../../../utils/cancelAnimation';
 import domUpdater from '../utils/domUpdater';
 import { reactRefUpdate } from '../../../utils/reactRefUpdate';
@@ -33,8 +33,7 @@ export const handleTouchMove: (props: HandleEventMoveProps) => TouchEventHandler
       cancelAnimation(smoothLoopId);
       modifyInfoWindowTop({ currentTop });
 
-      const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), { currentTop });
-
+      const slideEvent = createCustomEvent(EVENT_SLIDE_UP_WINDOW, { currentTop });
       target[DOMID_IMAGE_SLIDER].dispatchEvent(slideEvent);
       target[DOMID_BLURFRAME].dispatchEvent(slideEvent);
 

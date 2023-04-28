@@ -107,6 +107,7 @@ function ImageSlider({ wrapperId, imageList }: SlideProps) {
   return (
     <SliderWrapper>
       <SlideContainer
+        id={DOMID_IMAGE_SLIDER_CONTAINER}
         onMouseMoveCapture={onMouseMoveCapture}
         onMouseDownCapture={onMouseDownCapture}
         onMouseUpCapture={onMouseUpCapture}

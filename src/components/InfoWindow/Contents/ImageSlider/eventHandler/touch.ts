@@ -53,7 +53,6 @@ export const handleTouchEnd: (props: HandleImageSliderEndProps) => TouchEventHan
       const leftCorrectionValue = calcImageListPosition({ left, width: blockWidth, index });
 
       slideImageSlider({ leftCorrectionValue });
-      concealNotSelectedImage(false);
 
       reactRefUpdate({
         ref: imageSliderRef,

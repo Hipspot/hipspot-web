@@ -4,7 +4,7 @@ import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import { DOMID_BLURFRAME, DOMID_IMAGE_SLIDER } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import modifyInfoWindowTop from '@components/InfoWindow/view/modifyInfoWindowTop';
-import { SlideUpWindowEvent } from '@libs/types/customEvents';
+import { createCustomEvent } from '@libs/utils/customEvent';
 import { cancelAnimation } from '../../../utils/cancelAnimation';
 import { reactRefUpdate } from '../../../utils/reactRefUpdate';
 import domUpdater from '../utils/domUpdater';
@@ -32,7 +32,7 @@ export const handleMouseMove: (eventMoveProps: HandleEventMoveProps) => MouseEve
       cancelAnimation(smoothLoopId);
       modifyInfoWindowTop({ currentTop });
 
-      const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), { currentTop });
+      const slideEvent = createCustomEvent(EVENT_SLIDE_UP_WINDOW, { currentTop });
       target[DOMID_IMAGE_SLIDER].dispatchEvent(slideEvent);
       target[DOMID_BLURFRAME].dispatchEvent(slideEvent);
       reactRefUpdate({ ref: topCoordRef, update: e.clientY });

@@ -1,7 +1,6 @@
 import slideImageSlider from '@components/InfoWindow/view/slideImageSlider';
 import moveImageSlider from '@components/InfoWindow/view/moveImageSlider';
 import stopImageSlideTransition from '@components/InfoWindow/view/stopImageSlideTransition';
-import concealNotSelectedImage from '@components/InfoWindow/view/concealNotSelectedImage';
 import { CSSVAR_IMAGE_SLIDER_WIDTH } from '@constants/cssVar';
 import { DOMID_IMAGE_SLIDER } from '@constants/DOM';
 import { HandleImageSliderStartProps, HandleImageSlideMoveProps, HandleImageSliderEndProps } from '@libs/types/slider';
@@ -64,7 +63,6 @@ export const handleMouseUp: (props: HandleImageSliderEndProps) => MouseEventHand
       const leftCorrectionValue = calcImageListPosition({ left, width: blockWidth, index });
 
       slideImageSlider({ leftCorrectionValue });
-      concealNotSelectedImage(false);
 
       reactRefUpdate({
         ref: imageSliderRef,
