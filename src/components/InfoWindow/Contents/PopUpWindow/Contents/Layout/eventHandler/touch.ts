@@ -1,4 +1,4 @@
-import { DOMID_POP_UP_WINDOW_HANDLER } from '@constants/DOM';
+import { DOMID_BLURFRAME, DOMID_POP_UP_WINDOW_HANDLER } from '@constants/DOM';
 import {
   HandleEventEndCaptureProps,
   HandleEventMoveCaptureProps,
@@ -37,7 +37,9 @@ export const handleTouchMoveCapture: (props: HandleEventMoveCaptureProps) => Tou
       }
 
       if (isFlicking === 'moveDown') {
-        if (tabState.popUpState === 'full') setPopUpWindowPosition({ to: 'half' });
+        if (tabState.popUpState === 'full' && !check.isScrolled(DOMID_BLURFRAME)) {
+          setPopUpWindowPosition({ to: 'half' });
+        }
         if (tabState.popUpState === 'half') setPopUpWindowPosition({ to: 'invisible' });
       }
     }

@@ -99,6 +99,7 @@ const usePopUpWindowLayoutControll: () => UsePopUpWindowLayoutControllResult = (
         return false;
       },
       isOnHandling: () => layoutStateRef.current.onHandling,
+      isScrolled: (DOMID: string) => document.getElementById(DOMID)!.scrollTop > 0,
     };
   }, []);
 

@@ -73,6 +73,7 @@ export type PopUpWindowLayoutCheckMethod = {
   isLongPress: (timeGap: number) => boolean;
   isFlicking: ({ moveY, timeGap }: { moveY: number; timeGap: number }) => 'moveUp' | 'moveDown' | false;
   isOnHandling: () => boolean;
+  isScrolled: (DOMID: string) => boolean;
 };
 
 export type UsePopUpWindowLayoutControllResult = {
