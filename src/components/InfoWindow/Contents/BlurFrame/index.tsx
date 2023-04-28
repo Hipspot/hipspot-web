@@ -1,6 +1,6 @@
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import { TabState } from '@libs/types/infowindow';
-import { SlideUpWindowEvent } from '@libs/types/customEvents';
+import { createCustomEvent } from '@libs/utils/customEvent';
 import { DOMID_BLURFRAME } from '@constants/DOM';
 import { popUpHeights } from '@constants/popUpHeights';
 import { useEffect } from 'react';
@@ -25,7 +25,7 @@ function BlurFrame({ tabState, id, children }: BlurFrameProps) {
   }, []);
 
   useEffect(() => {
-    const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), {
+    const slideEvent = createCustomEvent(EVENT_SLIDE_UP_WINDOW, {
       currentTop: tabState.top,
     });
     document.getElementById(DOMID_BLURFRAME)?.dispatchEvent(slideEvent);
