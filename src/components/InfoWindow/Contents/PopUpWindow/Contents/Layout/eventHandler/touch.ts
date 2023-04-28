@@ -26,6 +26,7 @@ export const handleTouchMoveCapture: (props: HandleEventMoveCaptureProps) => Tou
       const timeGap = performance.now() - layoutStateRef.current.timeStamp;
       const moveY = curY - baseY;
       const moveX = curX - baseX;
+
       const isFlicking = check.isFlicking({ moveY, timeGap });
 
       if (check.isHorizontalMove(moveX) || check.isLongPress(timeGap)) setUp.end();

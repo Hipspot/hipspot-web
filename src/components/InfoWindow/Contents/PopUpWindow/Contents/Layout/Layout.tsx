@@ -45,6 +45,7 @@ function Layout({ id, children, tabState, smoothLoopId }: PopUpWindowLayoutProps
 
   useEffect(() => {
     smoothMove({
+      startY: refs.positionRef.current.top,
       parentElement: document.getElementById(id) as HTMLDivElement,
       endPointTabState: tabState,
       smoothLoopId,

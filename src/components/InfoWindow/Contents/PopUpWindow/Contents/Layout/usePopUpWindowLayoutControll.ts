@@ -4,7 +4,9 @@ import { tabStateAtom } from '@states/infoWindow';
 import useCameraMove from '@components/MapComp/hooks/useCameraMove';
 import { PopUpWindowState, UsePopUpWindowLayoutControllResult } from '@libs/types/infowindow';
 import { PopUpHeightsType, popUpHeights } from '@constants/popUpHeights';
+import { isIOS } from '@libs/utils/userAgent';
 import {
+  DURATION,
   FLICKING_DISTANCE,
   FLICKING_TIMEGAP,
   HORIZONTAL_MOVE_DISTANCE,
@@ -15,9 +17,26 @@ import { reactRefUpdate } from '../../utils/reactRefUpdate';
 const usePopUpWindowLayoutControll: () => UsePopUpWindowLayoutControllResult = () => {
   const [tabState, setTabState] = useRecoilState(tabStateAtom);
   const { flyToPrev } = useCameraMove();
-  const positionRef = useRef<{ top: number }>({ top: 0 });
+  const positionRef = useRef<{ top: number }>({ top: popUpHeights[tabState.popUpState] });
   const layoutStateRef = useRef<{ onHandling: boolean; timeStamp: number }>({ onHandling: false, timeStamp: 0 });
   const pointRef = useRef<{ clientX: number; clientY: number }>({ clientX: 0, clientY: 0 });
+
+  const config = useMemo<{
+    duration: number;
+    flickingDistance: number;
+    flickingTimeGap: number;
+    horizontalMoveDistance: number;
+    longPressTimeGap: number;
+  }>(
+    () => ({
+      duration: DURATION,
+      flickingDistance: isIOS ? FLICKING_DISTANCE * 2 : FLICKING_DISTANCE,
+      flickingTimeGap: FLICKING_TIMEGAP,
+      horizontalMoveDistance: isIOS ? HORIZONTAL_MOVE_DISTANCE * 2 : HORIZONTAL_MOVE_DISTANCE,
+      longPressTimeGap: LONGPRESS_TIMEGAP,
+    }),
+    []
+  );
 
   /**
    * popUpWindow Layout에 필요한 Ref들을 모아둔 객체
@@ -69,19 +88,19 @@ const usePopUpWindowLayoutControll: () => UsePopUpWindowLayoutControllResult = (
    * 이벤트를 확인하는 함수
    *
    */
-  const check = useMemo(
-    () => ({
-      isHorizontalMove: (moveX: number) => moveX < -HORIZONTAL_MOVE_DISTANCE || moveX > HORIZONTAL_MOVE_DISTANCE,
-      isLongPress: (timeGap: number) => timeGap > LONGPRESS_TIMEGAP,
+  const check = useMemo(() => {
+    const { horizontalMoveDistance, longPressTimeGap, flickingDistance, flickingTimeGap } = config;
+    return {
+      isHorizontalMove: (moveX: number) => moveX < -horizontalMoveDistance || moveX > horizontalMoveDistance,
+      isLongPress: (timeGap: number) => timeGap > longPressTimeGap,
       isFlicking: ({ moveY, timeGap }: { moveY: number; timeGap: number }) => {
-        if (moveY < -FLICKING_DISTANCE && timeGap < FLICKING_TIMEGAP) return 'moveUp';
-        if (moveY > FLICKING_DISTANCE && timeGap < FLICKING_TIMEGAP) return 'moveDown';
+        if (moveY < -flickingDistance && timeGap < flickingTimeGap) return 'moveUp';
+        if (moveY > flickingDistance && timeGap < flickingTimeGap) return 'moveDown';
         return false;
       },
       isOnHandling: () => layoutStateRef.current.onHandling,
-    }),
-    []
-  );
+    };
+  }, []);
 
   return {
     refs,
