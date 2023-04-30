@@ -54,7 +54,7 @@ export default function InfoWindow() {
               </MakeLodableSuspense>
             </S.ImageSliderWrapper>
           </S.TopSection>
-          <S.Section tabState={tabState}>
+          <S.Section>
             <MakeLodableSuspense lodableState={state} loading={<InformationSkeleton />}>
               <Information
                 openingHours={contents.openingHours}

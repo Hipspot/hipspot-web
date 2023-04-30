@@ -5,13 +5,11 @@ import {
   CSSVAR_IMAGE_TRANSLATE,
 } from '@constants/cssVar';
 import styled from '@emotion/styled';
-import { TabState } from '@libs/types/infowindow';
 
 export const TopSection = styled.section``;
-export const Section = styled.section<{ tabState: TabState }>`
+export const Section = styled.section`
   background-color: white;
   padding: 16px;
-  display: ${(props) => (props.tabState.popUpState === 'full' ? 'block' : 'none')};
   flex: 1;
 `;
 
