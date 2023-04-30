@@ -10,22 +10,21 @@ import { ease } from '@libs/utils/easings';
 
 interface SmoothMoveArgs {
   parentElement: HTMLDivElement;
-  startY: number;
-  endPointTabState: TabState;
+  tabState: TabState;
   smoothLoopId: { id: number };
-  callback?: () => void;
+  recordCurrentTop: (top: number) => void;
 }
 const duration = DURATION;
 
-export default function smoothMove({ parentElement, startY, endPointTabState, smoothLoopId }: SmoothMoveArgs) {
+export default function smoothMove({ parentElement, tabState, smoothLoopId, recordCurrentTop }: SmoothMoveArgs) {
   const start = performance.now();
+  const [startY, endY] = [tabState.startTop, tabState.top];
   let curY = parentElement.getBoundingClientRect().y;
   let curT = 0;
   let timeRef = start;
 
   function loop() {
     const loopT = performance.now();
-    const endY = endPointTabState.top;
     const timeRatio = calcProgressRatio({ start, end: start + duration, current: loopT });
     const easedRatio = ease.easeOutQuint(timeRatio);
     const nextY = calcInterpolation({ min: startY, max: endY, ratio: easedRatio });
@@ -36,6 +35,7 @@ export default function smoothMove({ parentElement, startY, endPointTabState, sm
     modifyInfoWindowTop({ currentTop: curY });
     dispatchCustomEvent(DOMID_BLURFRAME, slideEvent);
     dispatchCustomEvent(DOMID_IMAGE_SLIDER, slideEvent);
+    recordCurrentTop(curY);
 
     if (Math.abs(curY - endY) > 1 && curT < duration) {
       smoothLoopId.id = requestAnimationFrame(loop);
@@ -43,6 +43,7 @@ export default function smoothMove({ parentElement, startY, endPointTabState, sm
       modifyInfoWindowTop({ currentTop: endY });
       dispatchCustomEvent(DOMID_BLURFRAME, slideEvent);
       dispatchCustomEvent(DOMID_IMAGE_SLIDER, slideEvent);
+      recordCurrentTop(curY);
     }
     curT += loopT - timeRef;
     timeRef = loopT;

@@ -7,29 +7,30 @@ import {
 } from '@libs/types/infowindow';
 
 export const handleMouseDownCapture: (props: HandleEventStartCaptureProps) => MouseEventHandler<HTMLDivElement> =
-  ({ setUp }) =>
+  ({ recordGesture }) =>
   (e) => {
     const target = e.target as HTMLElement;
     if (target.id === DOMID_POP_UP_WINDOW_HANDLER) return;
     const timeStamp: number = performance.now();
-    setUp.start({ clientX: e.clientX, clientY: e.clientY, timeStamp });
+    recordGesture.start({ clientX: e.clientX, clientY: e.clientY, timeStamp });
   };
 
 export const handleMouseMoveCapture: (props: HandleEventMoveCaptureProps) => MouseEventHandler<HTMLDivElement> =
-  ({ refs, setPopUpWindowPosition, setUp, check, tabState }) =>
+  ({ model, method, recordGesture, check, tabState }) =>
   (e) => {
-    if (check.isOnHandling()) {
-      const { pointRef, layoutStateRef } = refs;
-      const { clientX: baseX, clientY: baseY } = pointRef.current;
+    if (check.isOnGesture()) {
+      const { point, layoutState } = model;
+      const { setPopUpWindowPosition } = method;
+      const { clientX: baseX, clientY: baseY } = point;
       const { clientX: curX, clientY: curY } = e;
 
-      const timeGap = performance.now() - layoutStateRef.current.timeStamp;
+      const timeGap = performance.now() - layoutState.timeStamp;
       const moveY = curY - baseY;
       const moveX = curX - baseX;
 
-      if (check.isHorizontalMove(moveX) || check.isLongPress(timeGap)) setUp.end();
-
       const isFlicking = check.isFlicking({ moveY, timeGap });
+
+      if (check.isHorizontalMove(moveX) || check.isLongPress(timeGap) || isFlicking) recordGesture.end();
 
       if (isFlicking === 'moveUp') {
         if (tabState.popUpState === 'half') setPopUpWindowPosition({ to: 'full' });
@@ -44,20 +45,20 @@ export const handleMouseMoveCapture: (props: HandleEventMoveCaptureProps) => Mou
   };
 
 export const handleMouseUpCapture: (props: HandleEventEndCaptureProps) => MouseEventHandler<HTMLDivElement> =
-  ({ setUp, check }) =>
+  ({ recordGesture, check }) =>
   () => {
-    if (check.isOnHandling()) setUp.end();
+    if (check.isOnGesture()) recordGesture.end();
   };
 
 export const handleMouseOutCapture: (props: HandleEventEndCaptureProps) => MouseEventHandler<HTMLDivElement> =
-  ({ setUp, check }) =>
+  ({ recordGesture, check }) =>
   (e) => {
-    if (!check.isOnHandling()) return;
+    if (!check.isOnGesture()) return;
 
     const target = e.target as HTMLDivElement;
     const relatedTarget = e.relatedTarget as HTMLDivElement;
     const outCheck1 = target.closest(`#${DOMID_POP_UP_WINDOW}`);
     const outCheck2 = relatedTarget.closest(`#${DOMID_POP_UP_WINDOW}`);
 
-    if (outCheck1 && !outCheck2) setUp.end();
+    if (outCheck1 && !outCheck2) recordGesture.end();
   };

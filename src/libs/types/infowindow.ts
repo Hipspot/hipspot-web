@@ -1,4 +1,3 @@
-import { MutableRefObject } from 'react';
 import { SetterOrUpdater } from 'recoil';
 
 export type PopUpWindowState = 'invisible' | 'half' | 'full';
@@ -10,6 +9,7 @@ export type PopUpWindowScopeProps = {
 export interface TabState {
   onHandling: boolean;
   top: number;
+  startTop: number;
   popUpState: PopUpWindowState;
 }
 
@@ -42,44 +42,47 @@ export interface HandleEventMoveProps {
 }
 
 export interface HandleEventStartCaptureProps {
-  setUp: PopUpWindowLayoutSetUpMethod;
+  recordGesture: PopUpWindowLayoutSetUpMethod;
 }
 export interface HandleEventMoveCaptureProps {
-  setUp: PopUpWindowLayoutSetUpMethod;
-  setPopUpWindowPosition: PopUpWindowLayoutPositionMethod;
-  refs: PopUpWindowLayoutRefs;
+  recordGesture: PopUpWindowLayoutSetUpMethod;
+  method: PopUpWindowLayoutPositionMethod;
+  model: PopUpWindowLayoutModel;
   check: PopUpWindowLayoutCheckMethod;
   tabState: TabState;
 }
 export interface HandleEventEndCaptureProps {
-  setUp: PopUpWindowLayoutSetUpMethod;
+  recordGesture: PopUpWindowLayoutSetUpMethod;
   check: PopUpWindowLayoutCheckMethod;
 }
 
-export type PopUpWindowLayoutRefs = {
-  layoutStateRef: MutableRefObject<{ onHandling: boolean; timeStamp: number }>;
-  pointRef: MutableRefObject<{ clientX: number; clientY: number }>;
-  positionRef: MutableRefObject<{ top: number }>;
+export type PopUpWindowLayoutModel = {
+  layoutState: { onGesture: boolean; timeStamp: number };
+  point: { clientX: number; clientY: number };
+  position: { top: number };
 };
 
 export type PopUpWindowLayoutSetUpMethod = {
   start: ({ clientX, clientY, timeStamp }: { clientX: number; clientY: number; timeStamp: number }) => void;
   end: () => void;
 };
-export type PopUpWindowLayoutPositionMethod = ({ to }: { to: PopUpWindowState }) => void;
+export type PopUpWindowLayoutPositionMethod = {
+  setPopUpWindowPosition: ({ to }: { to: PopUpWindowState }) => void;
+  recordCurrentTop: (top: number) => void;
+};
 
 export type PopUpWindowLayoutCheckMethod = {
   isHorizontalMove: (moveX: number) => boolean;
   isLongPress: (timeGap: number) => boolean;
   isFlicking: ({ moveY, timeGap }: { moveY: number; timeGap: number }) => 'moveUp' | 'moveDown' | false;
-  isOnHandling: () => boolean;
+  isOnGesture: () => boolean;
   isScrolled: (DOMID: string) => boolean;
 };
 
 export type UsePopUpWindowLayoutControllResult = {
-  refs: PopUpWindowLayoutRefs;
+  model: PopUpWindowLayoutModel;
   check: PopUpWindowLayoutCheckMethod;
-  setPopUpWindowPosition: PopUpWindowLayoutPositionMethod;
-  setUp: PopUpWindowLayoutSetUpMethod;
+  method: PopUpWindowLayoutPositionMethod;
+  recordGesture: PopUpWindowLayoutSetUpMethod;
   tabState: TabState;
 };

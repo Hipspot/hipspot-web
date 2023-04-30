@@ -7,29 +7,30 @@ import {
 import { TouchEventHandler } from 'react';
 
 export const handleTouchStartCapture: (props: HandleEventStartCaptureProps) => TouchEventHandler<HTMLDivElement> =
-  ({ setUp }) =>
+  ({ recordGesture }) =>
   (e) => {
     const target = e.target as HTMLElement;
     if (target.id === DOMID_POP_UP_WINDOW_HANDLER) return;
     const timeStamp: number = performance.now();
-    setUp.start({ clientX: e.touches[0].clientX, clientY: e.touches[0].clientY, timeStamp });
+    recordGesture.start({ clientX: e.touches[0].clientX, clientY: e.touches[0].clientY, timeStamp });
   };
 
 export const handleTouchMoveCapture: (props: HandleEventMoveCaptureProps) => TouchEventHandler<HTMLDivElement> =
-  ({ refs, setPopUpWindowPosition, setUp, check, tabState }) =>
+  ({ model, method, recordGesture, check, tabState }) =>
   (e) => {
-    if (check.isOnHandling()) {
-      const { pointRef, layoutStateRef } = refs;
-      const { clientX: baseX, clientY: baseY } = pointRef.current;
+    if (check.isOnGesture()) {
+      const { point, layoutState } = model;
+      const { setPopUpWindowPosition } = method;
+      const { clientX: baseX, clientY: baseY } = point;
       const { clientX: curX, clientY: curY } = e.touches[0];
 
-      const timeGap = performance.now() - layoutStateRef.current.timeStamp;
+      const timeGap = performance.now() - layoutState.timeStamp;
       const moveY = curY - baseY;
       const moveX = curX - baseX;
 
       const isFlicking = check.isFlicking({ moveY, timeGap });
 
-      if (check.isHorizontalMove(moveX) || check.isLongPress(timeGap)) setUp.end();
+      if (check.isHorizontalMove(moveX) || check.isLongPress(timeGap) || isFlicking) recordGesture.end();
 
       if (isFlicking === 'moveUp') {
         if (tabState.popUpState === 'half') setPopUpWindowPosition({ to: 'full' });
@@ -45,7 +46,7 @@ export const handleTouchMoveCapture: (props: HandleEventMoveCaptureProps) => Tou
     }
   };
 export const handleTouchEndCapture: (props: HandleEventEndCaptureProps) => TouchEventHandler<HTMLDivElement> =
-  ({ setUp }) =>
+  ({ recordGesture }) =>
   () => {
-    setUp.end();
+    recordGesture.end();
   };

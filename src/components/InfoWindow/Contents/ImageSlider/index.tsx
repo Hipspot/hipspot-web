@@ -31,7 +31,10 @@ interface SlideProps {
 
 function ImageSlider({ wrapperId, imageList }: SlideProps) {
   const [imageIndex, setImageIndex] = useState(0);
-  const { tabState, setPopUpWindowPosition } = usePopUpWindowLayoutControll();
+  const {
+    tabState,
+    method: { setPopUpWindowPosition },
+  } = usePopUpWindowLayoutControll();
   const imageSliderRef = useRef<ImageSliderRef>({
     x: 0,
     startX: 0,

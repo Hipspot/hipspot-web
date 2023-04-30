@@ -16,7 +16,9 @@ function useMarkerClickAction() {
   const setTabState = useSetRecoilState(tabStateAtom);
   const setOpenClusterList = useSetRecoilState(openClusterListAtom);
   const setClusterList = useSetRecoilState(clusterListAtom);
-  const { setPopUpWindowPosition } = usePopUpWindowLayoutControll();
+  const {
+    method: { setPopUpWindowPosition },
+  } = usePopUpWindowLayoutControll();
   const { tiltFlyTo } = useCameraMove();
   const mapRef = useMapRef();
   const pointMarkerClickAction = (cafeId: number) => {

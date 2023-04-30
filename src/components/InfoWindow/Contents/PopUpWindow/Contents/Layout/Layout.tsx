@@ -26,14 +26,20 @@ export interface PopUpWindowLayoutProps {
 }
 
 function Layout({ id, children, tabState, smoothLoopId }: PopUpWindowLayoutProps & PopUpWindowScopeProps) {
-  const { refs, setPopUpWindowPosition, setUp, check } = usePopUpWindowLayoutControll();
+  const {
+    model,
+    method,
+    method: { recordCurrentTop },
+    recordGesture,
+    check,
+  } = usePopUpWindowLayoutControll();
 
   const eventStartProp: HandleEventStartCaptureProps = {
-    setUp,
+    recordGesture,
   };
 
-  const eventMoveProp: HandleEventMoveCaptureProps = { refs, setUp, setPopUpWindowPosition, check, tabState };
-  const eventEndProp: HandleEventEndCaptureProps = { setUp, check };
+  const eventMoveProp: HandleEventMoveCaptureProps = { model, recordGesture, method, check, tabState };
+  const eventEndProp: HandleEventEndCaptureProps = { recordGesture, check };
 
   const onMouseDownCapture = handleMouseDownCapture(eventStartProp);
   const onMouseMoveCapture = handleMouseMoveCapture(eventMoveProp);
@@ -45,9 +51,9 @@ function Layout({ id, children, tabState, smoothLoopId }: PopUpWindowLayoutProps
 
   useEffect(() => {
     smoothMove({
-      startY: refs.positionRef.current.top,
       parentElement: document.getElementById(id) as HTMLDivElement,
-      endPointTabState: tabState,
+      tabState,
+      recordCurrentTop,
       smoothLoopId,
     });
   }, [tabState]);

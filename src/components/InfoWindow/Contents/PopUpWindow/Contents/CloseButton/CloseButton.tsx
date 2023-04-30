@@ -4,7 +4,7 @@ import * as S from '../../style';
 import usePopUpWindowLayoutControll from '../Layout/usePopUpWindowLayoutControll';
 
 function CloseButton() {
-  const { setPopUpWindowPosition } = usePopUpWindowLayoutControll();
+  const { method } = usePopUpWindowLayoutControll();
   const { flyToPrev } = useCameraMove();
   return (
     <S.Icon
@@ -12,7 +12,7 @@ function CloseButton() {
       onClick={(e) => {
         e.stopPropagation();
         e.preventDefault();
-        setPopUpWindowPosition({ to: 'invisible' });
+        method.setPopUpWindowPosition({ to: 'invisible' });
         flyToPrev();
       }}
     >
