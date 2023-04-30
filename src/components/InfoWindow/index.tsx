@@ -39,7 +39,7 @@ export default function InfoWindow() {
 
   return (
     <PopUpWindow.Layout data-testid={DOMID_POP_UP_WINDOW} id={DOMID_POP_UP_WINDOW} tabState={tabState}>
-      <PopUpWindow.Handler available={!!contents} tabState={tabState} />
+      <PopUpWindow.Handler available={!!contents} />
       {contents ? (
         <BlurFrame id={DOMID_BLURFRAME} tabState={tabState}>
           <S.TopSection>

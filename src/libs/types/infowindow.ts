@@ -1,4 +1,4 @@
-import { SetterOrUpdater } from 'recoil';
+import { PopUpWindowModel } from '@components/InfoWindow/Contents/PopUpWindow/utils/model';
 
 export type PopUpWindowState = 'invisible' | 'half' | 'full';
 
@@ -7,7 +7,6 @@ export type PopUpWindowScopeProps = {
 };
 
 export interface TabState {
-  onHandling: boolean;
   top: number;
   startTop: number;
   popUpState: PopUpWindowState;
@@ -18,27 +17,27 @@ export interface CoordState {
   startY: number;
 }
 
-export interface HandleEventEndProps {
-  endCameraMove: () => void;
-  setTabState: SetterOrUpdater<TabState>;
-  tabState: TabState;
-  topCoordRef: React.MutableRefObject<number>;
-}
-
 export interface HandleEventStartProps {
-  setTabState: SetterOrUpdater<TabState>;
   smoothLoopId: { id: number };
   modifyRef: React.MutableRefObject<number>;
   available: boolean;
+  model: PopUpWindowModel;
 }
 
 export interface HandleEventMoveProps {
   available: boolean;
-  tabState: TabState;
   modifyRef: React.MutableRefObject<number>;
   topCoordRef: React.MutableRefObject<number>;
   target: { [id in string]: HTMLDivElement | HTMLElement };
   smoothLoopId: { id: number };
+  model: PopUpWindowModel;
+}
+
+export interface HandleEventEndProps {
+  setPopUpWindowPosition: ({ to }: { to: PopUpWindowState }) => void;
+  model: PopUpWindowModel;
+  tabState: TabState;
+  topCoordRef: React.MutableRefObject<number>;
 }
 
 export interface HandleEventStartCaptureProps {
@@ -47,7 +46,7 @@ export interface HandleEventStartCaptureProps {
 export interface HandleEventMoveCaptureProps {
   recordGesture: PopUpWindowLayoutSetUpMethod;
   method: PopUpWindowLayoutPositionMethod;
-  model: PopUpWindowLayoutModel;
+  model: PopUpWindowModel;
   check: PopUpWindowLayoutCheckMethod;
   tabState: TabState;
 }
@@ -55,12 +54,6 @@ export interface HandleEventEndCaptureProps {
   recordGesture: PopUpWindowLayoutSetUpMethod;
   check: PopUpWindowLayoutCheckMethod;
 }
-
-export type PopUpWindowLayoutModel = {
-  layoutState: { onGesture: boolean; timeStamp: number };
-  point: { clientX: number; clientY: number };
-  position: { top: number };
-};
 
 export type PopUpWindowLayoutSetUpMethod = {
   start: ({ clientX, clientY, timeStamp }: { clientX: number; clientY: number; timeStamp: number }) => void;
@@ -80,7 +73,7 @@ export type PopUpWindowLayoutCheckMethod = {
 };
 
 export type UsePopUpWindowLayoutControllResult = {
-  model: PopUpWindowLayoutModel;
+  model: PopUpWindowModel;
   check: PopUpWindowLayoutCheckMethod;
   method: PopUpWindowLayoutPositionMethod;
   recordGesture: PopUpWindowLayoutSetUpMethod;

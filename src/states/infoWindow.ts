@@ -8,7 +8,6 @@ export const tabStateAtom = atom<TabState>({
   default: {
     startTop: popUpHeights[PopUpHeightsType.bottom],
     top: popUpHeights[PopUpHeightsType.bottom],
-    onHandling: false,
     popUpState: 'invisible',
   },
 });

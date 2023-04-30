@@ -1,6 +1,5 @@
-import { popUpHeights, PopUpHeightsType } from '@constants/popUpHeights';
 import { clusterListAtom, openClusterListAtom } from '@states/clusterList';
-import { activatedCafeIdAtom, tabStateAtom } from '@states/infoWindow';
+import { activatedCafeIdAtom } from '@states/infoWindow';
 import usePopUpWindowLayoutControll from '@components/InfoWindow/Contents/PopUpWindow/Contents/Layout/usePopUpWindowLayoutControll';
 import { geoJsonAtom } from '@states/map';
 import { useRecoilValueLoadable, useSetRecoilState } from 'recoil';
@@ -13,7 +12,6 @@ import useMapRef from './useMap';
 function useMarkerClickAction() {
   const allFeaturesLoadable = useRecoilValueLoadable(geoJsonAtom);
   const setActivatedCafeId = useSetRecoilState(activatedCafeIdAtom);
-  const setTabState = useSetRecoilState(tabStateAtom);
   const setOpenClusterList = useSetRecoilState(openClusterListAtom);
   const setClusterList = useSetRecoilState(clusterListAtom);
   const {
@@ -35,7 +33,7 @@ function useMarkerClickAction() {
 
   const clusterMarkerClickAction = (clusterList: any) => {
     setOpenClusterList(true);
-    setTabState((prev) => ({ ...prev, popUpState: 'invisible', top: popUpHeights[PopUpHeightsType.bottom] }));
+    setPopUpWindowPosition({ to: 'invisible' });
     setClusterList(clusterList);
   };
 

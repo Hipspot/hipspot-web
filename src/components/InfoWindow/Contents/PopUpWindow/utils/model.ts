@@ -26,9 +26,10 @@ export class PopUpWindowModel implements IPopUpWindowModel {
   }
 
   update<T extends keyof typeof Members>(member: T, value: Partial<IPopUpWindowModel[T]>): void {
-    if (!this.validateMemberValue(member, value)) return console.error('올바른 업데이트가 아닙니다', member);
+    const temp = { ...this[member], ...value };
+    if (!this.validateMemberValue(member, temp)) return console.error('올바른 업데이트가 아닙니다', member);
 
-    this[member] = { ...this[member], ...value };
+    this[member] = temp;
   }
 
   // eslint-disable-next-line class-methods-use-this
