@@ -3,12 +3,12 @@ import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import { geoJsonAtom } from '@states/map';
 import { activeFilterIdAtom } from '@states/clusterList';
-import { GeoJSONSourceOptions, MapboxEvent } from 'mapbox-gl';
+import { MapboxEvent } from 'mapbox-gl';
 import { FindMyLocationEvent } from '@libs/types/customEvents';
 import { EVENT_FIND_MY_LOCATION } from '@constants/event';
 import { DOMID_MAP_COMPONENT } from '@constants/DOM';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { activatedCafeIdAtom, tabStateAtom } from '@states/infoWindow';
+import { activatedCafeIdAtom } from '@states/infoWindow';
 import addFeatureLayer from './eventHandler/addFeatureLayer';
 import drawPulsingDotMarker from './eventHandler/drawPulsingDotMarker';
 import { DOMTargetList } from '../../constants/DOM';
@@ -19,11 +19,10 @@ import useMarkerUpdate from './hooks/useMarkerUpdate';
 function MapComp() {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const allFeatures = useRecoilValue(geoJsonAtom);
-  const tabState = useRecoilValue(tabStateAtom);
   const activatedCafeId = useRecoilValue(activatedCafeIdAtom);
   const mapRef = useMap();
   const { flyTo, savePrevPostion } = useCameraMove();
-  const { updateMarkers, removeAllMarkers, getPointMarkerById } = useMarkerUpdate();
+  const { updateMarkers, removeAllMarkers, addActivatedCafeMarker, removeActivatedCafeMarker } = useMarkerUpdate();
   const onMapLoad = ({ target: targetMap }: MapboxEvent) =>
     addFeatureLayer({ map: targetMap, allFeatures, activeFilterId });
   const onRender = () => updateMarkers();
@@ -36,6 +35,7 @@ function MapComp() {
     if (!allFeatures) return;
 
     removeAllMarkers();
+    removeActivatedCafeMarker();
     updateMarkers();
 
     if (map.getLayer('cafeList')) {
@@ -57,34 +57,15 @@ function MapComp() {
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
-
-    const style = map.getStyle();
-    const source = style.sources.cafeList as GeoJSONSourceOptions;
-    const { popUpState } = tabState;
-
-    if (popUpState === 'thumbNail') {
-      source.cluster = true;
-      map.setStyle(style);
-    } else {
-      source.cluster = false;
-      map.setStyle(style);
-    }
-  }, [tabState]);
-
-  useEffect(() => {
-    const map = mapRef.current;
     if (!map) return;
 
-    const marker = getPointMarkerById(activatedCafeId);
-    if (!marker) return;
+    const activatedCafeFeature = allFeatures.find((feature) => feature.properties.cafeId === activatedCafeId);
 
-    const elem = marker.getElement();
-
-    elem.style.zIndex = '9';
+    if (!activatedCafeFeature) return;
+    addActivatedCafeMarker(activatedCafeFeature);
 
     return () => {
-      elem.style.zIndex = '0';
+      removeActivatedCafeMarker();
     };
   }, [activatedCafeId]);
 
