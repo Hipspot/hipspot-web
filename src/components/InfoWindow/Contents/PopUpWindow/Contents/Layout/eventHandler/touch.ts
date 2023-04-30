@@ -24,7 +24,7 @@ export const handleTouchMoveCapture: (props: HandleEventMoveCaptureProps) => Tou
       const { clientX: baseX, clientY: baseY } = point;
       const { clientX: curX, clientY: curY } = e.touches[0];
 
-      const timeGap = performance.now() - layoutState.timeStamp;
+      const timeGap = e.timeStamp - layoutState.timeStamp;
       const moveY = curY - baseY;
       const moveX = curX - baseX;
 
