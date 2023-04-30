@@ -1,31 +1,28 @@
-import concealNotSelectedImage from '@components/InfoWindow/view/concealNotSelectedImage';
 import modifyImageSliderHeight from '@components/InfoWindow/view/modifyImageSliderHeight';
 import modifyImageSliderWidth from '@components/InfoWindow/view/modifyImageSliderWidth';
 import moveImageSlider from '@components/InfoWindow/view/moveImageSlider';
 import stopImageSlideTransition from '@components/InfoWindow/view/stopImageSlideTransition';
 import {
-  CSSVAR_IMAGE_CONCEAL,
   CSSVAR_IMAGE_SLIDER_HEIGHT,
   CSSVAR_IMAGE_SLIDER_TRANSITION_DURATION,
   CSSVAR_IMAGE_SLIDER_WIDTH,
   CSSVAR_IMAGE_TRANSLATE,
 } from '@constants/cssVar';
-import { DOMID_IMAGE_SLIDER } from '@constants/DOM';
+import { DOMID_IMAGE_SLIDER, DOMID_IMAGE_SLIDER_CONTAINER, DOMTargetList } from '@constants/DOM';
 import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import { popUpHeights } from '@constants/popUpHeights';
 import { imageSliderHeightTween, imageSliderWidthTween } from '@constants/Tween';
 import styled from '@emotion/styled';
-import { SlideUpWindowEvent } from '@libs/types/customEvents';
 import { ImageSliderRef } from '@libs/types/slider';
 import { calcImageListPosition } from '@libs/utils/calc';
-import { tabStateAtom } from '@states/infoWindow';
+import { createCustomEvent } from '@libs/utils/customEvent';
 import { useEffect, useRef, useState } from 'react';
 import Loading from 'react-loading';
-import { useRecoilState } from 'recoil';
 import { reactRefUpdate } from '../PopUpWindow/utils/reactRefUpdate';
 import { handleMouseDown, handleMouseMove, handleMouseUp } from './eventHandler/mouse';
 import { handleSlidePopUpWindowForImageSlide } from './eventHandler/slideUpWindow';
 import { handleTouchEnd, handleTouchMove, handleTouchStart } from './eventHandler/touch';
+import usePopUpWindowLayoutControll from '../PopUpWindow/Contents/Layout/usePopUpWindowLayoutControll';
 
 interface SlideProps {
   wrapperId: string;
@@ -34,7 +31,10 @@ interface SlideProps {
 
 function ImageSlider({ wrapperId, imageList }: SlideProps) {
   const [imageIndex, setImageIndex] = useState(0);
-  const [tabState] = useRecoilState(tabStateAtom);
+  const {
+    tabState,
+    method: { setPopUpWindowPosition },
+  } = usePopUpWindowLayoutControll();
   const imageSliderRef = useRef<ImageSliderRef>({
     x: 0,
     startX: 0,
@@ -50,21 +50,20 @@ function ImageSlider({ wrapperId, imageList }: SlideProps) {
   const onMouseMoveCapture = handleMouseMove({ imageSliderRef });
   const onMouseUpCapture = handleMouseUp({ imageSliderRef, setImageIndex });
   const onTouchStartCapture = handleTouchStart({ imageSliderRef });
-  const onTouchMoveCapture = handleTouchMove({ imageSliderRef });
+  const onTouchMoveCapture = handleTouchMove({ imageSliderRef }) as unknown as (e: TouchEvent) => void;
   const onTouchEndCapture = handleTouchEnd({ imageSliderRef, setImageIndex });
 
   const onSlidePopUpWindow = handleSlidePopUpWindowForImageSlide({ popUpHeights });
 
   useEffect(() => {
-    const elem = document.getElementById(wrapperId);
-    if (elem !== null) {
-      elem.removeEventListener(EVENT_SLIDE_UP_WINDOW, onSlidePopUpWindow);
-      elem.addEventListener(EVENT_SLIDE_UP_WINDOW, onSlidePopUpWindow);
-    }
+    const wrapper = document.getElementById(wrapperId);
+    const container = document.getElementById(DOMID_IMAGE_SLIDER_CONTAINER);
+    DOMTargetList[wrapperId] = wrapper;
+    DOMTargetList[DOMID_IMAGE_SLIDER_CONTAINER] = container;
   }, []);
 
   useEffect(() => {
-    const slideEvent: SlideUpWindowEvent = Object.assign(new Event(EVENT_SLIDE_UP_WINDOW), {
+    const slideEvent = createCustomEvent(EVENT_SLIDE_UP_WINDOW, {
       currentTop: tabState.top,
     });
     const carousel = document.getElementById(DOMID_IMAGE_SLIDER) as HTMLDivElement;
@@ -90,23 +89,34 @@ function ImageSlider({ wrapperId, imageList }: SlideProps) {
 
     stopImageSlideTransition();
     moveImageSlider({ left: leftCorrectionValue });
-    concealNotSelectedImage(false);
-
     reactRefUpdate({
       ref: imageSliderRef,
       update: { ...imageSliderRef.current, x: 0, startX: 0, onHandling: false, left: leftCorrectionValue },
     });
   }, [tabState]);
 
+  useEffect(() => {
+    const wrapper = document.getElementById(wrapperId);
+    const container = document.getElementById(DOMID_IMAGE_SLIDER_CONTAINER);
+    if (wrapper && container) {
+      container.addEventListener('touchmove', onTouchMoveCapture, { passive: false });
+      wrapper.addEventListener(EVENT_SLIDE_UP_WINDOW, onSlidePopUpWindow);
+    }
+    return () => {
+      container?.removeEventListener('touchmove', onTouchMoveCapture, false);
+      wrapper?.removeEventListener(EVENT_SLIDE_UP_WINDOW, onSlidePopUpWindow);
+    };
+  }, []);
+
   return (
     <SliderWrapper>
       <SlideContainer
+        id={DOMID_IMAGE_SLIDER_CONTAINER}
         onMouseMoveCapture={onMouseMoveCapture}
         onMouseDownCapture={onMouseDownCapture}
         onMouseUpCapture={onMouseUpCapture}
         onMouseLeave={onMouseUpCapture}
         onTouchStartCapture={onTouchStartCapture}
-        onTouchMoveCapture={onTouchMoveCapture}
         onTouchEndCapture={onTouchEndCapture}
       >
         {imageList.map((imageSrc, i) => (
@@ -119,6 +129,9 @@ function ImageSlider({ wrapperId, imageList }: SlideProps) {
                 ? { height: imageSliderHeightTween.max, width: imageSliderWidthTween.max }
                 : { height: imageSliderWidthTween.min, width: imageSliderWidthTween.min }
             }
+            onDoubleClick={() => {
+              setPopUpWindowPosition({ to: 'full' });
+            }}
           />
         ))}
       </SlideContainer>
@@ -184,6 +197,4 @@ const Image = styled.img<{ selected: boolean; initSize: { height: number; width:
   object-position: center;
   position: relative;
   z-index: ${(props) => (props.selected ? 11 : 1)};
-
-  visibility: ${(props) => (props.selected ? 'visible' : `var(${CSSVAR_IMAGE_CONCEAL})`)};
 `;

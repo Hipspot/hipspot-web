@@ -6,8 +6,8 @@ import { TabState } from '../libs/types/infowindow';
 export const tabStateAtom = atom<TabState>({
   key: 'atom / tabState',
   default: {
+    startTop: popUpHeights[PopUpHeightsType.bottom],
     top: popUpHeights[PopUpHeightsType.bottom],
-    onHandling: false,
     popUpState: 'invisible',
   },
 });

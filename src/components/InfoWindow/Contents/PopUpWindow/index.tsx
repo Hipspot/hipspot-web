@@ -1,123 +1,25 @@
-import { useEffect, ReactNode, useRef } from 'react';
-import { VscGrabber } from 'react-icons/vsc';
-import { useSetRecoilState } from 'recoil';
-import { tabStateAtom } from '@states/infoWindow';
-import { HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps, TabState } from '@libs/types/infowindow';
-import useCameraMove from '@components/MapComp/hooks/useCameraMove';
-import { CancelIcon } from '@assets/index';
-import { PopUpHeightsType, popUpHeights } from '@constants/popUpHeights';
-import { DOMID_IMAGE_SLIDER, DOMTargetList, DOMID_BLURFRAME } from '@constants/DOM';
-import { handleMouseDown, handleMouseMove, handleMouseUp } from './eventHandler/mouse';
-import { handleTouchEnd, handleTouchMove, handleTouchStart } from './eventHandler/touch';
-import * as S from './style';
-import smoothMove from './utils/smoothMove';
+import { PopUpWindowScopeProps } from '@libs/types/infowindow';
+import Layout, { PopUpWindowLayoutProps } from './Contents/Layout/Layout';
+import Handler, { PopUpWindowHandlerProps } from './Contents/Handler/Handler';
+import CloseButton from './Contents/CloseButton/CloseButton';
 
-export interface PopUpWindowProps {
-  id: string;
-  children: ReactNode;
-  tabState: TabState;
-}
-
-export interface PopUpWindowHandlerProps {
-  tabState: TabState;
-  available: boolean;
-}
-
-const PopUpWindowScope: { smoothLoopId: { id: number } } = {
+/**
+ * PopUpWindow 컴포넌트에서만 사용되는 변수들을 모아둔 객체
+ */
+const PopUpWindowScope: PopUpWindowScopeProps = {
   smoothLoopId: { id: -1 },
 };
 
+/**
+ * PopUpWindow 컴포넌트에서 사용되는 컴포넌트들을 모아둔 객체
+ *
+ * Layout : PopUpWindow의 레이아웃을 담당하는 컴포넌트, 내용을 담는 컨테이너
+ * Handler : PopUpWindow를 위아래로 스와이프 할 수 있는 핸들러를 담당하는 컴포넌트, 마우스 이벤트, 터치 이벤트
+ * CloseButton : PopUpWindow를 닫을 수 있는 버튼을 담당하는 컴포넌트
+ */
 const PopUpWindow = {
-  Layout,
-  Handler,
+  Layout: (props: PopUpWindowLayoutProps) => Layout({ ...props, ...PopUpWindowScope }),
+  Handler: (props: PopUpWindowHandlerProps) => Handler({ ...props, ...PopUpWindowScope }),
   CloseButton,
 };
 export default PopUpWindow;
-
-function Layout({ id, children, tabState }: PopUpWindowProps) {
-  useEffect(() => {
-    smoothMove({
-      parentElement: document.getElementById(id) as HTMLDivElement,
-      endPointTabState: tabState,
-      smoothLoopId: PopUpWindowScope.smoothLoopId,
-    });
-  }, [tabState]);
-
-  useEffect(() => {
-    const elem = document.getElementById(id);
-    if (elem !== null) {
-      elem.style.setProperty('transform', `translate(calc(50vw - 50%), 100%)`);
-    }
-  }, []);
-
-  return (
-    <S.Layout id={id} tabState={tabState}>
-      <S.Wrapper>
-        <S.ResizeSideStyle>
-          <VscGrabber />
-        </S.ResizeSideStyle>
-        {children}
-      </S.Wrapper>
-    </S.Layout>
-  );
-}
-
-function Handler({ available, tabState }: PopUpWindowHandlerProps) {
-  const { smoothLoopId } = PopUpWindowScope;
-  const setTabState = useSetRecoilState(tabStateAtom);
-  const { flyToPrev } = useCameraMove();
-  const modifyRef = useRef<number>(0);
-  const topCoordRef = useRef<number>(window.innerHeight - 30);
-  const target = {
-    [DOMID_IMAGE_SLIDER]: DOMTargetList[DOMID_IMAGE_SLIDER]!,
-    [DOMID_BLURFRAME]: DOMTargetList[DOMID_BLURFRAME]!,
-  };
-
-  const eventStartProp: HandleEventStartProps = {
-    smoothLoopId,
-    modifyRef,
-    available,
-    setTabState,
-  };
-
-  const eventMoveProp: HandleEventMoveProps = { tabState, modifyRef, topCoordRef, available, target, smoothLoopId };
-  const eventEndProp: HandleEventEndProps = { endCameraMove: flyToPrev, setTabState, tabState, topCoordRef };
-
-  const onMouseDown = handleMouseDown(eventStartProp);
-  const onTouchStart = handleTouchStart(eventStartProp);
-  const onMouseMove = handleMouseMove(eventMoveProp);
-  const onTouchMove = handleTouchMove(eventMoveProp);
-  const onMouseUp = handleMouseUp(eventEndProp);
-  const onTouchEnd = handleTouchEnd(eventEndProp);
-  const onMouseOut = handleMouseUp(eventEndProp);
-
-  return (
-    <S.ResizeSide
-      tabState={tabState}
-      onMouseDown={onMouseDown}
-      onMouseUp={onMouseUp}
-      onMouseMove={onMouseMove}
-      onMouseOut={onMouseOut}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-      onTouchMove={onTouchMove}
-    />
-  );
-}
-
-function CloseButton() {
-  const setTabState = useSetRecoilState(tabStateAtom);
-  const { flyToPrev } = useCameraMove();
-  return (
-    <S.Icon
-      data-testid="close_button"
-      onClick={(e) => {
-        e.stopPropagation();
-        setTabState({ top: popUpHeights[PopUpHeightsType.bottom], onHandling: false, popUpState: 'invisible' });
-        flyToPrev();
-      }}
-    >
-      <CancelIcon />
-    </S.Icon>
-  );
-}

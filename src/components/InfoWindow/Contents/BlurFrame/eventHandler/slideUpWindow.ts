@@ -13,7 +13,7 @@ export const handleSlideUpWindowForBlurFrame =
     const { popUpHeights } = props;
     const { [PopUpHeightsType.middle]: middleHeight, [PopUpHeightsType.top]: topHeight } = popUpHeights;
     const ratio = calcProgressRatio({
-      current: e.currentTop + 30,
+      current: e.currentTop,
       start: middleHeight,
       end: topHeight,
     });

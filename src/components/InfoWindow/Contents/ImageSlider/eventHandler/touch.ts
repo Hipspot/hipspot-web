@@ -1,7 +1,6 @@
 import slideImageSlider from '@components/InfoWindow/view/slideImageSlider';
 import moveImageSlider from '@components/InfoWindow/view/moveImageSlider';
 import stopImageSlideTransition from '@components/InfoWindow/view/stopImageSlideTransition';
-import concealNotSelectedImage from '@components/InfoWindow/view/concealNotSelectedImage';
 import { CSSVAR_IMAGE_SLIDER_WIDTH } from '@constants/cssVar';
 import { HandleImageSliderStartProps, HandleImageSlideMoveProps, HandleImageSliderEndProps } from '@libs/types/slider';
 import { calcImageIndex, calcImageListPosition, calcNumberClamp } from '@libs/utils/calc';
@@ -23,12 +22,11 @@ export const handleTouchMove: (props: HandleImageSlideMoveProps) => TouchEventHa
   ({ imageSliderRef }) =>
   (e) => {
     if (imageSliderRef.current && imageSliderRef.current.onHandling) {
+      e.preventDefault();
       const { left: prevLeft, x } = imageSliderRef.current;
       const move = e.touches[0].clientX - x;
       const left = prevLeft + move;
-
       moveImageSlider({ left });
-
       reactRefUpdate({
         ref: imageSliderRef,
         update: { ...imageSliderRef.current, x: e.touches[0].clientX, left },
@@ -54,7 +52,6 @@ export const handleTouchEnd: (props: HandleImageSliderEndProps) => TouchEventHan
       const leftCorrectionValue = calcImageListPosition({ left, width: blockWidth, index });
 
       slideImageSlider({ leftCorrectionValue });
-      concealNotSelectedImage(false);
 
       reactRefUpdate({
         ref: imageSliderRef,
