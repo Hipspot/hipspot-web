@@ -1,23 +1,14 @@
-import { RefObject } from 'react';
-
-export interface ImageSliderRef {
-  onHandling: boolean;
-  x: number;
-  startX: number;
-  index: number;
-  left: number;
-  imageListLength: number;
-}
+import { ImageSliderModel } from '@components/InfoWindow/Contents/ImageSlider/model';
 
 export interface HandleImageSliderStartProps {
-  imageSliderRef: RefObject<ImageSliderRef>;
+  model: ImageSliderModel;
 }
 
 export interface HandleImageSlideMoveProps {
-  imageSliderRef: RefObject<ImageSliderRef>;
+  model: ImageSliderModel;
 }
 
 export interface HandleImageSliderEndProps {
-  imageSliderRef: RefObject<ImageSliderRef>;
+  model: ImageSliderModel;
   setImageIndex: React.Dispatch<React.SetStateAction<number>>;
 }

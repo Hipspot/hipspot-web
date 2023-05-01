@@ -6,42 +6,45 @@ import { HandleImageSliderStartProps, HandleImageSlideMoveProps, HandleImageSlid
 import { calcImageIndex, calcImageListPosition, calcNumberClamp } from '@libs/utils/calc';
 import { DOMID_IMAGE_SLIDER } from '@constants/DOM';
 import { TouchEventHandler } from 'react';
-import { reactRefUpdate } from '../../PopUpWindow/utils/reactRefUpdate';
+import { IMAGE_SLIDER_PADDING } from '@constants/imageSlider';
 
 export const handleTouchStart: (props: HandleImageSliderStartProps) => TouchEventHandler<HTMLElement> =
-  ({ imageSliderRef }) =>
+  ({ model }) =>
   (e) => {
     stopImageSlideTransition();
-    reactRefUpdate({
-      ref: imageSliderRef,
-      update: { ...imageSliderRef.current, x: e.touches[0].clientX, startX: e.touches[0].clientX, onHandling: true },
+
+    model.update({
+      onHandling: true,
+      x: e.touches[0].clientX,
+      startX: e.touches[0].clientX,
     });
   };
 
 export const handleTouchMove: (props: HandleImageSlideMoveProps) => TouchEventHandler<HTMLElement> =
-  ({ imageSliderRef }) =>
+  ({ model }) =>
   (e) => {
-    if (imageSliderRef.current && imageSliderRef.current.onHandling) {
+    if (model.onHandling) {
       e.preventDefault();
-      const { left: prevLeft, x } = imageSliderRef.current;
+      const { left: prevLeft, x } = model;
       const move = e.touches[0].clientX - x;
       const left = prevLeft + move;
       moveImageSlider({ left });
-      reactRefUpdate({
-        ref: imageSliderRef,
-        update: { ...imageSliderRef.current, x: e.touches[0].clientX, left },
+
+      model.update({
+        x: e.touches[0].clientX,
+        left,
       });
     }
   };
 
 export const handleTouchEnd: (props: HandleImageSliderEndProps) => TouchEventHandler<HTMLElement> =
-  ({ imageSliderRef, setImageIndex }) =>
+  ({ model, setImageIndex }) =>
   (e) => {
-    if (imageSliderRef.current && imageSliderRef.current.onHandling) {
+    if (model.onHandling) {
       const r = document.getElementById(DOMID_IMAGE_SLIDER) as HTMLDivElement;
       const width = parseFloat(r.style.getPropertyValue(CSSVAR_IMAGE_SLIDER_WIDTH));
-      const blockWidth = width + 16;
-      const { left, imageListLength, startX, index: prevIndex } = imageSliderRef.current;
+      const blockWidth = width + IMAGE_SLIDER_PADDING;
+      const { left, imageListLength, startX, index: prevIndex } = model;
       const displacement = e.changedTouches[0].clientX - startX;
 
       const index =
@@ -53,10 +56,14 @@ export const handleTouchEnd: (props: HandleImageSliderEndProps) => TouchEventHan
 
       slideImageSlider({ leftCorrectionValue });
 
-      reactRefUpdate({
-        ref: imageSliderRef,
-        update: { ...imageSliderRef.current, x: 0, startX: 0, onHandling: false, left: leftCorrectionValue, index },
+      model.update({
+        x: 0,
+        startX: 0,
+        onHandling: false,
+        left: leftCorrectionValue,
+        index,
       });
+
       setImageIndex(index);
     }
   };

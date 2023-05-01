@@ -13,21 +13,22 @@ import { EVENT_SLIDE_UP_WINDOW } from '@constants/event';
 import { popUpHeights } from '@constants/popUpHeights';
 import { imageSliderHeightTween, imageSliderWidthTween } from '@constants/Tween';
 import styled from '@emotion/styled';
-import { ImageSliderRef } from '@libs/types/slider';
 import { calcImageListPosition } from '@libs/utils/calc';
 import { createCustomEvent } from '@libs/utils/customEvent';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loading from 'react-loading';
-import { reactRefUpdate } from '../PopUpWindow/utils/reactRefUpdate';
 import { handleMouseDown, handleMouseMove, handleMouseUp } from './eventHandler/mouse';
 import { handleSlidePopUpWindowForImageSlide } from './eventHandler/slideUpWindow';
 import { handleTouchEnd, handleTouchMove, handleTouchStart } from './eventHandler/touch';
 import usePopUpWindowLayoutControll from '../PopUpWindow/Contents/Layout/usePopUpWindowLayoutControll';
+import { ImageSliderModel } from './model';
 
 interface SlideProps {
   wrapperId: string;
   imageList: string[];
 }
+
+const model = new ImageSliderModel();
 
 function ImageSlider({ wrapperId, imageList }: SlideProps) {
   const [imageIndex, setImageIndex] = useState(0);
@@ -35,25 +36,30 @@ function ImageSlider({ wrapperId, imageList }: SlideProps) {
     tabState,
     method: { setPopUpWindowPosition },
   } = usePopUpWindowLayoutControll();
-  const imageSliderRef = useRef<ImageSliderRef>({
-    x: 0,
-    startX: 0,
-    left: 0,
-    onHandling: false,
-    index: 0,
-    imageListLength: imageList.length,
-  });
 
   const { max, min } = imageSliderWidthTween;
 
-  const onMouseDownCapture = handleMouseDown({ imageSliderRef });
-  const onMouseMoveCapture = handleMouseMove({ imageSliderRef });
-  const onMouseUpCapture = handleMouseUp({ imageSliderRef, setImageIndex });
-  const onTouchStartCapture = handleTouchStart({ imageSliderRef });
-  const onTouchMoveCapture = handleTouchMove({ imageSliderRef }) as unknown as (e: TouchEvent) => void;
-  const onTouchEndCapture = handleTouchEnd({ imageSliderRef, setImageIndex });
+  const onMouseDownCapture = handleMouseDown({ model });
+  const onMouseMoveCapture = handleMouseMove({ model });
+  const onMouseUpCapture = handleMouseUp({ model, setImageIndex });
+  const onTouchStartCapture = handleTouchStart({ model });
+  const onTouchMoveCapture = handleTouchMove({ model }) as unknown as (e: TouchEvent) => void;
+  const onTouchEndCapture = handleTouchEnd({ model, setImageIndex });
 
   const onSlidePopUpWindow = handleSlidePopUpWindowForImageSlide({ popUpHeights });
+
+  useEffect(() => {
+    model.update({
+      onHandling: false,
+      x: 0,
+      startX: 0,
+      imageListLength: imageList.length,
+      left: 0,
+      index: 0,
+    });
+    stopImageSlideTransition();
+    moveImageSlider({ left: 0 });
+  }, [imageList]);
 
   useEffect(() => {
     const wrapper = document.getElementById(wrapperId);
@@ -82,17 +88,14 @@ function ImageSlider({ wrapperId, imageList }: SlideProps) {
     const blockWidth = value + 16;
 
     const leftCorrectionValue = calcImageListPosition({
-      left: imageSliderRef.current.left,
+      left: model.left,
       width: blockWidth,
       index: imageIndex,
     });
 
     stopImageSlideTransition();
     moveImageSlider({ left: leftCorrectionValue });
-    reactRefUpdate({
-      ref: imageSliderRef,
-      update: { ...imageSliderRef.current, x: 0, startX: 0, onHandling: false, left: leftCorrectionValue },
-    });
+    model.update({ x: 0, startX: 0, onHandling: false, left: leftCorrectionValue });
   }, [tabState]);
 
   useEffect(() => {
