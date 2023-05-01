@@ -20,7 +20,6 @@ function App() {
   });
 
   const theme = light;
-
   return (
     <ThemeProvider theme={theme}>
       <Global styles={globalStyle} />

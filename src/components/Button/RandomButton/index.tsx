@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import * as S from './style';
 import { RandomButtonIcon } from '@assets/index';
 import { useRecoilValue } from 'recoil';
@@ -7,28 +7,22 @@ import axios from 'axios';
 
 function RandomButton() {
   const { top } = useRecoilValue(tabStateAtom);
-  const [cafeIds, setCafeIds] = useState([] as any);
 
-  const fetchCafeId = async () => {
+  const handleClick = async () => {
     try {
-      setCafeIds(null);
-      const response = await axios.get('https://api.hipspot.xyz/cafe/:cafeId');
-      setCafeIds(response.data.cafeId);
-    } catch (e) {
-      throw Error('Error throwed');
+      const response = await axios.get(`https://api.hipspot.xyz/map`);
+      const { data } = response;
+      const cafeIds = data && data.map((cafe: any) => cafe.properties.cafeId);
+      const randomArray = cafeIds[Math.floor(Math.random() * cafeIds.length)];
+      const [randomCafeId] = randomArray;
+      console.log(randomCafeId);
+    } catch (error) {
+      console.error(error);
     }
   };
-  useEffect(() => {
-    fetchCafeId();
-  }, []);
 
-  if (!cafeIds) return null;
-
-  cafeIds.map((cafeId: { id: number }) => <li key={cafeIds.id}>{cafeId.id}</li>);
-
-  const onClick = () => {};
   return (
-    <S.Wrapper onClick={onClick} top={top}>
+    <S.Wrapper onClick={handleClick} top={top}>
       <RandomButtonIcon />
     </S.Wrapper>
   );
