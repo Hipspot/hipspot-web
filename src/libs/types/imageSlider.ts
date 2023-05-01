@@ -1,4 +1,4 @@
-import { ImageSliderModel } from '@components/InfoWindow/Contents/ImageSlider/model';
+import ImageSliderModel from '@components/InfoWindow/Contents/ImageSlider/model';
 
 export interface HandleImageSliderStartProps {
   model: ImageSliderModel;

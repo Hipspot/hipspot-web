@@ -3,7 +3,11 @@ import moveImageSlider from '@components/InfoWindow/view/moveImageSlider';
 import stopImageSlideTransition from '@components/InfoWindow/view/stopImageSlideTransition';
 import { CSSVAR_IMAGE_SLIDER_WIDTH } from '@constants/cssVar';
 import { DOMID_IMAGE_SLIDER } from '@constants/DOM';
-import { HandleImageSliderStartProps, HandleImageSlideMoveProps, HandleImageSliderEndProps } from '@libs/types/slider';
+import {
+  HandleImageSliderStartProps,
+  HandleImageSlideMoveProps,
+  HandleImageSliderEndProps,
+} from '@libs/types/imageSlider';
 import { calcImageIndex, calcImageListPosition, calcNumberClamp } from '@libs/utils/calc';
 import { MouseEventHandler } from 'react';
 import { IMAGE_SLIDER_PADDING } from '@constants/imageSlider';
@@ -19,7 +23,7 @@ export const handleMouseDown: (props: HandleImageSliderStartProps) => MouseEvent
     model.update({
       onHandling: true,
       x: e.clientX,
-      startX: e.clientX,
+      anchorX: e.clientX,
     });
   };
 
@@ -31,8 +35,8 @@ export const handleMouseMove: (props: HandleImageSlideMoveProps) => MouseEventHa
 
     if (model.onHandling) {
       const { left: prevLeft, x } = model;
-      const move = e.clientX - x;
-      const left = prevLeft + move;
+      const dx = e.clientX - x;
+      const left = prevLeft + dx;
 
       moveImageSlider({ left });
 
@@ -52,8 +56,8 @@ export const handleMouseUp: (props: HandleImageSliderEndProps) => MouseEventHand
       const r = document.getElementById(DOMID_IMAGE_SLIDER) as HTMLDivElement;
       const width = parseFloat(r.style.getPropertyValue(CSSVAR_IMAGE_SLIDER_WIDTH));
       const blockWidth = width + IMAGE_SLIDER_PADDING;
-      const { left, imageListLength, startX, index: prevIndex } = model;
-      const displacement = e.clientX - startX;
+      const { left, imageListLength, anchorX, index: prevIndex } = model;
+      const displacement = e.clientX - anchorX;
 
       const index =
         Math.abs(displacement) < blockWidth
@@ -66,7 +70,7 @@ export const handleMouseUp: (props: HandleImageSliderEndProps) => MouseEventHand
 
       model.update({
         x: 0,
-        startX: 0,
+        anchorX: 0,
         onHandling: false,
         left: leftCorrectionValue,
         index,

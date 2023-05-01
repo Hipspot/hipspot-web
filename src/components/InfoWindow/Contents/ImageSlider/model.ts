@@ -1,7 +1,7 @@
 interface IImageSliderModel {
   onHandling: boolean;
   x: number;
-  startX: number;
+  anchorX: number;
   index: number;
   left: number;
   imageListLength: number;
@@ -9,12 +9,12 @@ interface IImageSliderModel {
   update<T extends keyof IImageSliderModel>(key: T, value: this[T]): void;
 }
 
-export class ImageSliderModel implements IImageSliderModel {
+class ImageSliderModel implements IImageSliderModel {
   onHandling: boolean;
 
   x: number;
 
-  startX: number;
+  anchorX: number;
 
   index: number;
 
@@ -22,13 +22,30 @@ export class ImageSliderModel implements IImageSliderModel {
 
   imageListLength: number;
 
+  /**
+   * @param onHandling 슬라이더를 움직이고 있는지 여부
+   * @param x 실시간으로 움직이는 슬라이더의 x 좌표, 터치무브 이벤트마다의 이동거리를 계산하기 위해 사용
+   * @param anchorX 터치 시작 시 x 좌표
+   * @param index 이미지 슬라이더 가장 좌측에 보이는 사진의 인덱스값
+   * @param left 이미지 슬라이더를 실제로 transfrom 해주는값
+   * @param imageListLength 이미지 리스트 배열의 length, 이미지의 갯수를 의미
+   */
   constructor() {
     this.onHandling = false;
     this.x = 0;
-    this.startX = 0;
+    this.anchorX = 0;
     this.index = 0;
     this.left = 0;
     this.imageListLength = 0;
+  }
+
+  init(imageListLength: number) {
+    this.onHandling = false;
+    this.x = 0;
+    this.anchorX = 0;
+    this.index = 0;
+    this.left = 0;
+    this.imageListLength = imageListLength;
   }
 
   update<T extends keyof IImageSliderModel>(...params: [Partial<IImageSliderModel>] | [T, this[T]]): void {
@@ -55,7 +72,7 @@ export class ImageSliderModel implements IImageSliderModel {
   validate<T extends keyof IImageSliderModel>(key: T, value: this[T]): boolean {
     switch (key) {
       case 'x':
-      case 'startX':
+      case 'anchorX':
       case 'index':
       case 'left':
         if (Number.isNaN(value)) return false;
@@ -73,3 +90,5 @@ export class ImageSliderModel implements IImageSliderModel {
     return true;
   }
 }
+
+export default ImageSliderModel;

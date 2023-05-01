@@ -2,7 +2,11 @@ import slideImageSlider from '@components/InfoWindow/view/slideImageSlider';
 import moveImageSlider from '@components/InfoWindow/view/moveImageSlider';
 import stopImageSlideTransition from '@components/InfoWindow/view/stopImageSlideTransition';
 import { CSSVAR_IMAGE_SLIDER_WIDTH } from '@constants/cssVar';
-import { HandleImageSliderStartProps, HandleImageSlideMoveProps, HandleImageSliderEndProps } from '@libs/types/slider';
+import {
+  HandleImageSliderStartProps,
+  HandleImageSlideMoveProps,
+  HandleImageSliderEndProps,
+} from '@libs/types/imageSlider';
 import { calcImageIndex, calcImageListPosition, calcNumberClamp } from '@libs/utils/calc';
 import { DOMID_IMAGE_SLIDER } from '@constants/DOM';
 import { TouchEventHandler } from 'react';
@@ -16,7 +20,7 @@ export const handleTouchStart: (props: HandleImageSliderStartProps) => TouchEven
     model.update({
       onHandling: true,
       x: e.touches[0].clientX,
-      startX: e.touches[0].clientX,
+      anchorX: e.touches[0].clientX,
     });
   };
 
@@ -26,8 +30,8 @@ export const handleTouchMove: (props: HandleImageSlideMoveProps) => TouchEventHa
     if (model.onHandling) {
       e.preventDefault();
       const { left: prevLeft, x } = model;
-      const move = e.touches[0].clientX - x;
-      const left = prevLeft + move;
+      const dx = e.touches[0].clientX - x;
+      const left = prevLeft + dx;
       moveImageSlider({ left });
 
       model.update({
@@ -44,8 +48,8 @@ export const handleTouchEnd: (props: HandleImageSliderEndProps) => TouchEventHan
       const r = document.getElementById(DOMID_IMAGE_SLIDER) as HTMLDivElement;
       const width = parseFloat(r.style.getPropertyValue(CSSVAR_IMAGE_SLIDER_WIDTH));
       const blockWidth = width + IMAGE_SLIDER_PADDING;
-      const { left, imageListLength, startX, index: prevIndex } = model;
-      const displacement = e.changedTouches[0].clientX - startX;
+      const { left, imageListLength, anchorX, index: prevIndex } = model;
+      const displacement = e.changedTouches[0].clientX - anchorX;
 
       const index =
         Math.abs(displacement) < blockWidth
@@ -57,9 +61,9 @@ export const handleTouchEnd: (props: HandleImageSliderEndProps) => TouchEventHan
       slideImageSlider({ leftCorrectionValue });
 
       model.update({
-        x: 0,
-        startX: 0,
         onHandling: false,
+        x: 0,
+        anchorX: 0,
         left: leftCorrectionValue,
         index,
       });
