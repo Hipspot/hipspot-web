@@ -11,6 +11,7 @@ import { FLUTTER_CHANNEL } from '@constants/jsChannelName';
 import { Global, ThemeProvider } from '@emotion/react';
 import { light } from '@libs/styles/theme';
 import { globalStyle } from '@libs/styles/GlobalStyle';
+import LoginForm from '@components/LoginForm';
 
 function App() {
   const flutterMessageHandler = useFlutterMessageHandler();
@@ -26,6 +27,7 @@ function App() {
       <Wrapper>
         <MapCompContainer />
         <Filtering />
+        <LoginForm />
         <FindMyLocationButton />
         <ClusterList />
         <InfoWindow />
