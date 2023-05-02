@@ -3,7 +3,7 @@ import PointMarker from '@components/Marker/pointMarker';
 import ReasonableMarker from '@components/Marker/ReasonableMarker';
 import FranchiseMarker from '@components/Marker/FranchiseMarker';
 import { S3_URL } from '@constants/s3Url';
-import { MarkerList } from '@libs/types/map';
+import { CustomGeoJSONFeatures, MarkerList } from '@libs/types/map';
 import { renderEmotionElementToHtml } from '@libs/utils/renderEmotionElementToHtml';
 import { activeFilterIdAtom } from '@states/clusterList';
 import { geoJsonAtom } from '@states/map';
@@ -16,6 +16,7 @@ import getFranchiseByName from '../utils/getFranchiseByName';
 
 const pointMarkerList: MarkerList = {};
 const clusterMarkerList: MarkerList = {};
+let activatedCafeMarker: mapboxgl.Marker;
 
 function useMarkerUpdate() {
   const mapRef = useMapRef();
@@ -154,7 +155,72 @@ function useMarkerUpdate() {
     });
   };
 
-  return { updateMarkers, removeAllMarkers };
+  const addActivatedCafeMarker = (feature: CustomGeoJSONFeatures) => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const { cafeId, cafeName, thumbNail } = feature.properties;
+
+    try {
+      if (filterId === 2) {
+        const marker = renderEmotionElementToHtml({
+          elem: ReasonableMarker({
+            handleClickPointMarker: pointMarkerClickAction,
+            feature,
+          }),
+          cssDataKey: 'marker',
+        });
+
+        marker.style.zIndex = '9';
+
+        activatedCafeMarker = new mapboxgl.Marker(marker, { anchor: 'bottom' })
+          .setLngLat(feature.geometry.coordinates)
+          .addTo(map);
+
+        return;
+      }
+
+      const franchise = getFranchiseByName(cafeName);
+      if (franchise === undefined) {
+        const marker = renderEmotionElementToHtml({
+          elem: PointMarker({
+            handleClickPointMarker: pointMarkerClickAction,
+            feature,
+            image: `${S3_URL}/${cafeId}/store/${thumbNail}`,
+          }),
+          cssDataKey: 'marker',
+        });
+        marker.style.zIndex = '9';
+
+        activatedCafeMarker = new mapboxgl.Marker(marker, { anchor: 'bottom' })
+          .setLngLat(feature.geometry.coordinates)
+          .addTo(map);
+
+        return;
+      }
+
+      const marker = renderEmotionElementToHtml({
+        elem: FranchiseMarker({
+          handleClickPointMarker: pointMarkerClickAction,
+          feature,
+          franchise,
+        }),
+        cssDataKey: 'marker',
+      });
+      marker.style.zIndex = '9';
+
+      activatedCafeMarker = new mapboxgl.Marker(marker, { anchor: 'bottom' })
+        .setLngLat(feature.geometry.coordinates)
+        .addTo(map);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
+  };
+
+  const removeActivatedCafeMarker = () => activatedCafeMarker?.remove();
+
+  return { updateMarkers, removeAllMarkers, addActivatedCafeMarker, removeActivatedCafeMarker };
 }
 
 export default useMarkerUpdate;

@@ -53,6 +53,7 @@ const Wrapper = styled.div<{ open: boolean }>`
   position: absolute;
   top: 132px;
   right: 8px;
+  z-index: 10;
 
   background: #f2f2f2;
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.16);
