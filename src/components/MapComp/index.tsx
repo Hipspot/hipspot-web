@@ -71,7 +71,7 @@ function MapComp() {
   }, [activatedCafeId]);
 
   useEffect(() => {
-    if (tabState.popUpState !== 'thumbNail') return;
+    if (tabState.popUpState !== 'invisible') return;
     removeActivatedCafeMarker();
   }, [tabState.popUpState]);
 
