@@ -2,7 +2,6 @@ import ClusterMarker from '@components/Marker/clusterMarker';
 import PointMarker from '@components/Marker/pointMarker';
 import ReasonableMarker from '@components/Marker/ReasonableMarker';
 import FranchiseMarker from '@components/Marker/FranchiseMarker';
-import { S3_URL } from '@constants/s3Url';
 import { CustomGeoJSONFeatures, MarkerList } from '@libs/types/map';
 import { renderEmotionElementToHtml } from '@libs/utils/renderEmotionElementToHtml';
 import { activeFilterIdAtom } from '@states/clusterList';
@@ -35,7 +34,7 @@ function useMarkerUpdate() {
 
     // point markers
     pointFeaturesOnScreen.forEach((feature) => {
-      const { cafeId, cafeName, thumbNail } = feature.properties;
+      const { cafeId, cafeName } = feature.properties;
       if (Object.hasOwn(pointMarkerList, cafeId)) return;
       try {
         if (filterId === 2) {
@@ -59,7 +58,6 @@ function useMarkerUpdate() {
             elem: PointMarker({
               handleClickPointMarker: pointMarkerClickAction,
               feature,
-              image: `${S3_URL}/${cafeId}/store/${thumbNail}`,
             }),
             cssDataKey: 'marker',
           });
@@ -159,7 +157,7 @@ function useMarkerUpdate() {
     const map = mapRef.current;
     if (!map) return;
 
-    const { cafeId, cafeName, thumbNail } = feature.properties;
+    const { cafeName } = feature.properties;
 
     try {
       if (filterId === 2) {
@@ -186,7 +184,6 @@ function useMarkerUpdate() {
           elem: PointMarker({
             handleClickPointMarker: pointMarkerClickAction,
             feature,
-            image: `${S3_URL}/${cafeId}/store/${thumbNail}`,
           }),
           cssDataKey: 'marker',
         });

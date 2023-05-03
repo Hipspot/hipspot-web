@@ -1,13 +1,13 @@
+import { S3_URL } from '@constants/s3Url';
 import styled from '@emotion/styled';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 
 export type PointMarkerProps = {
-  image: string;
   feature: CustomGeoJSONFeatures;
   handleClickPointMarker: (id: number) => void;
 };
 
-export default function PointMarker({ handleClickPointMarker, feature, image }: PointMarkerProps) {
+export default function PointMarker({ handleClickPointMarker, feature }: PointMarkerProps) {
   const { cafeId, cafeName } = feature.properties;
 
   return (
@@ -18,7 +18,7 @@ export default function PointMarker({ handleClickPointMarker, feature, image }: 
           <path d={backgroundPath} fill="#D9D9D9" stroke="white" />
         </svg>
         <MaskImageWrapper>
-          <MaskImage image={image} />
+          <MaskImage image={`${S3_URL}/${cafeId}/thumbNail.jpg`} />
         </MaskImageWrapper>
       </MarkerWrapper>
     </Wrapper>
