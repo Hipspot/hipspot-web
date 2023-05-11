@@ -5,6 +5,7 @@ import { activatedCafeIdAtom } from '@states/infoWindow';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import ImageSlider from './ImageSlider';
+import BookMark from './BookMark';
 
 /**
  * @descripton ImageTabKey로 Tab Name을 얻을 수 있는 객체
@@ -65,6 +66,7 @@ function ImageListTab({ cafeId, imageList, wrapperId }: ImageListTabProps) {
             {name}
           </Tab>
         ))}
+        <BookMark isBookmarked />
       </TabBarWrapper>
     </Wrapper>
   );
@@ -81,6 +83,8 @@ const TabBarWrapper = styled.div`
   display: flex;
   gap: 32px;
   flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
 `;
 
 const Tab = styled.div<{ isSelected?: boolean }>`
