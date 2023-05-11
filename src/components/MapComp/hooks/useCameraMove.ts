@@ -45,9 +45,10 @@ function useCameraMove() {
 
     prevCameraState.current = currentCameraState.current;
     const nextState = { ...prevCameraState.current, ...tiltNextState({ coordinate }), ...option };
-    currentCameraState.current = nextState;
 
     map.flyTo(nextState);
+
+    currentCameraState.current = { ...nextState, pitch: 0, bearing: 0 };
   };
 
   const flyToPrev = () => {
