@@ -23,6 +23,6 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm@7.29.3
       - name: npm ci
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: jest
         run: pnpm test
