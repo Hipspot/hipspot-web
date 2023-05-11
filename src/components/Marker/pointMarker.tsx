@@ -71,7 +71,7 @@ const CafeName = styled.div`
   line-height: 24px;
 
   white-space: nowrap;
-  text-shadow: -2px -2px 0 #fff, 0 -2px 0 #fff, 2px -2px 0 #fff, 2px 0 0 #fff, 2px 2px 0 #fff, 0 2px 0 #fff,
-    -2px 2px 0 #fff, -2px 0 0 #fff;
+  text-shadow: -1.5px -1.5px 0 #fff, 0 -1.5px 0 #fff, 1.5px -1.5px 0 #fff, 1.5px 0 0 #fff, 1.5px 1.5px 0 #fff,
+    0 1.5px 0 #fff, -1.5px 1.5px 0 #fff, -1.5px 0 0 #fff;
   transform: translate(0, -100%);
 `;
