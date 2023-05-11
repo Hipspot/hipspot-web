@@ -8,27 +8,30 @@ import { FindMyLocationEvent } from '@libs/types/customEvents';
 import { EVENT_FIND_MY_LOCATION } from '@constants/event';
 import { DOMID_MAP_COMPONENT } from '@constants/DOM';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { activatedCafeIdAtom, tabStateAtom } from '@states/infoWindow';
+import { tabStateAtom } from '@states/infoWindow';
 import addFeatureLayer from './eventHandler/addFeatureLayer';
 import drawPulsingDotMarker from './eventHandler/drawPulsingDotMarker';
 import { DOMTargetList } from '../../constants/DOM';
 import useCameraMove from './hooks/useCameraMove';
 import useMap from './hooks/useMap';
 import useMarkerUpdate from './hooks/useMarkerUpdate';
+import useActivateCafe from './hooks/useActivateCafe';
 
 function MapComp() {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const allFeatures = useRecoilValue(geoJsonAtom);
-  const activatedCafeId = useRecoilValue(activatedCafeIdAtom);
   const tabState = useRecoilValue(tabStateAtom);
   const mapRef = useMap();
   const { flyTo, savePrevPostion } = useCameraMove();
   const { updateMarkers, removeAllMarkers, addActivatedCafeMarker, removeActivatedCafeMarker } = useMarkerUpdate();
+
   const onMapLoad = ({ target: targetMap }: MapboxEvent) =>
     addFeatureLayer({ map: targetMap, allFeatures, activeFilterId });
   const onRender = () => updateMarkers();
   const onMoveEnd = ({ target: targetMap }: MapboxEvent) =>
     savePrevPostion(targetMap.getCenter(), { zoom: targetMap.getZoom() });
+
+  useActivateCafe({ add: addActivatedCafeMarker, remove: removeActivatedCafeMarker, allFeatures });
 
   useEffect(() => {
     const map = mapRef.current;
@@ -55,20 +58,6 @@ function MapComp() {
       map.off('moveend', onMoveEnd);
     };
   }, [activeFilterId]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-
-    const activatedCafeFeature = allFeatures.find((feature) => feature.properties.cafeId === activatedCafeId);
-    if (!activatedCafeFeature) return;
-
-    addActivatedCafeMarker(activatedCafeFeature);
-
-    return () => {
-      removeActivatedCafeMarker();
-    };
-  }, [activatedCafeId]);
 
   useEffect(() => {
     if (tabState.popUpState !== 'invisible') return;

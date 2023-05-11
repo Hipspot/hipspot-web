@@ -33,7 +33,7 @@ const mapRef: { current: Map | null } = { current: null };
  * @returns Map | null
  *
  */
-function useMapRef() {
+function useMap() {
   const [, setLoad] = useState(false);
 
   useEffect(() => {
@@ -48,4 +48,4 @@ function useMapRef() {
   }, []);
   return mapRef;
 }
-export default useMapRef;
+export default useMap;
