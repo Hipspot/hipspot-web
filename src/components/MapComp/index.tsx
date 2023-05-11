@@ -15,7 +15,7 @@ import { DOMTargetList } from '../../constants/DOM';
 import useCameraMove from './hooks/useCameraMove';
 import useMap from './hooks/useMap';
 import useMarkerUpdate from './hooks/useMarkerUpdate';
-import useActivateCafe from './hooks/useActivateCafe';
+import useActivateCafeMarker from './hooks/useActivateCafeMarker';
 
 function MapComp() {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
@@ -31,7 +31,11 @@ function MapComp() {
   const onMoveEnd = ({ target: targetMap }: MapboxEvent) =>
     savePrevPostion(targetMap.getCenter(), { zoom: targetMap.getZoom() });
 
-  useActivateCafe({ add: addActivatedCafeMarker, remove: removeActivatedCafeMarker, allFeatures });
+  useActivateCafeMarker({
+    add: addActivatedCafeMarker,
+    remove: removeActivatedCafeMarker,
+    features: [allFeatures],
+  });
 
   useEffect(() => {
     const map = mapRef.current;
@@ -58,11 +62,6 @@ function MapComp() {
       map.off('moveend', onMoveEnd);
     };
   }, [activeFilterId]);
-
-  useEffect(() => {
-    if (tabState.popUpState !== 'invisible') return;
-    removeActivatedCafeMarker();
-  }, [tabState.popUpState]);
 
   useEffect(() => {
     const map = mapRef.current;

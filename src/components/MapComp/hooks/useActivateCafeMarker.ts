@@ -4,15 +4,16 @@ import { useEffect } from 'react';
 import { activatedCafeIdAtom } from '@states/infoWindow';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 
-interface UseActivateCafeHookProps {
+interface UseActivateCafeMarkerHookProps {
   add: (features: CustomGeoJSONFeatures) => void;
   remove: () => void;
-  allFeatures: CustomGeoJSONFeatures[];
+  features: CustomGeoJSONFeatures[] | CustomGeoJSONFeatures[][];
+  removeCondition?: boolean[];
 }
 
-function useActivateCafe({ add, remove, allFeatures }: UseActivateCafeHookProps) {
+function useActivateCafeMarker({ add, remove, features, removeCondition }: UseActivateCafeMarkerHookProps) {
   const activatedCafeId = useRecoilValue(activatedCafeIdAtom);
-
+  const allFeatures = features.flat();
   const mapRef = useMap();
 
   useEffect(() => {
@@ -28,5 +29,9 @@ function useActivateCafe({ add, remove, allFeatures }: UseActivateCafeHookProps)
       remove();
     };
   }, [activatedCafeId]);
+
+  useEffect(() => {
+    if (removeCondition && removeCondition.find((value) => value === true)) remove();
+  }, [removeCondition]);
 }
-export default useActivateCafe;
+export default useActivateCafeMarker;
