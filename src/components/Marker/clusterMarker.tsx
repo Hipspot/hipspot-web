@@ -22,9 +22,8 @@ export default function ClusterMarker({ count, filterId, handleClickClusterMarke
   const clusterColors = filteredClusterColor[filterId];
 
   return (
-    <ClusterMarkerWrapper>
+    <ClusterMarkerWrapper onClick={onClick}>
       <OuterCircle
-        onClick={onClick}
         OuterCircleColor={clusterColors.OuterCircleColor}
         OuterCircleBoxShadowColor={clusterColors.OuterCircleBoxShadowColor}
       />
