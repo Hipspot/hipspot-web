@@ -12,6 +12,8 @@ export enum FilterId {
   Franchise,
   /** 개인 카페 */
   Personal,
+  /** 즐겨찾기 */
+  Favorite,
 }
 
 /** 필터의 정보 */

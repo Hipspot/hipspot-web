@@ -11,6 +11,8 @@ import {
   PersonalGrayIcon,
   StudyColoredIcon,
   StudyGrayIcon,
+  FavoirteColoredIcon,
+  FavoriteGrayIcon,
 } from '@assets/index';
 import { filterColor } from 'libs/styles/color';
 import { FilterDataList, FilterId } from '@libs/types/filter';
@@ -51,6 +53,12 @@ const filterDataList: FilterDataList = {
     icon: PersonalColoredIcon,
     iconDisabled: PersonalGrayIcon,
     color: filterColor[FilterId.Personal],
+  },
+  [FilterId.Favorite]: {
+    label: '즐겨찾기',
+    icon: FavoirteColoredIcon,
+    iconDisabled: FavoriteGrayIcon,
+    color: filterColor[FilterId.Favorite],
   },
 };
 export default filterDataList;

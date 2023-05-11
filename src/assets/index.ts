@@ -21,3 +21,5 @@ export { default as ReasonableColoredIcon } from './img/ReasonableColoredIcon.pn
 export { default as ReasonableGrayIcon } from './img/ReasonableGrayIcon.png';
 export { default as StudyColoredIcon } from './img/StudyColoredIcon.png';
 export { default as StudyGrayIcon } from './img/StudyGrayIcon.png';
+export { default as FavoirteColoredIcon } from './img/FavoriteColoredIcon.png';
+export { default as FavoriteGrayIcon } from './img/FavoriteGrayIcon.png';

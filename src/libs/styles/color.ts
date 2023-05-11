@@ -41,4 +41,6 @@ export const filterColor = {
   [FilterId.Franchise]: colors.filterColor.blue,
   /** 개인카페 #B46FEA */
   [FilterId.Personal]: colors.filterColor.violet,
+  /** 즐겨찾기 #F2BE19 */
+  [FilterId.Favorite]: colors.filterColor.yellow,
 };
