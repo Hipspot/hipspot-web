@@ -2,10 +2,9 @@ import React from 'react';
 import { toast } from 'react-hot-toast';
 import { BookmarkFilledIcon, BookmarkIcon } from '@assets/index';
 import styled from '@emotion/styled';
-import { CafeInfo } from '@libs/types/cafe';
 
 interface BookMarkProps {
-  isBookmarked: CafeInfo['isBookmarked'];
+  isBookmarked: boolean;
 }
 
 function BookMark({ isBookmarked }: BookMarkProps) {

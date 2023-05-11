@@ -53,12 +53,6 @@ export type CafeInfo = {
    * @example 'https://map.kakao.com/link/map/카페 힙스팟,37.5446694,127.051352'
    */
   kakaoMapUrl: string | null;
-  /**
-   * 카페 즐겨찾기 여부
-   * @description null일 경우 로그인하지 않은 상태 / true일 경우 즐겨찾기 등록 / false일 경우 즐겨찾기 해제
-   * @example true | false | null
-   */
-  isBookmarked: null | boolean;
 };
 
 export type Days = '월' | '화' | '수' | '목' | '금' | '토' | '일' | '매일';
