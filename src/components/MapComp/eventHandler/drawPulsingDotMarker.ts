@@ -8,7 +8,7 @@ interface DrawMyLocationMarkerParams {
   coordinates: Position;
 }
 
-function drawPlusingDotMarker({ map, coordinates }: DrawMyLocationMarkerParams) {
+function drawPulsingDotMarker({ map, coordinates }: DrawMyLocationMarkerParams) {
   if (map.getSource(MAP_SOURCE_PULSING_DOT_POINT)) {
     map.removeLayer(MAP_LAYER_PULSING_DOT);
     map.removeSource(MAP_SOURCE_PULSING_DOT_POINT);
@@ -42,4 +42,4 @@ function drawPlusingDotMarker({ map, coordinates }: DrawMyLocationMarkerParams) 
   });
 }
 
-export default drawPlusingDotMarker;
+export default drawPulsingDotMarker;
