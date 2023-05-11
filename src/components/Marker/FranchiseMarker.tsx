@@ -1,6 +1,5 @@
 import franchiseLogo from '@assets/FranchiseLogo';
 import styled from '@emotion/styled';
-import { FilterId } from '@libs/types/filter';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 import { Franchise } from '@libs/types/marker';
 
@@ -11,11 +10,9 @@ export type FranchiseMarkerProps = {
 };
 
 export default function FranchiseMarker({ handleClickPointMarker, feature, franchise }: FranchiseMarkerProps) {
-  const { cafeId, cafeName, filterList } = feature.properties;
+  const { cafeId, cafeName } = feature.properties;
   return (
     <Wrapper className="mapgl-marker-animation" id={`${cafeId}`} onClick={() => handleClickPointMarker(cafeId)}>
-      {/* filterList에 맞게 랜더링해주는지 테스트하기 위한 tag 추후 삭제해주세요 */}
-      <div>{filterList.map((filter) => FilterId[filter]).join(', ')}</div>
       <CafeName>{cafeName}</CafeName>
       <MarkerWrapper>
         <img src={franchiseLogo[franchise]} alt={franchise} />
@@ -48,6 +45,7 @@ const CafeName = styled.div`
   line-height: 24px;
 
   white-space: nowrap;
-  text-shadow: 0 0.5px white, 0.5px 0px white, -0.5px 0px white, 0px -0.5px white, 1px 1px 1px 77;
+  text-shadow: -2px -2px 0 #fff, 0 -2px 0 #fff, 2px -2px 0 #fff, 2px 0 0 #fff, 2px 2px 0 #fff, 0 2px 0 #fff,
+    -2px 2px 0 #fff, -2px 0 0 #fff;
   transform: translate(0, -100%);
 `;

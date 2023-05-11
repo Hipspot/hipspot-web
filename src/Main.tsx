@@ -1,3 +1,4 @@
+import LoginButton from '@components/Button/LoginButton/LoginButton';
 import ClusterList from '@components/ClusterList';
 import Filtering from '@components/Filtering';
 import styled from '@emotion/styled';
@@ -8,10 +9,10 @@ import useFlutterMessageHandler from '@libs/webview/useFlutterMessageHandler';
 import { Toaster } from 'react-hot-toast';
 import FindMyLocationButton from '@components/Button/FindMyLocationButton';
 import { FLUTTER_CHANNEL } from '@constants/jsChannelName';
+import RandomButton from '@components/Button/RandomButton';
 import { Global, ThemeProvider } from '@emotion/react';
 import { light } from '@libs/styles/theme';
 import { globalStyle } from '@libs/styles/GlobalStyle';
-import LoginButton from '@components/Button/LoginButton/LoginButton';
 
 function Main() {
   const flutterMessageHandler = useFlutterMessageHandler();
@@ -29,6 +30,7 @@ function Main() {
         <LoginButton />
         <Filtering />
         <FindMyLocationButton />
+        <RandomButton />
         <ClusterList />
         <InfoWindow />
         <Toaster

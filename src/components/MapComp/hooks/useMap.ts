@@ -8,7 +8,7 @@ mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worke
 
 export const mapConfig: MapboxOptions = {
   container: 'map',
-  style: 'mapbox://styles/mapbox/streets-v11?optimize=true',
+  style: 'mapbox://styles/sangjun/clgwfbvxr003s01r88wfc14jo',
   center: [127.0770389, 37.6257614],
   zoom: 17,
   maxZoom: 18,

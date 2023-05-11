@@ -8,6 +8,7 @@ import { FindMyLocationEvent } from '@libs/types/customEvents';
 import { EVENT_FIND_MY_LOCATION } from '@constants/event';
 import { DOMID_MAP_COMPONENT } from '@constants/DOM';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { activatedCafeIdAtom, tabStateAtom } from '@states/infoWindow';
 import addFeatureLayer from './eventHandler/addFeatureLayer';
 import drawPulsingDotMarker from './eventHandler/drawPulsingDotMarker';
 import { DOMTargetList } from '../../constants/DOM';
@@ -18,9 +19,11 @@ import useMarkerUpdate from './hooks/useMarkerUpdate';
 function MapComp() {
   const activeFilterId = useRecoilValue(activeFilterIdAtom);
   const allFeatures = useRecoilValue(geoJsonAtom);
+  const activatedCafeId = useRecoilValue(activatedCafeIdAtom);
+  const tabState = useRecoilValue(tabStateAtom);
   const mapRef = useMap();
   const { flyTo, savePrevPostion } = useCameraMove();
-  const { updateMarkers, removeAllMarkers } = useMarkerUpdate();
+  const { updateMarkers, removeAllMarkers, addActivatedCafeMarker, removeActivatedCafeMarker } = useMarkerUpdate();
   const onMapLoad = ({ target: targetMap }: MapboxEvent) =>
     addFeatureLayer({ map: targetMap, allFeatures, activeFilterId });
   const onRender = () => updateMarkers();
@@ -33,6 +36,7 @@ function MapComp() {
     if (!allFeatures) return;
 
     removeAllMarkers();
+    removeActivatedCafeMarker();
     updateMarkers();
 
     if (map.getLayer('cafeList')) {
@@ -51,6 +55,25 @@ function MapComp() {
       map.off('moveend', onMoveEnd);
     };
   }, [activeFilterId]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const activatedCafeFeature = allFeatures.find((feature) => feature.properties.cafeId === activatedCafeId);
+    if (!activatedCafeFeature) return;
+
+    addActivatedCafeMarker(activatedCafeFeature);
+
+    return () => {
+      removeActivatedCafeMarker();
+    };
+  }, [activatedCafeId]);
+
+  useEffect(() => {
+    if (tabState.popUpState !== 'invisible') return;
+    removeActivatedCafeMarker();
+  }, [tabState.popUpState]);
 
   useEffect(() => {
     const map = mapRef.current;

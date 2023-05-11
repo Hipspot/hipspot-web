@@ -24,7 +24,7 @@ function addFeatureLayer({ map, allFeatures, activeFilterId }: HandleMapLoadProp
       features: filteredFeatures,
     } as FeatureCollection,
     cluster: true,
-    clusterMaxZoom: 16,
+    clusterMaxZoom: 18,
     clusterRadius: 60,
   });
   map.addLayer({
