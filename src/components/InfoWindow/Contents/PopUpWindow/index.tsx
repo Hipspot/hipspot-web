@@ -1,71 +1,25 @@
-import { useEffect, ReactNode, useRef } from 'react';
-import { VscGrabber } from 'react-icons/vsc';
-import { useSetRecoilState } from 'recoil';
-import { tabStateAtom } from '@states/infoWindow';
-import { HandleEventEndProps, HandleEventMoveProps, HandleEventStartProps, TabState } from '@libs/types/infowindow';
-import useCameraMove from '@components/MapComp/hooks/useCameraMove';
-import { handleMouseDown, handleMouseMove, handleMouseUp } from './eventHandler/mouse';
-import { handleTouchEnd, handleTouchMove, handleTouchStart } from './eventHandler/touch';
-import * as S from './style';
-import smoothMove from './utils/smoothMove';
+import { PopUpWindowScopeProps } from '@libs/types/infowindow';
+import Layout, { PopUpWindowLayoutProps } from './Contents/Layout/Layout';
+import Handler, { PopUpWindowHandlerProps } from './Contents/Handler/Handler';
+import CloseButton from './Contents/CloseButton/CloseButton';
 
-export interface PopUpWindowProps {
-  id: string;
-  children: ReactNode;
-  tabState: TabState;
-  available: boolean;
-}
+/**
+ * PopUpWindow 컴포넌트에서만 사용되는 변수들을 모아둔 객체
+ */
+const PopUpWindowScope: PopUpWindowScopeProps = {
+  smoothLoopId: { id: -1 },
+};
 
-function PopUpWindow({ id, children, tabState, available }: PopUpWindowProps) {
-  const smoothLoopId: { id: number } = { id: -1 };
-  const setTabState = useSetRecoilState(tabStateAtom);
-  const { flyToPrev } = useCameraMove();
-  const modifyRef = useRef<number>(0);
-  const topCoordRef = useRef<number>(window.innerHeight - 30);
-
-  const eventStartProp: HandleEventStartProps = {
-    smoothLoopId,
-    modifyRef,
-    available,
-    setTabState,
-  };
-  const eventMoveProp: HandleEventMoveProps = { tabState, modifyRef, topCoordRef, available };
-  const eventEndProp: HandleEventEndProps = { endCameraMove: flyToPrev, setTabState, tabState, topCoordRef };
-
-  const onMouseDown = handleMouseDown(eventStartProp);
-  const onTouchStart = handleTouchStart(eventStartProp);
-  const onMouseMove = handleMouseMove(eventMoveProp);
-  const onTouchMove = handleTouchMove(eventMoveProp);
-  const onMouseUp = handleMouseUp(eventEndProp);
-  const onTouchEnd = handleTouchEnd(eventEndProp);
-  const onMouseOut = handleMouseUp(eventEndProp);
-
-  useEffect(() => {
-    smoothMove({
-      parentElement: document.getElementById(id) as HTMLDivElement,
-      endPointTabState: tabState,
-      smoothLoopId,
-    });
-  }, [tabState]);
-
-  return (
-    <S.Layout id={id} tabState={tabState}>
-      <S.Wrapper>{children}</S.Wrapper>
-      <S.ResizeSideStyle>
-        <VscGrabber />
-      </S.ResizeSideStyle>
-      <S.ResizeSide
-        tabState={tabState}
-        onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}
-        onMouseMove={onMouseMove}
-        onMouseOut={onMouseOut}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-        onTouchMove={onTouchMove}
-      />
-    </S.Layout>
-  );
-}
-
+/**
+ * PopUpWindow 컴포넌트에서 사용되는 컴포넌트들을 모아둔 객체
+ *
+ * Layout : PopUpWindow의 레이아웃을 담당하는 컴포넌트, 내용을 담는 컨테이너
+ * Handler : PopUpWindow를 위아래로 스와이프 할 수 있는 핸들러를 담당하는 컴포넌트, 마우스 이벤트, 터치 이벤트
+ * CloseButton : PopUpWindow를 닫을 수 있는 버튼을 담당하는 컴포넌트
+ */
+const PopUpWindow = {
+  Layout: (props: PopUpWindowLayoutProps) => Layout({ ...props, ...PopUpWindowScope }),
+  Handler: (props: PopUpWindowHandlerProps) => Handler({ ...props, ...PopUpWindowScope }),
+  CloseButton,
+};
 export default PopUpWindow;
