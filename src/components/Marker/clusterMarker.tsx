@@ -22,40 +22,43 @@ export default function ClusterMarker({ count, filterId, handleClickClusterMarke
   const clusterColors = filteredClusterColor[filterId];
 
   return (
-    <Wrapper
-      onClick={onClick}
-      wrapperColor={clusterColors.wrapperColor}
-      wrapperBoxShadowColor={clusterColors.wrapperBoxShadowColor}
-    >
+    <ClusterMarkerWrapper onClick={onClick}>
+      <OuterCircle
+        OuterCircleColor={clusterColors.OuterCircleColor}
+        OuterCircleBoxShadowColor={clusterColors.OuterCircleBoxShadowColor}
+      />
       <InnerCircle
         innerCircleColor={clusterColors.innerCircleColor}
         innerCircleBoxShadowColorX={clusterColors.innerCircleBoxShadowColorX}
         innerCircleBoxShadowColorY={clusterColors.innerCircleBoxShadowColorY}
+      />
+      <ClusterPointNumberText>+{count}</ClusterPointNumberText>
+      <ClusterPointNumberShadow
+        textShadowColorX={clusterColors.textShadowColorX}
+        textShadowColorY={clusterColors.textShadowColorY}
       >
-        <ClusterPointNumberText>+{count}</ClusterPointNumberText>
-        <ClusterPointNumberShadow
-          textShadowColorX={clusterColors.textShadowColorX}
-          textShadowColorY={clusterColors.textShadowColorY}
-        >
-          +{count}
-        </ClusterPointNumberShadow>
-      </InnerCircle>
-    </Wrapper>
+        +{count}
+      </ClusterPointNumberShadow>
+    </ClusterMarkerWrapper>
   );
 }
-
-const Wrapper = styled.div<{ wrapperColor: string; wrapperBoxShadowColor: string }>`
-  width: 64px;
-  height: 64px;
-  background-color: ${(props) => props.wrapperColor};
-  border: 1.6px solid ${(props) => props.wrapperColor};
-  border-radius: 50%;
-  box-shadow: inset 0px 0px 8px ${(props) => props.wrapperBoxShadowColor};
-  filter: drop-shadow(0px 12px 24px rgba(0, 0, 0, 0.16));
-
+const ClusterMarkerWrapper = styled.div`
+  width: 52px;
+  height: 52px;
   display: flex;
   justify-content: center;
   align-items: center;
+  filter: drop-shadow(0px 12px 24px rgba(0, 0, 0, 0.16));
+`;
+
+const OuterCircle = styled.div<{ OuterCircleColor: string; OuterCircleBoxShadowColor: string }>`
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  background-color: ${(props) => props.OuterCircleColor};
+  border: 1.6px solid ${(props) => props.OuterCircleColor};
+  border-radius: 50%;
+  box-shadow: inset 0px 0px 10px ${(props) => props.OuterCircleBoxShadowColor};
 `;
 
 const InnerCircle = styled.div<{
@@ -63,15 +66,16 @@ const InnerCircle = styled.div<{
   innerCircleBoxShadowColorX: string;
   innerCircleBoxShadowColorY: string;
 }>`
-  position: relative;
-  width: 54px;
-  height: 54px;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
   background-color: ${(props) => props.innerCircleColor};
   border-radius: 50%;
   box-shadow: 1px -1px 2px ${(props) => props.innerCircleBoxShadowColorX},
     -1px 1px 2px ${(props) => props.innerCircleBoxShadowColorY};
-
   display: flex;
+  opacity: 0.7;
   justify-content: center;
   align-items: center;
 `;
@@ -107,17 +111,17 @@ const ClusterPointNumberShadow = styled.div<{
 
 const filteredClusterColor = [
   {
-    wrapperColor: '#F889FA',
-    wrapperBoxShadowColor: 'rgba(123, 9, 112, 0.35)',
+    OuterCircleColor: '#F889FA',
+    OuterCircleBoxShadowColor: 'rgba(123, 9, 112, 0.35)',
     innerCircleColor: '#F699ED',
     innerCircleBoxShadowColorX: 'rgba(250, 202, 251, 0.9)',
-    innerCircleBoxShadowColorY: 'rgba(0, 0, 0, 0.12)',
+    innerCircleBoxShadowColorY: 'rgba(23, 10, 0, 0.12)',
     textShadowColorX: 'rgba(71, 3, 68, 0.4)',
     textShadowColorY: 'rgba(245, 165, 237, 0.8)',
   },
   {
-    wrapperColor: '#32D186',
-    wrapperBoxShadowColor: '#3D785C',
+    OuterCircleColor: '#32D186',
+    OuterCircleBoxShadowColor: '#3D785C',
     innerCircleColor: '#32D186',
     innerCircleBoxShadowColorX: 'rgba(123, 225, 170, 0.9)',
     innerCircleBoxShadowColorY: 'rgba(2, 30, 25, 0.12)',
@@ -125,8 +129,8 @@ const filteredClusterColor = [
     textShadowColorY: '#48E39A',
   },
   {
-    wrapperColor: '#F2BE19',
-    wrapperBoxShadowColor: 'rgba(133, 50, 3, 0.2)',
+    OuterCircleColor: '#F2BE19',
+    OuterCircleBoxShadowColor: 'rgba(133, 50, 3, 0.2)',
     innerCircleColor: '#F2BE19',
     innerCircleBoxShadowColorX: 'rgba(249, 199, 125, 0.9)',
     innerCircleBoxShadowColorY: 'rgba(23, 10, 0, 0.12)',
@@ -134,8 +138,8 @@ const filteredClusterColor = [
     textShadowColorY: '#FDC999',
   },
   {
-    wrapperColor: '#BF8D69',
-    wrapperBoxShadowColor: 'rgba(133, 50, 3, 0.35)',
+    OuterCircleColor: '#BF8D69',
+    OuterCircleBoxShadowColor: 'rgba(133, 50, 3, 0.35)',
     innerCircleColor: '#BF8D69',
     innerCircleBoxShadowColorX: 'rgba(223, 171, 123, 0.9)',
     innerCircleBoxShadowColorY: 'rgba(23, 10, 0, 0.12)',
@@ -143,8 +147,8 @@ const filteredClusterColor = [
     textShadowColorY: '#FDC999',
   },
   {
-    wrapperColor: '#418DFF',
-    wrapperBoxShadowColor: 'rgba(3, 55, 133, 0.35)',
+    OuterCircleColor: '#418DFF',
+    OuterCircleBoxShadowColor: 'rgba(3, 55, 133, 0.35)',
     innerCircleColor: '#418DFF',
     innerCircleBoxShadowColorX: 'rgba(122, 170, 242, 0.9)',
     innerCircleBoxShadowColorY: 'rgba(23, 10, 0, 0.12)',
@@ -152,8 +156,8 @@ const filteredClusterColor = [
     textShadowColorY: '#90B8F2',
   },
   {
-    wrapperColor: '#B46FEA',
-    wrapperBoxShadowColor: 'rgba(76, 3, 133, 0.35)',
+    OuterCircleColor: '#B46FEA',
+    OuterCircleBoxShadowColor: 'rgba(76, 3, 133, 0.35)',
     innerCircleColor: '#B46FEA',
     innerCircleBoxShadowColorX: '#C6A1F7',
     innerCircleBoxShadowColorY: 'rgba(23, 10, 0, 0.12)',

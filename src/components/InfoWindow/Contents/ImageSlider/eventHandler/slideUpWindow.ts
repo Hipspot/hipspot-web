@@ -4,7 +4,6 @@ import modifyImageSliderHeight from '@components/InfoWindow/view/modifyImageSlid
 import { imageSliderHeightTween, imageSliderWidthTween } from '@constants/Tween';
 import { calcInterpolation, calcProgressRatio } from '@libs/utils/calc';
 import modifyImageSliderWidth from '@components/InfoWindow/view/modifyImageSliderWidth';
-import concealNotSelectedImage from '@components/InfoWindow/view/concealNotSelectedImage';
 
 export interface HandleSlidePopUpWindowForImageSlideProps {
   popUpHeights: { [key in PopUpHeightsType]: number };
@@ -17,10 +16,11 @@ export const handleSlidePopUpWindowForImageSlide =
     const { [PopUpHeightsType.middle]: middleHeight, [PopUpHeightsType.top]: topHeight } = popUpHeights;
 
     const ratio = calcProgressRatio({
-      current: e.currentTop + 30,
+      current: e.currentTop,
       start: middleHeight,
       end: topHeight,
     });
+
     const height = calcInterpolation({
       min: imageSliderHeightTween.min,
       max: imageSliderHeightTween.max,
@@ -35,5 +35,4 @@ export const handleSlidePopUpWindowForImageSlide =
 
     modifyImageSliderHeight({ height });
     modifyImageSliderWidth({ width });
-    concealNotSelectedImage(true);
   };

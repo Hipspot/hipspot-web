@@ -1,5 +1,5 @@
 export const calcProgressRatio = ({ current, start, end }: { current: number; start: number; end: number }) =>
-  (current - start) / (end - start);
+  calcNumberClamp({ num: (current - start) / (end - start), min: 0, max: 1 });
 
 export const calcInterpolation = ({ min, max, ratio }: { min: number; max: number; ratio: number }) =>
   min + (max - min) * ratio;
