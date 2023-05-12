@@ -1,24 +1,22 @@
-import React, { useEffect } from 'react';
+import { authAtom } from '@states/auth';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 
 function GoogleLogin() {
   const navigate = useNavigate();
+  const setAuthState = useSetRecoilState(authAtom);
+
   useEffect(() => {
     const url = new URL(window.location.href);
-    const urlString = url.href;
-    const params = {} as { [key: string]: string };
-    const queryString = urlString.split('?')[1];
-    if (queryString) {
-      const keyValuePairs = queryString.split('&');
-      keyValuePairs.forEach((pair) => {
-        const [key, value] = pair.split('=');
-        params[decodeURIComponent(key)] = decodeURIComponent(value || '');
-      });
-    }
-    console.log(params);
+    const accessToken = url.searchParams.get('access_token');
+
+    setAuthState({ isAuth: true, accessToken });
+
+    navigate('/');
   }, [navigate]);
 
-  return <div>accesstoken</div>;
+  return <div>Loading...</div>;
 }
 
 export default GoogleLogin;
