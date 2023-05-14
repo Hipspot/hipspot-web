@@ -1,4 +1,5 @@
 import { authAtom } from '@states/auth';
+import { toast } from 'react-hot-toast';
 import { useSetRecoilState } from 'recoil';
 
 /**
@@ -7,14 +8,14 @@ import { useSetRecoilState } from 'recoil';
  *
  */
 export default function useSetAuth() {
-  const setAuth = useSetRecoilState(authAtom);
+  const setAuthAtom = useSetRecoilState(authAtom);
   return (data: string) => {
-    const JsonData = JSON.parse(data);
-    if (!!JsonData && typeof JsonData === 'object' && Object.prototype.hasOwnProperty.call(JsonData, 'isAuth')) {
-      setAuth(JsonData as { isAuth: boolean });
+    if (data !== 'null') {
+      setAuthAtom({ isAuth: true, accessToken: data });
+      toast('플러터로부터 액세스 토큰을 전달받았습니다.');
     } else {
-      // eslint-disable-next-line no-console
-      console.error('데이터 형식이 잘못되었습니다.');
+      setAuthAtom({ isAuth: false, accessToken: '' });
+      toast('플러터의 액세스 토큰 정보가 없습니다.');
     }
   };
 }
