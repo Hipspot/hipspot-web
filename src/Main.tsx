@@ -13,12 +13,24 @@ import RandomButton from '@components/Button/RandomButton';
 import { Global, ThemeProvider } from '@emotion/react';
 import { light } from '@libs/styles/theme';
 import { globalStyle } from '@libs/styles/GlobalStyle';
+import { useSetRecoilState } from 'recoil';
+import { authAtom } from '@states/auth';
 
 function Main() {
   const flutterMessageHandler = useFlutterMessageHandler();
   useEffect(() => {
     window[FLUTTER_CHANNEL] = flutterMessageHandler;
   });
+
+  const setAuthState = useSetRecoilState(authAtom);
+  useEffect(() => {
+    if (localStorage.getItem('token') != null) {
+      setAuthState({ isAuth: true, accessToken: localStorage.getItem('token')! });
+      console.log('로그인 성공');
+    } else {
+      console.log('재로그인이 필요합니다.');
+    }
+  }, []);
 
   const theme = light;
 
@@ -27,8 +39,8 @@ function Main() {
       <Global styles={globalStyle} />
       <Wrapper>
         <MapCompContainer />
-        <LoginButton />
         <Filtering />
+        <LoginButton />
         <FindMyLocationButton />
         <RandomButton />
         <ClusterList />
