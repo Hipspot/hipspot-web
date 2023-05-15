@@ -35,6 +35,9 @@ const Button = styled.button`
   align-items: center;
   cursor: pointer;
   box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.24);
+  &:hover {
+    background-color: #d44fc5;
+  }
 `;
 
 export default LoginButton;
