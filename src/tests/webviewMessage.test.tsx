@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { RecoilObserver, render, waitFor } from '@libs/utils/testUtils';
 import { authAtom } from '@states/auth';
-import App from 'App';
+import App from 'Main';
 import { RecoilRoot } from 'recoil';
 
 describe('웹뷰에서', () => {

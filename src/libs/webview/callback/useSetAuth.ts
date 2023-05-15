@@ -11,7 +11,7 @@ export default function useSetAuth() {
   return (data: string) => {
     const JsonData = JSON.parse(data);
     if (!!JsonData && typeof JsonData === 'object' && Object.prototype.hasOwnProperty.call(JsonData, 'isAuth')) {
-      setAuth(JsonData as { isAuth: boolean });
+      setAuth(JsonData as { isAuth: boolean; accessToken: string });
     } else {
       // eslint-disable-next-line no-console
       console.error('데이터 형식이 잘못되었습니다.');

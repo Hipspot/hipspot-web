@@ -1,8 +1,14 @@
 import { atom } from 'recoil';
 
-export const authAtom = atom({
+interface AuthState {
+  isAuth: boolean;
+  accessToken: string | null;
+}
+
+export const authAtom = atom<AuthState>({
   key: 'auth',
   default: {
     isAuth: false,
+    accessToken: null,
   },
 });
