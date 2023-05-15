@@ -13,6 +13,9 @@ export const Layout = styled.div<{ tabState: TabState }>`
   transform: translate(calc(50vw - 50%), 100%);
   width: 100vw;
   z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   will-change: transform;
 `;
 
