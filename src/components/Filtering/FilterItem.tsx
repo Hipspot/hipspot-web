@@ -30,16 +30,12 @@ export default function FilterItem({ id, filterData }: FilterItemProps) {
 
 const Wrapper = styled.div<{ color: string }>`
   padding: 2px;
-
   width: fit-content;
   height: 40px;
-
   background: #f2f2f2;
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.16);
   border-radius: 6px;
-
   box-sizing: border-box;
-
   white-space: nowrap;
   color: ${({ color }) => color};
 

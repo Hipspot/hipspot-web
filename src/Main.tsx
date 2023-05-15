@@ -1,6 +1,4 @@
-import LoginButton from '@components/Button/LoginButton/LoginButton';
 import ClusterList from '@components/ClusterList';
-import Filtering from '@components/Filtering';
 import styled from '@emotion/styled';
 import MapCompContainer from '@containers/MapCompContainer';
 import InfoWindow from '@components/InfoWindow';
@@ -15,6 +13,7 @@ import { light } from '@libs/styles/theme';
 import { globalStyle } from '@libs/styles/GlobalStyle';
 import { useSetRecoilState } from 'recoil';
 import { authAtom } from '@states/auth';
+import Header from '@components/Header/Header';
 
 function Main() {
   const flutterMessageHandler = useFlutterMessageHandler();
@@ -39,8 +38,7 @@ function Main() {
       <Global styles={globalStyle} />
       <Wrapper>
         <MapCompContainer />
-        <Filtering />
-        <LoginButton />
+        <Header />
         <FindMyLocationButton />
         <RandomButton />
         <ClusterList />
