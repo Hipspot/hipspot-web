@@ -4,7 +4,6 @@ import { css } from '@emotion/react';
 import { geoJsonAtom } from '@states/map';
 import { activeFilterIdAtom } from '@states/clusterList';
 import { MapboxEvent } from 'mapbox-gl';
-
 import { DOMID_MAP_COMPONENT } from '@constants/DOM';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import addFeatureLayer from './eventHandler/addFeatureLayer';
@@ -28,6 +27,9 @@ function MapComp() {
   const onMoveEnd = ({ target: targetMap }: MapboxEvent) =>
     savePrevPostion(targetMap.getCenter(), { zoom: targetMap.getZoom() });
 
+  /**
+   * ActiveCafeMarker 사용
+   */
   useActivateCafeMarker({
     add: addActivatedCafeMarker,
     remove: removeActivatedCafeMarker,
