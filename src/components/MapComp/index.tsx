@@ -17,7 +17,8 @@ function MapComp() {
   const activeFilterId = useFiltering();
   const mapRef = useMap();
   const { savePrevPostion } = useCameraMove();
-  const { updateMarkers, removeAllMarkers, addActivatedCafeMarker, removeActivatedCafeMarker } = useMarkerUpdate();
+  const { updateMarkers, removeAllMarkers, addActivatedCafeMarker, removeActivatedCafeMarker } =
+    useMarkerUpdate(allFeatures);
 
   const onRender = () => updateMarkers();
   const onMoveEnd = ({ target: targetMap }: MapboxEvent) =>

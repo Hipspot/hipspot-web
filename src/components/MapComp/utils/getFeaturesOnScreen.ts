@@ -1,3 +1,4 @@
+import { MAP_SOURCE_RENDER_CAFE_LIST } from '@constants/map';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 import { Map, MapboxGeoJSONFeature } from 'mapbox-gl';
 
@@ -17,7 +18,7 @@ const getFeaturesOnScreen: (props: GetFeaturesOnScreenParams) => GetFeaturesOnSc
   map,
   allFeatures,
 }) => {
-  if (!map || !map.getSource('cafeList'))
+  if (!map || !map.getSource(MAP_SOURCE_RENDER_CAFE_LIST))
     return {
       pointFeaturesOnScreen: [],
       clusterFeaturesOnScreen: [],
@@ -25,7 +26,7 @@ const getFeaturesOnScreen: (props: GetFeaturesOnScreenParams) => GetFeaturesOnSc
       uniqueClusterIds: new Set<number>(),
     };
 
-  const mapboxFeaturesOnScreen = map.querySourceFeatures('cafeList');
+  const mapboxFeaturesOnScreen = map.querySourceFeatures(MAP_SOURCE_RENDER_CAFE_LIST);
   const clusterFeaturesOnScreen: MapboxGeoJSONFeature[] = [];
   const uniqueClusterIds = new Set<number>();
   const uniquePointIds = new Set<number>();

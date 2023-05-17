@@ -4,22 +4,21 @@ import ReasonableMarker from '@components/Marker/ReasonableMarker';
 import FranchiseMarker from '@components/Marker/FranchiseMarker';
 import { CustomGeoJSONFeatures, MarkerList } from '@libs/types/map';
 import { renderEmotionElementToHtml } from '@libs/utils/renderEmotionElementToHtml';
-import { activeFilterIdAtom } from '@states/clusterList';
-import { geoJsonAtom } from '@states/map';
-import mapboxgl, { GeoJSONSource, Marker } from 'mapbox-gl';
+import mapboxgl, { GeoJSONSource, Marker, Map, MapboxGeoJSONFeature } from 'mapbox-gl';
 import { useRecoilValue } from 'recoil';
-import getFeaturesOnScreen from '../utils/getFeaturesOnScreen';
-import useMapRef from './useMap';
 import useMarkerClickAction from './useMarkerClickAction';
 import getFranchiseByName from '../utils/getFranchiseByName';
+import useMap from './useMap';
+import { FilterId } from '@libs/types/filter';
+import { MAP_SOURCE_RENDER_CAFE_LIST } from '@constants/map';
+import { activeFilterIdAtom } from '@states/clusterList';
 
 const pointMarkerList: MarkerList = {};
 const clusterMarkerList: MarkerList = {};
 let activatedCafeMarker: mapboxgl.Marker;
 
-function useMarkerUpdate() {
-  const mapRef = useMapRef();
-  const allFeatures = useRecoilValue(geoJsonAtom);
+function useMarkerUpdate(allFeatures: CustomGeoJSONFeatures[]) {
+  const mapRef = useMap();
   const filterId = useRecoilValue(activeFilterIdAtom);
   const { pointMarkerClickAction, clusterMarkerClickAction } = useMarkerClickAction();
 
@@ -34,7 +33,8 @@ function useMarkerUpdate() {
 
     // point markers
     pointFeaturesOnScreen.forEach((feature) => {
-      const { cafeId, cafeName } = feature.properties;
+      const { cafeId, cafeName, filterList } = feature.properties;
+      if (!filterList.includes(filterId)) return;
       if (Object.hasOwn(pointMarkerList, cafeId)) return;
       try {
         if (filterId === 2) {
@@ -97,37 +97,38 @@ function useMarkerUpdate() {
     });
 
     // cluster markers
-    clusterFeaturesOnScreen.forEach((feature) => {
-      const clusterId = feature.properties?.cluster_id;
-      if (Object.hasOwn(clusterMarkerList, clusterId)) return;
+    if (filterId !== FilterId.Favorite)
+      clusterFeaturesOnScreen.forEach((feature) => {
+        const clusterId = feature.properties?.cluster_id;
+        if (Object.hasOwn(clusterMarkerList, clusterId)) return;
 
-      const count = feature.properties?.point_count;
-      const geo = feature.geometry;
+        const count = feature.properties?.point_count;
+        const geo = feature.geometry;
 
-      const marker = renderEmotionElementToHtml({
-        elem: ClusterMarker({
-          count,
-          filterId,
-          handleClickClusterMarker: (id: number) => {
-            const source = map.getSource('cafeList') as GeoJSONSource;
+        const marker = renderEmotionElementToHtml({
+          elem: ClusterMarker({
+            count,
+            filterId,
+            handleClickClusterMarker: (id: number) => {
+              const source = map.getSource('cafeList') as GeoJSONSource;
 
-            source.getClusterLeaves(id, 200, 0, (err, leaves) => {
-              const properties = leaves.map((leaf) => ({
-                ...leaf.properties,
-              }));
-              clusterMarkerClickAction(properties);
-            });
-          },
-          clusterId,
-        }),
-        cssDataKey: 'cluster',
+              source.getClusterLeaves(id, 200, 0, (err, leaves) => {
+                const properties = leaves.map((leaf) => ({
+                  ...leaf.properties,
+                }));
+                clusterMarkerClickAction(properties);
+              });
+            },
+            clusterId,
+          }),
+          cssDataKey: 'cluster',
+        });
+
+        if (geo.type === 'GeometryCollection') return;
+        clusterMarkerList[clusterId] = new mapboxgl.Marker(marker)
+          .setLngLat(geo.coordinates as [number, number])
+          .addTo(map);
       });
-
-      if (geo.type === 'GeometryCollection') return;
-      clusterMarkerList[clusterId] = new mapboxgl.Marker(marker)
-        .setLngLat(geo.coordinates as [number, number])
-        .addTo(map);
-    });
 
     // remove cluster markers
     Object.entries(clusterMarkerList).forEach((markerEntry) => {
@@ -221,3 +222,55 @@ function useMarkerUpdate() {
 }
 
 export default useMarkerUpdate;
+
+interface GetFeaturesOnScreenParams {
+  map: Map | undefined;
+  filterId: number;
+  allFeatures: CustomGeoJSONFeatures[];
+}
+
+interface GetFeaturesOnScreenReturns {
+  pointFeaturesOnScreen: CustomGeoJSONFeatures[];
+  clusterFeaturesOnScreen: MapboxGeoJSONFeature[];
+  uniquePointIds: Set<number>;
+  uniqueClusterIds: Set<number>;
+}
+const getFeaturesOnScreen: (props: GetFeaturesOnScreenParams) => GetFeaturesOnScreenReturns = ({
+  map,
+  allFeatures,
+}) => {
+  if (!map || !map.getSource(MAP_SOURCE_RENDER_CAFE_LIST))
+    return {
+      pointFeaturesOnScreen: [],
+      clusterFeaturesOnScreen: [],
+      uniquePointIds: new Set<number>(),
+      uniqueClusterIds: new Set<number>(),
+    };
+
+  const mapboxFeaturesOnScreen = map.querySourceFeatures(MAP_SOURCE_RENDER_CAFE_LIST);
+  const clusterFeaturesOnScreen: MapboxGeoJSONFeature[] = [];
+  const uniqueClusterIds = new Set<number>();
+  const uniquePointIds = new Set<number>();
+
+  mapboxFeaturesOnScreen.forEach((feature) => {
+    if (uniqueClusterIds.has(feature.properties?.cluster_id)) return;
+
+    if (feature.properties?.cluster) {
+      clusterFeaturesOnScreen.push(feature);
+      uniqueClusterIds.add(feature.properties.cluster_id);
+    }
+
+    if (feature.properties?.cafeId) {
+      uniquePointIds.add(Number(feature.properties.cafeId));
+    }
+  });
+  const pointFeaturesOnScreen = allFeatures.filter((feature: CustomGeoJSONFeatures) =>
+    uniquePointIds.has(Number(feature.properties.cafeId))
+  );
+
+  return { pointFeaturesOnScreen, clusterFeaturesOnScreen, uniquePointIds, uniqueClusterIds };
+};
+
+// const switchMarkerType = (filterId: number, feature: CustomGeoJSONFeatures) => {};
+
+// const getMarkerObj = () => {};
