@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import useMap from './useMap';
-import { EventData, MapEventType, MapboxEvent } from 'mapbox-gl';
+import mapboxgl, { EventData, MapEventType, MapboxEvent } from 'mapbox-gl';
 
 interface UseMapEventListnerProps {
   type: keyof MapEventType;
   callback: (e: MapboxEvent<undefined> & EventData) => void;
-  effect: () => void;
+  effect: (map: mapboxgl.Map) => void;
   dep?: any[];
 }
 function useMapEventListner({ type, callback, effect, dep }: UseMapEventListnerProps) {
@@ -15,7 +15,7 @@ function useMapEventListner({ type, callback, effect, dep }: UseMapEventListnerP
     const map = mapRef.current;
     if (!map) return;
 
-    effect();
+    effect(map);
     map.on(type, callback);
 
     return () => {
