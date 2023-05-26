@@ -11,16 +11,17 @@ import useMapEventListner from './hooks/useMapEventListner';
 import useFiltering from './hooks/useFiltering';
 
 function MapComp() {
-  const allFeatures = useMapSources();
   const activeFilterId = useFiltering();
+  const featureList = useMapSources(activeFilterId);
 
   const { savePrevPostion } = useCameraMove();
   const { updateMarkers, removeAllMarkers, addActivatedCafeMarker, removeActivatedCafeMarker } = useMarkerUpdate({
-    allFeatures,
+    featureList,
     filterId: activeFilterId,
   });
 
   const onRender = () => updateMarkers();
+
   const onMoveEnd = ({ target: targetMap }: MapboxEvent) =>
     savePrevPostion(targetMap.getCenter(), { zoom: targetMap.getZoom() });
 
@@ -30,7 +31,7 @@ function MapComp() {
   useActivateCafeMarker({
     add: addActivatedCafeMarker,
     remove: removeActivatedCafeMarker,
-    features: [allFeatures],
+    features: [featureList],
   });
 
   /**
@@ -48,7 +49,6 @@ function MapComp() {
       removeAllMarkers();
       removeActivatedCafeMarker();
       updateMarkers();
-      console.log('render effect');
     },
     dep: [activeFilterId],
   });
