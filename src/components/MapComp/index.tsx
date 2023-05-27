@@ -45,26 +45,30 @@ function MapComp() {
   /**
    * 랜더링 이벤트 발생시 실행되는 이벤트리스너
    */
-  useMapEventListner({
-    type: 'render',
-    callback: onRender,
-    effect: () => {
-      removeAllMarkers();
-      removeActivatedCafeMarker();
-      updateMarkers();
+  useMapEventListner(
+    {
+      type: 'render',
+      callback: onRender,
+      effect: () => {
+        removeAllMarkers();
+        removeActivatedCafeMarker();
+        updateMarkers();
+      },
     },
-    dep: [filterId],
-  });
+    [filterId]
+  );
 
   /**
    * moveEnd 이벤트 발생시 실행되는 이벤트리스너
    */
-  useMapEventListner({
-    type: 'moveend',
-    callback: onMoveEnd,
-    effect: () => {},
-    dep: [filterId],
-  });
+  useMapEventListner(
+    {
+      type: 'moveend',
+      callback: onMoveEnd,
+      effect: () => {},
+    },
+    [filterId]
+  );
 
   return (
     <div

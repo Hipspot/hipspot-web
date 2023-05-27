@@ -21,17 +21,19 @@ function useMapSourceAndLayer({ filteredFeatures }: UseMapSourceProps, deps: any
     setLoaded(true);
   };
 
-  useMapEventListner({
-    type: 'load',
-    callback: onMapLoad,
-    effect: (map) => {
-      if (map.getLayer(MAP_SOURCE_RENDER_CAFE_LIST)) {
-        map.removeLayer(MAP_SOURCE_RENDER_CAFE_LIST);
-        map.removeSource(MAP_SOURCE_RENDER_CAFE_LIST);
-      }
+  useMapEventListner(
+    {
+      type: 'load',
+      callback: onMapLoad,
+      effect: (map) => {
+        if (map.getLayer(MAP_SOURCE_RENDER_CAFE_LIST)) {
+          map.removeLayer(MAP_SOURCE_RENDER_CAFE_LIST);
+          map.removeSource(MAP_SOURCE_RENDER_CAFE_LIST);
+        }
+      },
     },
-    dep: [],
-  });
+    []
+  );
 
   useEffect(() => {
     console.log(deps);

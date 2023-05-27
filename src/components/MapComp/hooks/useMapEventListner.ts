@@ -6,9 +6,8 @@ interface UseMapEventListnerProps {
   type: keyof MapEventType;
   callback: (e: MapboxEvent<undefined> & EventData) => void;
   effect: (map: mapboxgl.Map) => void;
-  dep?: any[];
 }
-function useMapEventListner({ type, callback, effect, dep }: UseMapEventListnerProps) {
+function useMapEventListner({ type, callback, effect }: UseMapEventListnerProps, dep: any[]) {
   const mapRef = useMap();
 
   useEffect(() => {
