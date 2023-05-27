@@ -36,7 +36,6 @@ function useMapSourceAndLayer({ filteredFeatures }: UseMapSourceProps, deps: any
   );
 
   useEffect(() => {
-    console.log(deps);
     const map = mapRef.current;
     if (!(map && loaded)) return;
     if (map.getLayer(MAP_SOURCE_RENDER_CAFE_LIST)) {
