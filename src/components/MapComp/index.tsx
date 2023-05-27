@@ -6,24 +6,27 @@ import useCameraMove from './hooks/useCameraMove';
 import useMarkerUpdate from './hooks/useMarkerUpdate';
 import useActivateCafeMarker from './hooks/useActivateCafeMarker';
 import useMyLocationMarker from './hooks/useMyLocationMarker';
-import useMapSources from './hooks/useAddSource';
+import useMapSourceAndLayer from './hooks/useAddSource';
 import useMapEventListner from './hooks/useMapEventListner';
 import useFiltering from './hooks/useFiltering';
 
 function MapComp() {
-  const activeFilterId = useFiltering();
-  const featureList = useMapSources(activeFilterId);
+  const [filterId, filteredFeatures] = useFiltering();
 
   const { savePrevPostion } = useCameraMove();
   const { updateMarkers, removeAllMarkers, addActivatedCafeMarker, removeActivatedCafeMarker } = useMarkerUpdate({
-    featureList,
-    filterId: activeFilterId,
+    filterId,
   });
 
+  // 맵 관련 이벤트리스너
   const onRender = () => updateMarkers();
-
   const onMoveEnd = ({ target: targetMap }: MapboxEvent) =>
     savePrevPostion(targetMap.getCenter(), { zoom: targetMap.getZoom() });
+
+  /**
+   * filterId에 따라 Source와 레이어
+   */
+  useMapSourceAndLayer({ filteredFeatures }, [filterId]);
 
   /**
    * ActiveCafeMarker 사용
@@ -31,7 +34,7 @@ function MapComp() {
   useActivateCafeMarker({
     add: addActivatedCafeMarker,
     remove: removeActivatedCafeMarker,
-    features: [featureList],
+    features: [filteredFeatures],
   });
 
   /**
@@ -50,7 +53,7 @@ function MapComp() {
       removeActivatedCafeMarker();
       updateMarkers();
     },
-    dep: [activeFilterId],
+    dep: [filterId],
   });
 
   /**
@@ -60,7 +63,7 @@ function MapComp() {
     type: 'moveend',
     callback: onMoveEnd,
     effect: () => {},
-    dep: [activeFilterId],
+    dep: [filterId],
   });
 
   return (

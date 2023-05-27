@@ -1,21 +1,19 @@
-import { geoJsonAtom } from '@states/map';
 import { MAP_SOURCE_RENDER_CAFE_LIST } from '@constants/map';
 import { CustomGeoJSONFeatures } from '@libs/types/map';
 import { FeatureCollection } from 'geojson';
-import { useRecoilValue } from 'recoil';
 import { MapboxEvent } from 'mapbox-gl';
-import { FilterId } from '@libs/types/filter';
 import useMapEventListner from './useMapEventListner';
 import { useEffect, useState } from 'react';
 import useMap from './useMap';
 
-function useMapSources(filterId: FilterId) {
+interface UseMapSourceProps {
+  filteredFeatures: CustomGeoJSONFeatures[];
+}
+function useMapSourceAndLayer({ filteredFeatures }: UseMapSourceProps, deps: any[]) {
   const mapRef = useMap();
-  const allFeatures = useRecoilValue(geoJsonAtom);
   const [loaded, setLoaded] = useState(false);
   const onMapLoad = ({ target: targetMap }: MapboxEvent) => {
-    const filteredFeatures = useMapSources.filterFeatures({ features: allFeatures, filterId });
-    useMapSources.addSourceAndLayer({
+    useMapSourceAndLayer.addSourceAndLayer({
       map: targetMap,
       sourceFeatures: filteredFeatures,
       name: MAP_SOURCE_RENDER_CAFE_LIST,
@@ -36,24 +34,22 @@ function useMapSources(filterId: FilterId) {
   });
 
   useEffect(() => {
+    console.log(deps);
     const map = mapRef.current;
-    if (!(map && allFeatures && loaded)) return;
+    if (!(map && loaded)) return;
     if (map.getLayer(MAP_SOURCE_RENDER_CAFE_LIST)) {
       map.removeLayer(MAP_SOURCE_RENDER_CAFE_LIST);
       map.removeSource(MAP_SOURCE_RENDER_CAFE_LIST);
     }
-    const filteredFeatures = useMapSources.filterFeatures({ features: allFeatures, filterId });
-    useMapSources.addSourceAndLayer({
+    useMapSourceAndLayer.addSourceAndLayer({
       map,
       sourceFeatures: filteredFeatures,
       name: MAP_SOURCE_RENDER_CAFE_LIST,
     });
-  }, [filterId, loaded]);
-
-  return allFeatures;
+  }, [...deps, loaded]);
 }
 
-export default useMapSources;
+export default useMapSourceAndLayer;
 
 interface AddSourceAndLayerProps {
   map: mapboxgl.Map;
@@ -61,7 +57,7 @@ interface AddSourceAndLayerProps {
   name: string;
 }
 
-useMapSources.addSourceAndLayer = ({ map, sourceFeatures, name }: AddSourceAndLayerProps) => {
+useMapSourceAndLayer.addSourceAndLayer = ({ map, sourceFeatures, name }: AddSourceAndLayerProps) => {
   map.addSource(name, {
     type: 'geojson',
     data: {
@@ -80,14 +76,4 @@ useMapSources.addSourceAndLayer = ({ map, sourceFeatures, name }: AddSourceAndLa
       'circle-opacity': 0,
     },
   });
-};
-useMapSources.filterFeatures = ({ features, filterId }: { features: CustomGeoJSONFeatures[]; filterId: FilterId }) => {
-  const filteredFeatures: CustomGeoJSONFeatures[] = [];
-
-  features.forEach((feature: CustomGeoJSONFeatures) => {
-    if (feature.properties?.filterList.includes(filterId)) {
-      filteredFeatures.push(feature);
-    }
-  });
-  return filteredFeatures;
 };
