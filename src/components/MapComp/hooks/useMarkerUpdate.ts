@@ -15,44 +15,49 @@ import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 /**
  * 마커 캐싱해두는 objext
  */
-const pointMarkerList: MarkerList = {};
-const clusterMarkerList: MarkerList = {};
+const cachedPointMarkerList: MarkerList = {};
+const cachedClusterMarkerList: MarkerList = {};
 let activatedCafeMarker: Marker;
 
-function useMarkerUpdate({ featureList, filterId }: { featureList: CustomGeoJSONFeatures[]; filterId: FilterId }) {
+function useMarkerUpdate({ filterId }: { filterId: FilterId }) {
   const mapRef = useMap();
   const { pointMarkerClickAction, clusterMarkerClickAction } = useMarkerClickAction();
+
+  // generateMarker 함수들에 handler 전달해서 사용
   const generateMarkerHTML = useMarkerUpdate.generateMarkerHTMLFuncInterCeptor(pointMarkerClickAction);
   const generateClusterHTML = useMarkerUpdate.generateClusterHTMLFuncInterCeptor(filterId, clusterMarkerClickAction);
 
   /**
    * @abstract
-   *  포인트마커 캐싱, 필터링 확인 -> 마커 생성 -> 클러스터마커 존재 확인 -> 클러스터마커 생성
+   *  features 확인 -> 포인트마커 업로드 -> 포인트마커 삭제 ->  클러스터마커 업로드 -> 클러스터마커 삭제
    *
    */
   const updateMarkers = () => {
     const map = mapRef.current;
     if (!map) return;
 
-    const { pointFeaturesOnScreen, clusterFeaturesOnScreen, uniqueClusterIds, uniquePointIds } =
-      useMarkerUpdate.getFeaturesOnScreen({
-        map,
-        featureList,
-      });
+    /**
+     * 1. features 확인
+     */
+    const {
+      onScreenPointMarkerFeatures,
+      onScreenClusterMarkerFeatures,
+      onScreenClusterMarkerIds,
+      onScreenPointMarkerIds,
+    } = useMarkerUpdate.getOnScreenFeatures({ map });
 
     /**
-     * 마커 생성 페이즈
+     * 마커 생성 및 추가 페이즈
+     * 캐싱된 마커가 있으면 사용, 없으면 새로 만들어서 추가
      */
-    pointFeaturesOnScreen.forEach((feature) => {
+    onScreenPointMarkerFeatures.forEach(async (feature) => {
       const { cafeId } = feature.properties;
-      if (Object.hasOwn(pointMarkerList, cafeId)) return;
-
-      const marker = generateMarkerHTML({ filterId, feature });
-
       const { coordinates } = feature.geometry;
 
-      // 마커 생성과 동시에 맵에 추가
-      pointMarkerList[cafeId] = useMarkerUpdate.createMarkerAndAddToMap({ map, marker, coordinates });
+      if (Object.hasOwn(cachedPointMarkerList, cafeId)) return cachedPointMarkerList[cafeId].addTo(map);
+
+      const marker = generateMarkerHTML({ filterId, feature });
+      cachedPointMarkerList[cafeId] = useMarkerUpdate.createMarkerAndAddToMap({ map, marker, coordinates });
     });
 
     if (filterId === FilterId.Favorite) {
@@ -60,57 +65,54 @@ function useMarkerUpdate({ featureList, filterId }: { featureList: CustomGeoJSON
     }
 
     /**
-     *
+     * 포인트마커 삭제 페이즈
      */
-    Object.entries(pointMarkerList).forEach((markerEntry) => {
+    Object.entries(cachedPointMarkerList).forEach((markerEntry) => {
       const [id, marker] = markerEntry as [string, Marker];
-      if (uniquePointIds.has(Number(id))) {
-        marker.addTo(map);
-        return;
-      }
-      marker.remove();
+      if (!onScreenPointMarkerIds.has(Number(id))) marker.remove(); // O(1)로 조회
     });
 
-    // cluster markers 생성
-    clusterFeaturesOnScreen.forEach((feature) => {
-      const { cluster_id: clusterId } = feature.properties!;
-      if (Object.hasOwn(clusterMarkerList, clusterId)) return;
+    /**
+     *  cluster markers 추가 페이즈
+     */
 
+    onScreenClusterMarkerFeatures.forEach(async (feature) => {
+      const { cluster_id: clusterId } = feature.properties!;
       const { type } = feature.geometry;
+      if (Object.hasOwn(cachedClusterMarkerList, clusterId)) return cachedClusterMarkerList[clusterId].addTo(map);
+
       if (type === 'GeometryCollection') return;
 
       const source = map.getSource(MAP_SOURCE_RENDER_CAFE_LIST) as GeoJSONSource;
       const marker = generateClusterHTML({ feature, source });
 
-      clusterMarkerList[clusterId] = useMarkerUpdate.createMarkerAndAddToMap({
+      cachedClusterMarkerList[clusterId] = useMarkerUpdate.createMarkerAndAddToMap({
         map,
         marker,
         coordinates: feature.geometry.coordinates as LngLatLike,
       });
     });
 
-    // remove cluster markers
-    Object.entries(clusterMarkerList).forEach((markerEntry) => {
+    /**
+     * 클러스터마커 삭제 페이즈
+     */
+    Object.entries(cachedClusterMarkerList).forEach((markerEntry) => {
       const [id, marker] = markerEntry as [string, Marker];
-      if (uniqueClusterIds.has(Number(id))) {
-        marker.addTo(map);
-        return;
-      }
-      marker.remove();
+      if (!onScreenClusterMarkerIds.has(Number(id))) marker.remove();
     });
   };
 
   const removeAllMarkers = () => {
-    Object.entries(pointMarkerList).forEach((markerEntry) => {
+    Object.entries(cachedPointMarkerList).forEach((markerEntry) => {
       const [id, marker] = markerEntry as [string, Marker];
       marker.remove();
-      delete pointMarkerList[id];
+      delete cachedPointMarkerList[id];
     });
 
-    Object.entries(clusterMarkerList).forEach((markerEntry) => {
+    Object.entries(cachedClusterMarkerList).forEach((markerEntry) => {
       const [id, marker] = markerEntry as [string, Marker];
       marker.remove();
-      delete clusterMarkerList[id];
+      delete cachedClusterMarkerList[id];
     });
   };
 
@@ -146,36 +148,29 @@ useMarkerUpdate.createMarkerAndAddToMap = ({
   coordinates: LngLatLike;
 }) => new Marker(marker, { anchor: 'bottom' }).setLngLat(coordinates).addTo(map);
 
-/**
- * pointFeaturesOnScreen : 화면에 보이는 point feature
- * clusterFeaturesOnScreen : 화면에 보이는 cluster feature
- * uniquePointIds : 유니크 feature의 id
- * uniqueClusterIds : 유니크 클러스터 Id
- */
 interface GetFeaturesOnScreenReturns {
-  pointFeaturesOnScreen: CustomGeoJSONFeatures[];
-  clusterFeaturesOnScreen: MapboxGeoJSONFeature[];
-  uniquePointIds: Set<number>;
-  uniqueClusterIds: Set<number>;
+  onScreenPointMarkerFeatures: CustomGeoJSONFeatures[];
+  onScreenClusterMarkerFeatures: MapboxGeoJSONFeature[];
+  onScreenPointMarkerIds: Set<number>;
+  onScreenClusterMarkerIds: Set<number>;
 }
-
 /**
  *
  * @param param0
  * @returns
  */
-useMarkerUpdate.getFeaturesOnScreen = ({ map }: { map: Map | undefined; featureList: CustomGeoJSONFeatures[] }) => {
-  const pointFeaturesOnScreen: CustomGeoJSONFeatures[] = []; // 화면에 보이는 포인트마커 리스트
-  const clusterFeaturesOnScreen: MapboxGeoJSONFeature[] = []; // 화면에 보이는 클러스터마커 리스트
-  const uniquePointIds = new Set<number>(); // 유니크 포인트 id
-  const uniqueClusterIds = new Set<number>(); // 유니크 클러스터 id
+useMarkerUpdate.getOnScreenFeatures = ({ map }: { map: Map | undefined }) => {
+  const onScreenPointMarkerFeatures: CustomGeoJSONFeatures[] = []; // 화면에 보이는 포인트마커 리스트
+  const onScreenClusterMarkerFeatures: MapboxGeoJSONFeature[] = []; // 화면에 보이는 클러스터마커 리스트
+  const onScreenPointMarkerIds = new Set<number>(); // Set으로
+  const onScreenClusterMarkerIds = new Set<number>(); // 유니크 클러스터 id
 
   if (!map || !map.getSource(MAP_SOURCE_RENDER_CAFE_LIST))
     return {
-      pointFeaturesOnScreen,
-      clusterFeaturesOnScreen,
-      uniquePointIds,
-      uniqueClusterIds,
+      onScreenPointMarkerFeatures,
+      onScreenClusterMarkerFeatures,
+      onScreenPointMarkerIds,
+      onScreenClusterMarkerIds,
     };
 
   const mapboxFeaturesOnScreen = map.querySourceFeatures(MAP_SOURCE_RENDER_CAFE_LIST);
@@ -183,26 +178,26 @@ useMarkerUpdate.getFeaturesOnScreen = ({ map }: { map: Map | undefined; featureL
   mapboxFeaturesOnScreen.forEach((feature) => {
     const { cluster_id: clusterId, cafeId, cluster } = feature.properties!;
 
-    if (uniqueClusterIds.has(Number(clusterId))) return;
-    if (uniquePointIds.has(Number(cafeId))) return;
+    if (onScreenClusterMarkerIds.has(Number(clusterId))) return;
+    if (onScreenPointMarkerIds.has(Number(cafeId))) return;
 
     if (cluster) {
-      clusterFeaturesOnScreen.push(feature);
-      uniqueClusterIds.add(clusterId);
+      onScreenClusterMarkerFeatures.push(feature);
+      onScreenClusterMarkerIds.add(clusterId);
     }
 
     if (cafeId) {
       const featureTypeCast = feature as unknown as CustomGeoJSONFeatures;
-      pointFeaturesOnScreen.push(featureTypeCast);
-      uniquePointIds.add(Number(cafeId));
+      onScreenPointMarkerFeatures.push(featureTypeCast);
+      onScreenPointMarkerIds.add(Number(cafeId));
     }
   });
 
   return {
-    pointFeaturesOnScreen,
-    clusterFeaturesOnScreen,
-    uniquePointIds,
-    uniqueClusterIds,
+    onScreenPointMarkerFeatures,
+    onScreenClusterMarkerFeatures,
+    onScreenPointMarkerIds,
+    onScreenClusterMarkerIds,
   } as GetFeaturesOnScreenReturns;
 };
 
