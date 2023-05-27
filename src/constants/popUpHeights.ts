@@ -5,7 +5,6 @@ export enum PopUpHeightsType {
   middle,
   bottom,
 }
-
 export const popUpHeights = {
   [PopUpHeightsType.top]: -BarSizes[BarSizeType.BOTTOM],
   [PopUpHeightsType.middle]: window.innerHeight * 0.6,

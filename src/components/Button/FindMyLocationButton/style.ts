@@ -1,14 +1,14 @@
 import styled from '@emotion/styled';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ top: number }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  position: absolute;
+  position: fixed;
   left: 16px;
-  bottom: 16px;
+  top: ${(props) => props.top - 50}px;
 
   width: 44px;
   height: 44px;
