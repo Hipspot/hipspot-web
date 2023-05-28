@@ -9,6 +9,6 @@ export const authAtom = atom<AuthState>({
   key: 'auth',
   default: {
     isAuth: false,
-    accessToken: null,
+    accessToken: '',
   },
 });
