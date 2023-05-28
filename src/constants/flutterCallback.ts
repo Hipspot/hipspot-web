@@ -5,10 +5,12 @@ export enum FlutterCallback {
   initFilterling,
   setAuth,
   setMyLocation,
+  setNotchHeight,
 }
 
 export enum MessageToFlutterType {
   openLoginModal = 'openLoginModal',
   getMyLocation = 'getMyLocation',
   getAuth = 'getAuth',
+  getNotchHeight = 'getNotchHeight',
 }

@@ -22,7 +22,7 @@ describe('웹뷰에서', () => {
     });
   });
   
-  it('잘못된 메세지 내용을 수신하면 에러를 출력한다.', async () => {
+  it('잘못된 메세지 제목을 수신하면 에러를 출력한다.', async () => {
     console.error = jest.fn();
     render(<App />);
 
@@ -43,4 +43,5 @@ describe('웹뷰에서', () => {
 
     expect(console.error).toBeCalled();
   });
+  */
 });
