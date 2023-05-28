@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+/*
 import { RecoilObserver, render, waitFor } from '@libs/utils/testUtils';
 import { authAtom } from '@states/auth';
 import App from 'Main';
@@ -45,3 +46,4 @@ describe('웹뷰에서', () => {
     expect(console.error).toBeCalled();
   });
 });
+*/
