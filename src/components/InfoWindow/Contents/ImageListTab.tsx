@@ -84,7 +84,6 @@ const TabBarWrapper = styled.div`
   gap: 32px;
   flex-shrink: 0;
   align-items: center;
-  justify-content: flex-end;
 `;
 
 const Tab = styled.div<{ isSelected?: boolean }>`
