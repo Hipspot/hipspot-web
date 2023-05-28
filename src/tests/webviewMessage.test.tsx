@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-/*
 import { RecoilObserver, render, waitFor } from '@libs/utils/testUtils';
 import { authAtom } from '@states/auth';
 import App from 'Main';
@@ -23,7 +22,7 @@ describe('웹뷰에서', () => {
       isAuth: true,
     });
   });
-
+  /*
   it('잘못된 메세지 제목을 수신하면 에러를 출력한다.', async () => {
     console.error = jest.fn();
     render(<App />);
@@ -45,5 +44,5 @@ describe('웹뷰에서', () => {
 
     expect(console.error).toBeCalled();
   });
+  */
 });
-*/
