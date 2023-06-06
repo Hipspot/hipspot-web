@@ -35,10 +35,15 @@ function Main() {
     /**
      * 웹뷰인지 확인 요청 메세지를 플러터로 보낸다.
      * isWebViewAtom 기본값은 false이며
-     * - 플러터가 이 메세지를 받으면 setIsWebView를 반환해 true로 변경한다.
-     * - 모바일 환경이 아니라면 setIsWebView가 반환되지 않아 false로 유지된다.
+     * - 플러터가 이 메세지를 받으면 setIsWebView 메세지를 반환해 useFlutterMessageHandler에서 처리되어 아톰 값이 true로 변경한다.
+     * - 모바일 환경이 아니라면 setIsWebView 메세지가 반환되지 않아 기본값이 유지된다.
      * */
     messageToFlutter(MessageToFlutterType.getIsWebView, null);
+
+    /**
+     * favoriteList를 플러터로 요청
+     */
+    messageToFlutter(MessageToFlutterType.getFavoriteList, null);
   }, []);
 
   const theme = light;

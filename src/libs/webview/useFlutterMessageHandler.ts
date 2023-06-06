@@ -6,11 +6,13 @@ import useSetAuth from './callback/useSetAuth';
 import { useSetRecoilState } from 'recoil';
 import { notchHeightAtom } from '@states/header';
 import { isWebViewAtom } from '@states/isWebView';
+import { favoriteListAtom } from '@states/favoriteList';
 
 export default function useFlutterMessageHandler() {
   const setAuth = useSetAuth();
   const setNotchHeightAtom = useSetRecoilState(notchHeightAtom);
   const setIsWebViewAtom = useSetRecoilState(isWebViewAtom);
+  const setFavoriteList = useSetRecoilState(favoriteListAtom);
 
   return ({ type, data }: Message) => {
     switch (FlutterCallback[type]) {
@@ -24,6 +26,13 @@ export default function useFlutterMessageHandler() {
         return setNotchHeightAtom(data);
       case FlutterCallback.setIsWebView:
         return setIsWebViewAtom(true);
+      case FlutterCallback.setFavoriteList:
+        return setFavoriteList(
+          data
+            .slice(1, -1)
+            .split(', ')
+            .map((id: string) => Number(id))
+        );
       default:
         // eslint-disable-next-line no-console
         console.error('등록된 핸들러가 없습니다.');
