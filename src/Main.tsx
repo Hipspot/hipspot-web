@@ -14,6 +14,8 @@ import { globalStyle } from '@libs/styles/GlobalStyle';
 import { useSetRecoilState } from 'recoil';
 import { authAtom } from '@states/auth';
 import Header from '@components/Header/Header';
+import messageToFlutter from '@libs/webview/messageToFlutter';
+import { MessageToFlutterType } from '@constants/flutterCallback';
 
 function Main() {
   const flutterMessageHandler = useFlutterMessageHandler();
@@ -29,6 +31,14 @@ function Main() {
     } else {
       console.log('재로그인이 필요합니다.');
     }
+
+    /**
+     * 웹뷰인지 확인 요청 메세지를 플러터로 보낸다.
+     * isWebViewAtom 기본값은 false이며
+     * - 플러터가 이 메세지를 받으면 setIsWebView를 반환해 true로 변경한다.
+     * - 모바일 환경이 아니라면 setIsWebView가 반환되지 않아 false로 유지된다.
+     * */
+    messageToFlutter(MessageToFlutterType.getIsWebView, null);
   }, []);
 
   const theme = light;

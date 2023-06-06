@@ -5,10 +5,12 @@ import { setMyLocation } from './callback/setMyLocation';
 import useSetAuth from './callback/useSetAuth';
 import { useSetRecoilState } from 'recoil';
 import { notchHeightAtom } from '@states/header';
+import { isWebViewAtom } from '@states/isWebView';
 
 export default function useFlutterMessageHandler() {
   const setAuth = useSetAuth();
   const setNotchHeightAtom = useSetRecoilState(notchHeightAtom);
+  const setIsWebViewAtom = useSetRecoilState(isWebViewAtom);
 
   return ({ type, data }: Message) => {
     switch (FlutterCallback[type]) {
@@ -20,6 +22,8 @@ export default function useFlutterMessageHandler() {
         return setMyLocation(data);
       case FlutterCallback.setNotchHeight:
         return setNotchHeightAtom(data);
+      case FlutterCallback.setIsWebView:
+        return setIsWebViewAtom(true);
       default:
         // eslint-disable-next-line no-console
         console.error('등록된 핸들러가 없습니다.');
