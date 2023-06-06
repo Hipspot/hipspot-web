@@ -43,5 +43,4 @@ describe('웹뷰에서', () => {
 
     expect(console.error).toBeCalled();
   });
-  */
 });

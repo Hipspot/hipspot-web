@@ -13,4 +13,6 @@ export enum MessageToFlutterType {
   getMyLocation = 'getMyLocation',
   getAuth = 'getAuth',
   getNotchHeight = 'getNotchHeight',
+  addFavorite = 'addFavorite',
+  removeFavorite = 'removeFavorite',
 }

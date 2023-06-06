@@ -66,7 +66,7 @@ function ImageListTab({ cafeId, imageList, wrapperId }: ImageListTabProps) {
             {name}
           </Tab>
         ))}
-        <BookMark isBookmarked />
+        <BookMark isBookmarked={false} />
       </TabBarWrapper>
     </Wrapper>
   );
