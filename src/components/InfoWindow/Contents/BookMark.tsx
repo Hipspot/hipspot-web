@@ -37,8 +37,12 @@ function BookMark() {
   }, [isBookmarked]);
 
   return (
-    <IconButton onClick={onBookmarkClick}>
-      {isBookmarked ? <BookmarkFilledIcon /> : isBookmarked === false ? <BookmarkIcon /> : null}
+    <IconButton>
+      {isBookmarked ? (
+        <BookmarkFilledIcon onClick={onBookmarkClick} />
+      ) : isBookmarked === false ? (
+        <BookmarkIcon onClick={onBookmarkClick} />
+      ) : null}
     </IconButton>
   );
 }
