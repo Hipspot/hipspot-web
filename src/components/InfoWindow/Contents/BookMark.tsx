@@ -21,7 +21,9 @@ function BookMark() {
       if (isBookmarked) {
         messageToFlutter(MessageToFlutterType?.removeFavorite, activatedCafeId);
       } else {
-        messageToFlutter(MessageToFlutterType.addFavorite, activatedCafeId);
+      const bookMarkActionType = isBookMarked ?  MessageToFlutterType.removeFavorite : MessageToFlutterType.addFavorite;
+
+        messageToFlutter(bookMarkActionType, activatedCafeId);
       }
     } else {
       toast('현재 모바일 환경에서만 북마크를 추가할 수 있습니다.');
