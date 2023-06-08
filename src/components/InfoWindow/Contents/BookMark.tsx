@@ -17,16 +17,15 @@ function BookMark() {
   const isMounted = useRef(false);
 
   const onBookmarkClick = () => {
-    if (!isWebView) {toast('현재 모바일 환경에서만 북마크를 추가할 수 있습니다.');}
-      if (isBookmarked) {
-        messageToFlutter(MessageToFlutterType?.removeFavorite, activatedCafeId);
-      } else {
-      const bookMarkActionType = isBookMarked ?  MessageToFlutterType.removeFavorite : MessageToFlutterType.addFavorite;
-
-        messageToFlutter(bookMarkActionType, activatedCafeId);
-      }
-    } else {
+    if (!isWebView) {
       toast('현재 모바일 환경에서만 북마크를 추가할 수 있습니다.');
+    }
+    if (isBookmarked) {
+      messageToFlutter(MessageToFlutterType?.removeFavorite, activatedCafeId);
+    } else {
+      const bookMarkActionType = isBookmarked ? MessageToFlutterType.removeFavorite : MessageToFlutterType.addFavorite;
+
+      messageToFlutter(bookMarkActionType, activatedCafeId);
     }
   };
 
@@ -40,11 +39,7 @@ function BookMark() {
 
   return (
     <IconButton>
-      {isBookmarked ? (
-        <BookmarkFilledIcon onClick={onBookmarkClick} />
-      ) : isBookmarked === false ? (
-        <BookmarkIcon onClick={onBookmarkClick} />
-      ) : null}
+      {isBookmarked ? <BookmarkFilledIcon onClick={onBookmarkClick} /> : <BookmarkIcon onClick={onBookmarkClick} />}
     </IconButton>
   );
 }
