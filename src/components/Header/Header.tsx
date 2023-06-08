@@ -1,16 +1,22 @@
 import LoginButton from '@components/Button/LoginButton/LoginButton';
 import Filtering from '@components/Filtering';
+import { MessageToFlutterType } from '@constants/flutterCallback';
 import styled from '@emotion/styled';
+import messageToFlutter from '@libs/webview/messageToFlutter';
+import { notchHeightAtom } from '@states/header';
+import { useEffect } from 'react';
+import toast from 'react-hot-toast';
+import { useRecoilValue } from 'recoil';
 
-type HeaderProps = {
-  /**
-   * 필터링의 상단
-   * @description 여백모바일 환경마다 다를 윗 여백을 조정하기 위함
-   * @example 20
-   */
-  marginTop?: number;
-};
-function Header({ marginTop }: HeaderProps) {
+function Header() {
+  const notchHeight = useRecoilValue(notchHeightAtom);
+  const marginTop = Number(notchHeight) + 20;
+
+  useEffect(() => {
+    messageToFlutter(MessageToFlutterType.getNotchHeight, null);
+    toast(marginTop.toString());
+  }, []);
+
   return (
     <Wrapper marginTop={marginTop}>
       <Filtering />
@@ -21,7 +27,7 @@ function Header({ marginTop }: HeaderProps) {
 
 const Wrapper = styled.div<{ marginTop?: number }>`
   position: sticky;
-  padding-top: ${(props) => props.marginTop || '20px'};
+  padding-top: ${(props) => `${props.marginTop}px`};
   position: sticky;
   padding-left: 16px;
   padding-right: 80px;

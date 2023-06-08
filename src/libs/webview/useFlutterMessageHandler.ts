@@ -3,9 +3,12 @@ import { Message } from '@libs/types/flutter';
 import { initFilterling } from './callback/initFilterling';
 import { setMyLocation } from './callback/setMyLocation';
 import useSetAuth from './callback/useSetAuth';
+import { useSetRecoilState } from 'recoil';
+import { notchHeightAtom } from '@states/header';
 
 export default function useFlutterMessageHandler() {
   const setAuth = useSetAuth();
+  const setNotchHeightAtom = useSetRecoilState(notchHeightAtom);
 
   return ({ type, data }: Message) => {
     switch (FlutterCallback[type]) {
@@ -15,6 +18,8 @@ export default function useFlutterMessageHandler() {
         return setAuth(data);
       case FlutterCallback.setMyLocation:
         return setMyLocation(data);
+      case FlutterCallback.setNotchHeight:
+        return setNotchHeightAtom(data);
       default:
         // eslint-disable-next-line no-console
         console.error('등록된 핸들러가 없습니다.');
