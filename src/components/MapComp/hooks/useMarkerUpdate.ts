@@ -34,7 +34,7 @@ function useMarkerUpdate({ filterId }: { filterId: FilterId }) {
    */
   const updateMarkers = () => {
     const map = mapRef.current;
-    if (!map || map.isRotating()) return;
+    if (!map) return;
 
     /**
      * 1. features 확인
