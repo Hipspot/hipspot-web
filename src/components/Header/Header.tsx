@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 import messageToFlutter from '@libs/webview/messageToFlutter';
 import { notchHeightAtom } from '@states/header';
 import { useEffect } from 'react';
-import toast from 'react-hot-toast';
 import { useRecoilValue } from 'recoil';
 
 function Header() {
@@ -14,7 +13,6 @@ function Header() {
 
   useEffect(() => {
     messageToFlutter(MessageToFlutterType.getNotchHeight, null);
-    toast(marginTop.toString());
   }, []);
 
   return (
