@@ -17,7 +17,7 @@ function BookMark() {
   const isMounted = useRef(false);
 
   const onBookmarkClick = () => {
-    if (isWebView) {
+    if (!isWebView) {toast('현재 모바일 환경에서만 북마크를 추가할 수 있습니다.');}
       if (isBookmarked) {
         messageToFlutter(MessageToFlutterType?.removeFavorite, activatedCafeId);
       } else {
