@@ -7,6 +7,7 @@ import { useSetRecoilState } from 'recoil';
 import { notchHeightAtom } from '@states/header';
 import { isWebViewAtom } from '@states/isWebView';
 import { favoriteListAtom } from '@states/favoriteList';
+import { parseStringifiedArray } from '@libs/utils/parseStringifiedArray';
 
 export default function useFlutterMessageHandler() {
   const setAuth = useSetAuth();
@@ -27,12 +28,7 @@ export default function useFlutterMessageHandler() {
       case FlutterCallback.setIsWebView:
         return setIsWebViewAtom(true);
       case FlutterCallback.setFavoriteList:
-        return setFavoriteList(
-          data
-            .slice(1, -1)
-            .split(', ')
-            .map((id: string) => Number(id))
-        );
+        return setFavoriteList(parseStringifiedArray(data));
       default:
         // eslint-disable-next-line no-console
         console.error('등록된 핸들러가 없습니다.');
