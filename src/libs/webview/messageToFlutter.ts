@@ -36,8 +36,8 @@ function mockFlutterMessage({ type }: { type: MessageToFlutterType; data: any })
     case MessageToFlutterType.getMyLocation: {
       const randomRange = (max: number, min: number) => Math.random() * (max - min) + min;
       const bounds = [
-        [127.03, 37.53],
-        [127.07, 37.56],
+        [127.075, 37.625],
+        [127.076, 37.626],
       ];
       const position = [randomRange(bounds[0][0], bounds[1][0]), randomRange(bounds[0][1], bounds[1][1])];
       const responseMessage = JSON.parse(JSON.stringify({ type: 'setMyLocation', data: position }));
