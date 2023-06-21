@@ -8,6 +8,7 @@ export enum FlutterCallback {
   setNotchHeight,
   setIsWebView,
   setFavoriteList,
+  setOnboardingFilter,
 }
 
 export enum MessageToFlutterType {
@@ -19,4 +20,5 @@ export enum MessageToFlutterType {
   removeFavorite = 'removeFavorite',
   getIsWebView = 'getIsWebView',
   getFavoriteList = 'getFavoriteList',
+  getOnboardingFilter = 'getOnboardingFilter',
 }
